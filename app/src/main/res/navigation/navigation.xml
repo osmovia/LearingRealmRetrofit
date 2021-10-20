@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation"
+    app:startDestination="@id/recyclerWordFragment">
+
+    <dialog
+        android:id="@+id/deleteWordFragment"
+        android:name="com.example.learingrealmandretrofit.DeleteWordFragment"
+        android:label="DeleteWordFragment" >
+    </dialog>
+
+    <fragment
+        android:id="@+id/recyclerWordFragment"
+        android:name="com.example.learingrealmandretrofit.RecyclerWordFragment"
+        android:label="RecyclerWordFragment" >
+        <action
+            android:id="@+id/action_recyclerWordFragment_to_dialogSaveWord"
+            app:destination="@id/dialogSaveWord"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_recyclerWordFragment_to_deleteWordFragment"
+            app:destination="@id/deleteWordFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="change"
+            app:argType="string" />
+    </fragment>
+    <dialog
+        android:id="@+id/dialogSaveWord"
+        android:name="com.example.learingrealmandretrofit.DialogSaveWord"
+        android:label="DialogSaveWord" />
+</navigation>

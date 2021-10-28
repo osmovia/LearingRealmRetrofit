@@ -15,7 +15,7 @@ class DeleteWordFragment : DialogFragment() {
     companion object {
         const val deleteWordKey = "DELETE_WORD_KEY"
     }
-    lateinit var binding: FragmentDeleteWordBinding
+    private lateinit var binding: FragmentDeleteWordBinding
     val deleteObject : RealmCard
         get() = arguments?.getSerializable(deleteWordKey) as RealmCard
 

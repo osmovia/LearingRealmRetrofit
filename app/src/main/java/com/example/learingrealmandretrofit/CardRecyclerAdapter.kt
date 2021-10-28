@@ -56,7 +56,7 @@ class CardRecyclerAdapter(
             is ItemViewHolder -> {
                 val item = generalArray.get(position) as RealmCard
                 holder.textViewOriginal.text = item.word
-                holder.textViewTranslate.text = item.translate
+                holder.textViewTranslate.text = item.translation
                 holder.textViwExample.text = item.example
 
                 holder.itemContainer.setOnClickListener {

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.example.learingrealmandretrofit.databinding.FragmentDeleteWordBinding
+import com.example.learingrealmandretrofit.objects.Card
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
@@ -15,10 +16,14 @@ class DeleteWordFragment : DialogFragment() {
     companion object {
         const val deleteWordKey = "DELETE_WORD_KEY"
     }
-    private lateinit var binding: FragmentDeleteWordBinding
-    val deleteObject : RealmCard
-        get() = arguments?.getSerializable(deleteWordKey) as RealmCard
 
+    // Bindings
+    private lateinit var binding: FragmentDeleteWordBinding
+
+//    val deleteObject : RealmCard
+//        get() = arguments?.getSerializable(deleteWordKey) as RealmCard
+
+    // Lifecycle
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,6 +33,7 @@ class DeleteWordFragment : DialogFragment() {
 
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.buttonYes.setOnClickListener{
             removeFromRealm()
@@ -35,6 +41,8 @@ class DeleteWordFragment : DialogFragment() {
             findNavController().popBackStack()
         }
     }
+
+    // Functions
     private fun removeFromRealm() {
         val config = RealmConfiguration
             .Builder()
@@ -42,10 +50,12 @@ class DeleteWordFragment : DialogFragment() {
             .allowWritesOnUiThread(true)
             .build()
         val realm = Realm.getInstance(config)
+
+        val card = arguments?.getSerializable(deleteWordKey) as Card
         realm.executeTransaction { realmTransaction ->
             val result = realmTransaction
-                .where(RealmCard::class.java)
-                .equalTo("id", deleteObject.id)
+                .where(Card::class.java)
+                .equalTo("id", card.id)
                 .findAll()
             result.deleteAllFromRealm()
         }

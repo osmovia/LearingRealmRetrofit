@@ -1,4 +1,4 @@
-package com.example.learingrealmandretrofit
+package com.example.learingrealmandretrofit.objects
 
 
 import io.realm.RealmObject
@@ -6,13 +6,13 @@ import io.realm.annotations.Required
 import java.io.Serializable
 import com.google.gson.Gson
 
-
-open class RealmCard(
+// TODO: Rename to "Card"
+open class Card(
     @Required
     var id: Int? = null,
-    var word: String? = null,
-    var translation: String? = null,
-    var example: String? = null
+    var word: String = "",
+    var translation: String = "",
+    var example: String = ""
 ) : RealmObject(), Serializable{
     override fun toString(): String {
         return Gson().toJson(this)

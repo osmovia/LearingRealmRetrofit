@@ -6,7 +6,6 @@ import io.realm.annotations.Required
 import java.io.Serializable
 import com.google.gson.Gson
 
-// TODO: Rename to "Card"
 open class Card(
     @Required
     var id: Int? = null,

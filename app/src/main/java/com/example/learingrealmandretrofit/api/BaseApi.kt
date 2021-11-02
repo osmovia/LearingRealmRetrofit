@@ -1,6 +1,5 @@
 package com.example.learingrealmandretrofit.api
 
-import com.example.learingrealmandretrofit.api.ApiInterface
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

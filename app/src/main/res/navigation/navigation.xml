@@ -6,13 +6,13 @@
 
     <dialog
         android:id="@+id/deleteWordFragment"
-        android:name="com.example.learingrealmandretrofit.DeleteWordFragment"
+        android:name="com.example.learingrealmandretrofit.fragment.DeleteWordFragment"
         android:label="DeleteWordFragment" >
     </dialog>
 
     <fragment
         android:id="@+id/recyclerWordFragment"
-        android:name="com.example.learingrealmandretrofit.RecyclerWordFragment"
+        android:name="com.example.learingrealmandretrofit.fragment.MainFragment"
         android:label="RecyclerWordFragment" >
         <action
             android:id="@+id/action_recyclerWordFragment_to_dialogSaveWord"
@@ -34,6 +34,6 @@
     </fragment>
     <dialog
         android:id="@+id/dialogSaveWord"
-        android:name="com.example.learingrealmandretrofit.DialogSaveWord"
+        android:name="com.example.learingrealmandretrofit.fragment.DialogSaveWord"
         android:label="DialogSaveWord" />
 </navigation>

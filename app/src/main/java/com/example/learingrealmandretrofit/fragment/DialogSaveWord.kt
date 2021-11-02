@@ -1,13 +1,14 @@
-package com.example.learingrealmandretrofit
+package com.example.learingrealmandretrofit.fragment
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
+import com.example.learingrealmandretrofit.ConfigRealm
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.FragmentSaveWordBinding
 import com.example.learingrealmandretrofit.objects.Card
@@ -19,15 +20,12 @@ import retrofit2.Response
 
 class DialogSaveWord : DialogFragment() {
     companion object {
-        const val newWordKey = "NEW_WORD_KEY"
-        const val changeWordKey = "CHANGE_WORD_KEY"
         const val cardRealmKey = "CARD_REALM_KEY"
-        const val TAG = "DialogSaveWord"
     }
 
     private val card: Card?
         get() = arguments?.getSerializable(cardRealmKey) as? Card?
-    lateinit var binding: FragmentSaveWordBinding
+    private lateinit var binding: FragmentSaveWordBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,14 +41,14 @@ class DialogSaveWord : DialogFragment() {
         fillFields()
         binding.saveOrUpdateWord.setOnClickListener {
             if (card == null) {
-                createNewCard()
+                createCardRetrofit()
             } else {
-                updateCurrentCard()
+                updateCardRetrofit()
             }
         }
     }
 
-    private fun saveCardRealm(card: Card) {
+    private fun createCardRealm(card: Card) {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
@@ -59,76 +57,102 @@ class DialogSaveWord : DialogFragment() {
             findNavController().popBackStack()
             realm.close()
         }, {
+            findNavController().popBackStack()
             realm.close()
         })
-
-//        1. Init Realm
-//        2. Create or update card
-//        3. Check result, if ok - hide this fragment and show list of Cards to user.
     }
 
-    private fun createNewCard() {
+    private fun createCardRetrofit() {
         val word = binding.editTextOriginalWord.text.toString()
         val translate = binding.editTextTranslateWord.text.toString()
         val example = binding.editTextExample.text.toString()
         val realmCard = Card(word = word, translation = translate, example = example)
-
-        createNewCardRetrofit(realmCard)
-    }
-
-    private fun createNewCardRetrofit(card: Card) {
-        BaseApi.retrofit.createCard(card).enqueue(object : Callback<CardResponse?> {
+        BaseApi.retrofit.createCard(realmCard).enqueue(object : Callback<CardResponse?> {
             override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
-                Log.d(TAG, "onFailure response dialog save word $t")
+                checkInternet()
             }
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
+                val statusCode = response.code()
                 if (response.isSuccessful) {
                     val responseBody = response.body()
-                    val statusCode = response.code()
                     if (responseBody != null) {
-                        saveCardRealm(responseBody.card)
-                        Log.d(TAG, "onResponse ok, status code: $statusCode ")
+                        createCardRealm(responseBody.card)
+                    } else {
+                        errorServer(statusCode)
                     }
+                } else {
+                    errorServer(statusCode)
                 }
             }
         })
     }
 
-    private fun updateCurrentCard() {
+    private fun updateCardRetrofit() {
         val word = binding.editTextOriginalWord.text.toString()
         val translate = binding.editTextTranslateWord.text.toString()
         val example = binding.editTextExample.text.toString()
-        val id = card?.id
-        val cardRealm = Card(word = word, translation = translate, example = example, id = id)
-        updateCardRealm(cardRealm)
-        Log.d(TAG, "Update current card 1")
-        findNavController().previousBackStackEntry?.savedStateHandle?.set(changeWordKey, "")
-        findNavController().popBackStack()
-        Log.d(TAG, "Update current card 2")
-
+        val id = card!!.id!!
+        val card = Card(word = word, translation = translate, example = example)
+        val retrofitData = BaseApi.retrofit.updateCard(id, card)
+        retrofitData.enqueue(object : Callback<CardResponse?> {
+            override fun onResponse(
+                call: Call<CardResponse?>,
+                response: Response<CardResponse?>
+            ) {
+                val statusCode = response.code()
+                if(response.isSuccessful){
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        updateCardRealm(responseBody.card)
+                    } else {
+                        errorServer(statusCode)
+                    }
+                } else {
+                    errorServer(statusCode)
+                }
+            }
+            override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
+                checkInternet()
+            }
+        })
     }
 
-    private fun updateCardRealm(cardRealm: Card) {
+    private fun updateCardRealm(card: Card) {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
-        realm.executeTransaction { realmTransaction ->
+        realm.executeTransactionAsync({ realmTransaction ->
             val result = realmTransaction
                 .where(Card::class.java)
-                .equalTo("id", cardRealm.id)
+                .equalTo("id", card.id)
                 .findFirst()
-            result?.example = cardRealm.example
-            result?.translation = cardRealm.translation
-            result?.word = cardRealm.word
-            Log.d(TAG, "Update card realm")
-        }
+            result?.example = card.example
+            result?.translation = card.translation
+            result?.word = card.word
+        }, {
+            findNavController().popBackStack()
+            realm.close()
+        },{
+            findNavController().popBackStack()
+            realm.close()
+        })
     }
 
     private fun fillFields() {
-        if (card != null) {
+        if (card != null && card?.id != null) {
             binding.editTextOriginalWord.setText(card?.word.toString())
             binding.editTextTranslateWord.setText(card?.translation.toString())
             binding.editTextExample.setText(card?.example.toString())
         }
+    }
+
+    private fun errorServer(statusCode: Int) {
+        Toast.makeText(requireContext(), "Oops an error occurred, please try again later. Error code : $statusCode", Toast.LENGTH_LONG).show()
+        findNavController().popBackStack()
+    }
+
+    private fun checkInternet() {
+        Toast.makeText(requireContext(), "Oops an error occurred, check connect internet.", Toast.LENGTH_LONG).show()
+        findNavController().popBackStack()
     }
 }
 

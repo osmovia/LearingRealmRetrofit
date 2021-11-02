@@ -14,8 +14,8 @@ interface ApiInterface {
     fun createCard(@Body params: Card): Call<CardResponse>
 
     @PUT("cards/{id}")
-    fun updateCard(@Path("id") id : Int, @Body params : Card): Call<CardListResponse>
+    fun updateCard(@Path("id") id : Int, @Body params : Card): Call<CardResponse>
 
     @DELETE("cards/{id}")
-    fun deleteCard(@Path("id") id: Int): Call<CardListResponse>
+    fun deleteCard(@Path("id") id: Int): Call<CardResponse>
 }

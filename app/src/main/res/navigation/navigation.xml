@@ -31,9 +31,16 @@
         <argument
             android:name="change"
             app:argType="string" />
+        <action
+            android:id="@+id/action_recyclerWordFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
     </fragment>
     <dialog
         android:id="@+id/dialogSaveWord"
         android:name="com.example.learingrealmandretrofit.fragment.DialogSaveWord"
         android:label="DialogSaveWord" />
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.example.learingrealmandretrofit.fragment.RegistrationFragment"
+        android:label="RegistrationFragment" />
 </navigation>

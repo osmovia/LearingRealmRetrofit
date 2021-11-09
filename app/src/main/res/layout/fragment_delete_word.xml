@@ -38,26 +38,31 @@
 
             <Button
                 android:id="@+id/button_yes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="97dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif"
                 android:text="Yes"
+                android:background="@drawable/button_rounded_delete"
+                android:shadowRadius="3"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:backgroundTint="@null"/>
 
             <Button
                 android:id="@+id/button_no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="97dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
                 android:fontFamily="sans-serif"
                 android:text="No"
+                android:background="@drawable/button_rounded_delete"
                 android:layout_weight="1"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                app:backgroundTint="@null"/>
         </RadioGroup>
 
 

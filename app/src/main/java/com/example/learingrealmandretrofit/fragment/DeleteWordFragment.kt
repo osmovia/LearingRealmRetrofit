@@ -50,9 +50,11 @@ class DeleteWordFragment : DialogFragment() {
         val card = arguments?.getSerializable(deleteWordKey) as Card
          BaseApi.retrofit.deleteCard(card.id!!).enqueue(object : Callback<CardResponse?> {
              override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
-                 if(response.isSuccessful && response.body() != null) {
-                     val responseId = response.body()!!.card.id!!
-                     removeFromRealm(responseId)
+                 if(response.isSuccessful) {
+                     val responseBody = response.body()
+                     if (responseBody != null) {
+                         removeFromRealm(responseBody.card)
+                     }
                  } else {
                      noDeleteCard()
                      Toast.makeText(requireContext(), "Oops an error occurred, please try again later.", Toast.LENGTH_LONG).show()
@@ -65,13 +67,13 @@ class DeleteWordFragment : DialogFragment() {
          })
     }
 
-    private fun removeFromRealm(id: Int) {
+    private fun removeFromRealm(card: Card) {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
             val result = realmTransaction
                 .where(Card::class.java)
-                .equalTo("id", id)
+                .equalTo("id", card.id)
                 .findFirst()
             result?.deleteFromRealm()
         }, {

@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 private const val prefix = "api/v1"
-private const val baseUrl: String = "http://10.0.1.4:3000"
+private const val baseUrl: String = "https://word-notes.herokuapp.com/"
 
 object BaseApi {
     val retrofit: ApiInterface = Retrofit

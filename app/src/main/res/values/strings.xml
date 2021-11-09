@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">LearingRealmAndRetrofit</string>
+    <string name="app_name_title">Word Notes</string>
+    <string name="email_hint">E-mail address</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
 </resources>

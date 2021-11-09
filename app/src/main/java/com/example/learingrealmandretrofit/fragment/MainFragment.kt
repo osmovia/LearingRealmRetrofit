@@ -22,6 +22,9 @@ import io.realm.Sort
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.R.string.no
+import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 
 
 open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
@@ -41,7 +44,9 @@ open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
         view: View,
         savedInstanceState: Bundle?
     ) {
+
         Realm.init(context)
+        deleteAllCards()
         getAllCardRetrofit()
 
         binding.buttonFloatingAction.setOnClickListener {
@@ -141,6 +146,7 @@ open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        findNavController().navigate(R.id.action_recyclerWordFragment_to_registrationFragment)
         return true
     }
 

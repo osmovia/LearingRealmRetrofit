@@ -12,19 +12,20 @@ import com.example.learingrealmandretrofit.ConfigRealm
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.FragmentSaveWordBinding
 import com.example.learingrealmandretrofit.objects.Card
+import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.response.CardResponse
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DialogSaveWord : DialogFragment() {
+class DialogSaveOrChangeCard : DialogFragment() {
     companion object {
         const val cardRealmKey = "CARD_REALM_KEY"
     }
 
-    private val card: Card?
-        get() = arguments?.getSerializable(cardRealmKey) as? Card?
+    private val card: CardRealm?
+        get() = arguments?.getSerializable(cardRealmKey) as? CardRealm?
     private lateinit var binding: FragmentSaveWordBinding
 
     override fun onCreateView(
@@ -52,7 +53,13 @@ class DialogSaveWord : DialogFragment() {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
-            realmTransaction.insert(card)
+            val cardRealm = CardRealm(
+                id = card.id,
+                word = card.word,
+                example = card.example,
+                translation = card.translation
+            )
+            realmTransaction.insert(cardRealm)
         }, {
             findNavController().popBackStack()
             realm.close()
@@ -66,8 +73,8 @@ class DialogSaveWord : DialogFragment() {
         val word = binding.editTextOriginalWord.text.toString()
         val translate = binding.editTextTranslateWord.text.toString()
         val example = binding.editTextExample.text.toString()
-        val realmCard = Card(word = word, translation = translate, example = example)
-        BaseApi.retrofit.createCard(realmCard).enqueue(object : Callback<CardResponse?> {
+        val card = Card(word = word, translation = translate, example = example)
+        BaseApi.retrofit.createCard(card).enqueue(object : Callback<CardResponse?> {
             override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
                 checkInternet()
             }
@@ -91,14 +98,10 @@ class DialogSaveWord : DialogFragment() {
         val word = binding.editTextOriginalWord.text.toString()
         val translate = binding.editTextTranslateWord.text.toString()
         val example = binding.editTextExample.text.toString()
-        val id = card!!.id!!
+        val id = card!!.id
         val card = Card(word = word, translation = translate, example = example)
-        val retrofitData = BaseApi.retrofit.updateCard(id, card)
-        retrofitData.enqueue(object : Callback<CardResponse?> {
-            override fun onResponse(
-                call: Call<CardResponse?>,
-                response: Response<CardResponse?>
-            ) {
+        BaseApi.retrofit.updateCard(id, card).enqueue(object : Callback<CardResponse?> {
+            override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val statusCode = response.code()
                 if(response.isSuccessful){
                     val responseBody = response.body()
@@ -122,7 +125,7 @@ class DialogSaveWord : DialogFragment() {
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
             val result = realmTransaction
-                .where(Card::class.java)
+                .where(CardRealm::class.java)
                 .equalTo("id", card.id)
                 .findFirst()
             result?.example = card.example

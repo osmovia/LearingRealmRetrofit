@@ -5,16 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.learingrealmandretrofit.fragment.MainFragment
+import com.example.learingrealmandretrofit.fragment.CardFragment
 import com.example.learingrealmandretrofit.objects.Card
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
-class RealmRecyclerAdapter(
-    private val owner: MainFragment?,
+class RealmRecyclerAdapterCard(
+    private val owner: CardFragment?,
     private val cardList: OrderedRealmCollection<Card>,
     autoUpdate: Boolean
-) : RealmRecyclerViewAdapter<Card, RealmRecyclerAdapter.CardViewHolder>(cardList, autoUpdate) {
+) : RealmRecyclerViewAdapter<Card, RealmRecyclerAdapterCard.CardViewHolder>(cardList, autoUpdate) {
 
     override fun getItemCount(): Int = cardList.size
 

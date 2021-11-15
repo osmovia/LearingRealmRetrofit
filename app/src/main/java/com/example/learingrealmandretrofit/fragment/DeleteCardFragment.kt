@@ -10,8 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.learingrealmandretrofit.ConfigRealm
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.FragmentDeleteWordBinding
-import com.example.learingrealmandretrofit.objects.Card
-import com.example.learingrealmandretrofit.objects.response.CardResponse
+import com.example.learingrealmandretrofit.objects.CardRealm
+import com.example.learingrealmandretrofit.objects.response.Success
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
@@ -47,33 +47,37 @@ class DeleteWordFragment : DialogFragment() {
     }
     // Functions
     private fun removeCard() {
-        val card = arguments?.getSerializable(deleteWordKey) as Card
-         BaseApi.retrofit.deleteCard(card.id!!).enqueue(object : Callback<CardResponse?> {
-             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
-                 if(response.isSuccessful) {
-                     val responseBody = response.body()
-                     if (responseBody != null) {
-                         removeFromRealm(responseBody.card)
-                     }
-                 } else {
-                     noDeleteCard()
-                     Toast.makeText(requireContext(), "Oops an error occurred, please try again later.", Toast.LENGTH_LONG).show()
-                 }
-             }
-             override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
-                 noDeleteCard()
-                 Toast.makeText(requireContext(), "Oops an error occurred, check connect internet.", Toast.LENGTH_LONG).show()
-             }
-         })
+        arguments?.getInt(deleteWordKey)?.let {
+            BaseApi.retrofit.deleteCard(it).enqueue(object : Callback<Success?> {
+                override fun onResponse(call: Call<Success?>, response: Response<Success?>) {
+                    if (response.isSuccessful && response.body() != null) {
+                        if(response.body()?.success == true) {
+                            removeFromRealm(it)
+                        } else {
+                            noDeleteCard()
+                            Toast.makeText(requireContext(), "Oops an error occurred, please try again later.", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        noDeleteCard()
+                        Toast.makeText(requireContext(), "Oops an error occurred, please try again later.", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Success?>, t: Throwable) {
+                    noDeleteCard()
+                    Toast.makeText(requireContext(), "Oops an error occurred, check connect internet.", Toast.LENGTH_LONG).show()
+                }
+            })
+        }
     }
 
-    private fun removeFromRealm(card: Card) {
+    private fun removeFromRealm(id: Int) {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
             val result = realmTransaction
-                .where(Card::class.java)
-                .equalTo("id", card.id)
+                .where(CardRealm::class.java)
+                .equalTo("id", id)
                 .findFirst()
             result?.deleteFromRealm()
         }, {

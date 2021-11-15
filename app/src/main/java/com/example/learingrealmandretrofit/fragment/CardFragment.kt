@@ -15,19 +15,19 @@ import com.example.learingrealmandretrofit.api.BaseApi
 
 import com.example.learingrealmandretrofit.databinding.FragmentCardMainRecyclerBinding
 import com.example.learingrealmandretrofit.objects.Card
+import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.response.CardListResponse
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import io.realm.Sort
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.R.string.no
-import android.widget.Toolbar
-import androidx.appcompat.app.AppCompatActivity
 
-
-open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
+class CardFragment : Fragment() {
     private lateinit var binding: FragmentCardMainRecyclerBinding
     private var currentSwipePosition = 0
 
@@ -44,34 +44,38 @@ open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
         view: View,
         savedInstanceState: Bundle?
     ) {
-
+        testing()
         Realm.init(context)
+
+        val config = RealmConfiguration.Builder().build()
+        Realm.deleteRealm(config)
+
         deleteAllCards()
         getAllCardRetrofit()
 
         binding.buttonFloatingAction.setOnClickListener {
-            findNavController().navigate(R.id.action_recyclerWordFragment_to_dialogSaveWord)
+            findNavController().navigate(R.id.action_recyclerCardFragment_to_dialogSaveOrChangeCard)
         }
 
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
-            DeleteWordFragment.noDeleteWordKey
+            DeleteCardFragment.noDeleteWordKey
         )?.observe(
             viewLifecycleOwner
         ) {
-            binding.recyclerView.adapter?.notifyItemChanged(currentSwipePosition)
+            binding.recyclerCard.adapter?.notifyItemChanged(currentSwipePosition)
         }
 
-        val item = object : SwipeToDelete(requireContext()) {
+        val item = object : SwipeToDeleteCard(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 currentSwipePosition = viewHolder.absoluteAdapterPosition
-                val currentSwipeCard = pullCardsRealm()[viewHolder.absoluteAdapterPosition]
+                val currentSwipeCardId = pullCardsRealm()[viewHolder.absoluteAdapterPosition]?.id
                 findNavController().navigate(
-                    R.id.action_recyclerWordFragment_to_deleteWordFragment,
-                    bundleOf(DeleteWordFragment.deleteWordKey to currentSwipeCard))
+                    R.id.action_recyclerCardFragment_to_deleteCardFragment,
+                    bundleOf(DeleteCardFragment.deleteWordKey to currentSwipeCardId))
             }
         }
         val itemTouchHelper = ItemTouchHelper(item)
-        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerCard)
     }
 
     override fun onDestroy() {
@@ -89,14 +93,10 @@ open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
                 response.isSuccessful
                 when(statusCode) {
                     in 200..299 -> parsingResponse(responseBody)
-                    in 400..499 -> Toast.makeText(requireContext(),
-                            "Please check your internet connection",
-                            Toast.LENGTH_LONG).show()
-                    in 500..600 -> Toast.makeText(requireContext(),
-                        "Oops problem on the server, try again later",
-                        Toast.LENGTH_LONG).show()
+                    in 400..499 -> context?.showErrorToast()
+                    in 500..600 -> context?.showErrorToast()
                     else -> Toast.makeText(requireContext(),
-                        "Code error : $statusCode",
+                        getString(R.string.code_error_message, statusCode),
                         Toast.LENGTH_LONG).show()
                 }
             }
@@ -111,22 +111,28 @@ open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
             for (item in arrayCards) {
-                realmTransaction.insert(item)
+                val cardRealm = CardRealm(
+                    id = item.id,
+                    word = item.word,
+                    translation = item.translation,
+                    example = item.example
+                )
+                realmTransaction.insert(cardRealm)
             }
         }, {
             val cardResult = pullCardsRealm()
-            val adapter = RealmRecyclerAdapter(this, cardResult, true)
-            binding.recyclerView.layoutManager = LinearLayoutManager(context)
-            binding.recyclerView.adapter = adapter
+            val adapter = RecyclerAdapterCard(this, cardResult, true)
+            binding.recyclerCard.layoutManager = LinearLayoutManager(context)
+            binding.recyclerCard.adapter = adapter
             realm.close()
         }, {
             realm.close()
         })
     }
-    private fun pullCardsRealm() : RealmResults<Card> {
+    private fun pullCardsRealm() : RealmResults<CardRealm> {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
-        return  realm.where(Card::class.java).findAll().sort("word", Sort.ASCENDING)
+        return  realm.where(CardRealm::class.java).findAll().sort("word", Sort.ASCENDING)
     }
 
     fun parsingResponse(responseBody: CardListResponse?) {
@@ -146,14 +152,14 @@ open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        findNavController().navigate(R.id.action_recyclerWordFragment_to_registrationFragment)
+        findNavController().navigate(R.id.action_recyclerCardFragment_to_registrationFragment)
         return true
     }
 
-    fun onItemClick(cardRealm: Card) {
+    fun onItemClick(cardRealm: CardRealm) {
         findNavController().navigate(
-            R.id.action_recyclerWordFragment_to_dialogSaveWord,
-        bundleOf(DialogSaveWord.cardRealmKey to cardRealm))
+            R.id.action_recyclerCardFragment_to_dialogSaveOrChangeCard,
+        bundleOf(DialogCreateOrChangeCard.cardRealmKey to cardRealm))
     }
 
     private fun deleteAllCards() {
@@ -161,7 +167,7 @@ open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
             val result = realmTransaction
-                .where(Card::class.java)
+                .where(CardRealm::class.java)
                 .findAll()
             result.deleteAllFromRealm()
         }, {
@@ -169,5 +175,19 @@ open class MainFragment : Fragment(R.layout.fragment_card_main_recycler) {
         }, {
             realm.close()
         })
+    }
+
+    fun testing() {
+        val gson = Gson()
+        val gsonPretty = GsonBuilder().setPrettyPrinting().create()
+
+        val tut = Card(39, "word", "example", "translation")
+
+        val jsonTut: String = gson.toJson(tut)
+        Log.d("TESTING", jsonTut)
+
+        val jsonTutPretty: String = gsonPretty.toJson(tut)
+        Log.d("TESTING", jsonTutPretty)
+
     }
 }

@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.fragment.CardFragment
-import com.example.learingrealmandretrofit.objects.Card
+import com.example.learingrealmandretrofit.objects.CardRealm
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
-class RealmRecyclerAdapterCard(
+class RecyclerAdapterCard(
     private val owner: CardFragment?,
-    private val cardList: OrderedRealmCollection<Card>,
+    private val cardList: OrderedRealmCollection<CardRealm>,
     autoUpdate: Boolean
-) : RealmRecyclerViewAdapter<Card, RealmRecyclerAdapterCard.CardViewHolder>(cardList, autoUpdate) {
+) : RealmRecyclerViewAdapter<CardRealm, RecyclerAdapterCard.CardViewHolder>(cardList, autoUpdate) {
 
     override fun getItemCount(): Int = cardList.size
 
@@ -38,6 +38,6 @@ class RealmRecyclerAdapterCard(
         var textViewOriginal: TextView = itemView.findViewById(R.id.textViewOriginal)
         var textViewTranslate: TextView = itemView.findViewById(R.id.textViewTranslate)
         var textViwExample: TextView = itemView.findViewById(R.id.textViewExample)
-        var itemContainer: ViewGroup = itemView.findViewById(R.id.itemContainer)
+        var itemContainer: ViewGroup = itemView.findViewById(R.id.itemContainerCard)
     }
 }

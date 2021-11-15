@@ -18,38 +18,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.476">
 
-        <EditText
-            android:id="@+id/editTextOriginalWord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Word"
-            android:inputType="text"
-            android:minHeight="48dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+
 
         <EditText
-            android:id="@+id/editTextTranslateWord"
+            android:id="@+id/editTextTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
-            android:hint="Translate"
-            android:inputType="text"
-            android:minHeight="48dp"
-            app:layout_constraintEnd_toEndOf="@+id/editTextOriginalWord"
-            app:layout_constraintStart_toStartOf="@+id/editTextOriginalWord"
-            app:layout_constraintTop_toBottomOf="@+id/editTextOriginalWord" />
-
-        <EditText
-            android:id="@+id/editTextExample"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:hint="Example"
+            android:hint="Title"
             android:inputType="text"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,12 +34,12 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button_create_or_update_card"
+            android:id="@+id/button_create_or_update_deck"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="Save or update word"
+            android:text="Save or update title"
             app:layout_constraintEnd_toEndOf="@+id/editTextTranslateWord"
             app:layout_constraintStart_toStartOf="@+id/editTextTranslateWord"
             app:layout_constraintTop_toBottomOf="@+id/editTextTranslateWord" />

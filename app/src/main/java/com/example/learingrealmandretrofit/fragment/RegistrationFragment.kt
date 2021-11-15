@@ -5,25 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.learingrealmandretrofit.databinding.RegistrationFragmnetBinding
+import androidx.navigation.fragment.findNavController
+import com.example.learingrealmandretrofit.databinding.RegistrationFragmentBinding
 
 class RegistrationFragment : Fragment() {
-    private lateinit var binding: RegistrationFragmnetBinding
+    private lateinit var binding: RegistrationFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = RegistrationFragmnetBinding.inflate(layoutInflater)
+        binding = RegistrationFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
-        binding.email.setOnFocusChangeListener { v, hasFocus ->
-
+        binding.buttonContinue.setOnClickListener {
+            findNavController().navigate()
         }
     }
 }

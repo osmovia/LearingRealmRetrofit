@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.example.learingrealmandretrofit.ConfigRealm
 import com.example.learingrealmandretrofit.api.BaseApi
-import com.example.learingrealmandretrofit.databinding.FragmentDeleteWordBinding
+import com.example.learingrealmandretrofit.databinding.DialogDeleteCardBinding
 import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.response.Success
 import io.realm.Realm
@@ -18,7 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class DeleteWordFragment : DialogFragment() {
+class DeleteCardFragment : DialogFragment() {
     companion object {
         const val noDeleteWordKey = "NO_DELETE_WORD_KEY"
         const val deleteWordKey = "DELETE_WORD_KEY"
@@ -26,13 +26,13 @@ class DeleteWordFragment : DialogFragment() {
     }
 
     // Bindings
-    private lateinit var binding: FragmentDeleteWordBinding
+    private lateinit var binding: DialogDeleteCardBinding
     // Lifecycle
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentDeleteWordBinding.inflate(layoutInflater)
+        binding = DialogDeleteCardBinding.inflate(layoutInflater)
         dialog?.setCanceledOnTouchOutside(false)
         return binding.root
     }

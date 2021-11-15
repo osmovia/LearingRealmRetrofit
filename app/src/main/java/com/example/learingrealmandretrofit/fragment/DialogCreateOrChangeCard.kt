@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.example.learingrealmandretrofit.ConfigRealm
 import com.example.learingrealmandretrofit.api.BaseApi
-import com.example.learingrealmandretrofit.databinding.FragmentSaveWordBinding
+import com.example.learingrealmandretrofit.databinding.DialogCreateOrChangeCardBinding
 import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.response.CardResponse
@@ -19,28 +19,28 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DialogSaveOrChangeCard : DialogFragment() {
+class DialogCreateOrChangeCard : DialogFragment() {
     companion object {
         const val cardRealmKey = "CARD_REALM_KEY"
     }
 
     private val card: CardRealm?
         get() = arguments?.getSerializable(cardRealmKey) as? CardRealm?
-    private lateinit var binding: FragmentSaveWordBinding
+    private lateinit var binding: DialogCreateOrChangeCardBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSaveWordBinding.inflate(layoutInflater)
+        binding = DialogCreateOrChangeCardBinding.inflate(layoutInflater)
         dialog?.setCanceledOnTouchOutside(false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fillFields()
-        binding.saveOrUpdateWord.setOnClickListener {
+        binding.buttonCreateOrUpdateCard.setOnClickListener {
             if (card == null) {
                 createCardRetrofit()
             } else {

@@ -8,18 +8,16 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.ConfigRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.RecyclerAdapterDeck
-import com.example.learingrealmandretrofit.SwipeToDeleteCard
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.objects.Deck
 import com.example.learingrealmandretrofit.objects.DeckRealm
 import com.example.learingrealmandretrofit.objects.response.DeckListResponse
+import com.example.learingrealmandretrofit.showErrorToast
 import io.realm.Realm
 import io.realm.RealmResults
 import retrofit2.Call
@@ -39,26 +37,15 @@ class DeckFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        deleteAllDecksRealm()
+        getAllDecksRetrofit()
 
-        binding.post.setOnClickListener {
-            getDeck()
+        binding.buttonFloatingAction.setOnClickListener {
+            findNavController().navigate(R.id.action_deckFragment_to_dialogCreateOrChangeDeck)
         }
-
-//        val item = object : SwipeToDeleteCard(requireContext()) {
-//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                currentSwipePosition = viewHolder.absoluteAdapterPosition
-//                val currentSwipeCardId = pullCardsRealm()[viewHolder.absoluteAdapterPosition]?.id
-//                findNavController().navigate(
-//                    R.id.action_recyclerCardFragment_to_deleteCardFragment,
-//                    bundleOf(DeleteCardFragment.deleteWordKey to currentSwipeCardId))
-//            }
-//        }
-//        val itemTouchHelper = ItemTouchHelper(item)
-//        itemTouchHelper.attachToRecyclerView(binding.recyclerDeck)
-
     }
 
-    fun getDeck(){
+    private fun getAllDecksRetrofit(){
         BaseApi.retrofit.getDeck().enqueue(object : Callback<DeckListResponse?> {
             override fun onResponse(
                 call: Call<DeckListResponse?>,
@@ -67,28 +54,21 @@ class DeckFragment : Fragment() {
                 Log.d("KEK", "Response : ${response.body()}")
                 if (response.isSuccessful) {
                     Log.d("KEK", "isSuccessful")
-                    val responseBody = response.body()?.decks
-                    parsingResponse(responseBody)
+                    val responseBody = response.body()?.decks!!
+                    createDecksRealm(responseBody)
                 } else {
                     Log.d("KEK","isSuccessful error")
                 }
 
             }
             override fun onFailure(call: Call<DeckListResponse?>, t: Throwable) {
-                Log.d("KEK", "onFailure ${t.message}")
+                context?.showErrorToast(R.string.error_server)
             }
         })
-
-    }
-    fun parsingResponse(responseBody: List<Deck>?) {
-        val arrayDeck = mutableListOf<Deck>()
-        responseBody?.forEach {
-            arrayDeck.add(it)
-        }
-        createDecksRealm(arrayDeck)
     }
 
-    fun createDecksRealm(arrayDeck: MutableList<Deck>) {
+
+    private fun createDecksRealm(arrayDeck: List<Deck>) {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
@@ -106,15 +86,15 @@ class DeckFragment : Fragment() {
             binding.recyclerDeck.adapter = adapter
             realm.close()
         }, {
+            Log.d("ERROR1", "${it.message}")
             realm.close()
         })
     }
 
-    fun pullDecksRealm() : RealmResults<DeckRealm> {
+    private fun pullDecksRealm() : RealmResults<DeckRealm> {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         return realm.where(DeckRealm::class.java).findAll()
-
     }
 
     fun onItemClick(deckRealm: DeckRealm) {
@@ -122,5 +102,20 @@ class DeckFragment : Fragment() {
             R.id.action_deckFragment_to_dialogCreateOrChangeDeck,
             bundleOf(DialogCreateOrChangeDeck.deckRealmKey to deckRealm)
         )
+    }
+
+    private fun deleteAllDecksRealm() {
+        val config = ConfigRealm.config
+        val realm = Realm.getInstance(config)
+        realm.executeTransactionAsync ({ realmTransaction ->
+            val result = realmTransaction
+                .where(DeckRealm::class.java)
+                .findAll()
+            result.deleteAllFromRealm()
+        }, {
+            realm.close()
+        }, {
+            realm.close()
+        })
     }
 }

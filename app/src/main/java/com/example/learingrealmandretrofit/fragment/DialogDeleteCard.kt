@@ -4,27 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.example.learingrealmandretrofit.ConfigRealm
+import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DialogDeleteCardBinding
 import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.response.Success
+import com.example.learingrealmandretrofit.showErrorToast
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class DeleteCardFragment : DialogFragment() {
+class DialogDeleteCard : DialogFragment() {
     companion object {
         const val noDeleteWordKey = "NO_DELETE_WORD_KEY"
         const val deleteWordKey = "DELETE_WORD_KEY"
 
     }
-
     // Bindings
     private lateinit var binding: DialogDeleteCardBinding
     // Lifecycle
@@ -33,7 +33,7 @@ class DeleteCardFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogDeleteCardBinding.inflate(layoutInflater)
-        dialog?.setCanceledOnTouchOutside(false)
+        dialog?.setCanceledOnTouchOutside(true)
         return binding.root
     }
 
@@ -55,17 +55,16 @@ class DeleteCardFragment : DialogFragment() {
                             removeFromRealm(it)
                         } else {
                             noDeleteCard()
-                            Toast.makeText(requireContext(), "Oops an error occurred, please try again later.", Toast.LENGTH_LONG).show()
+                            context?.showErrorToast()
                         }
                     } else {
                         noDeleteCard()
-                        Toast.makeText(requireContext(), "Oops an error occurred, please try again later.", Toast.LENGTH_LONG).show()
+                        context?.showErrorToast(R.string.error_server)
                     }
                 }
-
                 override fun onFailure(call: Call<Success?>, t: Throwable) {
                     noDeleteCard()
-                    Toast.makeText(requireContext(), "Oops an error occurred, check connect internet.", Toast.LENGTH_LONG).show()
+                    context?.showErrorToast()
                 }
             })
         }

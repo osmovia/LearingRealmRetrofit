@@ -27,7 +27,8 @@ class RecyclerAdapterDeck (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeckViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
+        val itemView = LayoutInflater
+            .from(parent.context)
             .inflate(R.layout.item_deck_recycler, parent, false)
         return DeckViewHolder(itemView)
     }

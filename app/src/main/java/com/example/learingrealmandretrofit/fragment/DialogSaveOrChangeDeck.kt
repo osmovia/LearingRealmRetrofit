@@ -5,11 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DialogCreateOrUpdateDeckBinding
 import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.Deck
 import com.example.learingrealmandretrofit.objects.DeckRealm
+import com.example.learingrealmandretrofit.objects.response.DeckResponse
+import com.example.learingrealmandretrofit.showErrorCodeToast
+import com.example.learingrealmandretrofit.showErrorToast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class DialogCreateOrChangeDeck : DialogFragment() {
 
@@ -27,7 +34,7 @@ class DialogCreateOrChangeDeck : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogCreateOrUpdateDeckBinding.inflate(layoutInflater)
-        dialog?.setCanceledOnTouchOutside(false)
+        dialog?.setCanceledOnTouchOutside(true)
         return binding.root
     }
 
@@ -44,20 +51,40 @@ class DialogCreateOrChangeDeck : DialogFragment() {
     }
 
     private fun updateDeckRetrofit() {
-        val title = binding.editTextTitle.text.toString()
-        val cardsList = mutableListOf<Card>()
-        val cards1 = Card(id = 1, word = "word1", example = "example1", translation = "translation1")
-        cardsList.add(cards1)
-        val cards2 = Card(id = 2, word = "word2", example = "example2", translation = "translation2")
-        cardsList.add(cards2)
-        val deck = Deck(
-            id = deck!!.id,
-            title = title,
-            cards = cardsList
-        )
+
     }
 
     private fun createDeckRetrofit() {
+        // Test create work new deck
+        val card = Card(1, "","","")
+        val list: List<Card> = listOf(card)
+        val deck = Deck(0,"NewDeck", list)
+        BaseApi.retrofit.createdDeck(deck).enqueue(object : Callback<DeckResponse?> {
+            override fun onResponse(call: Call<DeckResponse?>, response: Response<DeckResponse?>) {
+                TODO("Not yet implemented")
+            }
 
+            override fun onFailure(call: Call<DeckResponse?>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    private fun createDeckRealm() {
+
+    }
+
+    private fun updateDeckRealm() {
+
+    }
+
+    private fun errorServer(statusCode: Int) {
+        context?.showErrorCodeToast(statusCode)
+        findNavController().popBackStack()
+    }
+
+    private fun checkInternet() {
+        context?.showErrorToast()
+        findNavController().popBackStack()
     }
 }

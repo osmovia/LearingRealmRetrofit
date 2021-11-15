@@ -3,7 +3,7 @@ package com.example.learingrealmandretrofit
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-class SwipeToDeleteDeck : ItemTouchHelper.Callback() {
+class SwipePutCard : ItemTouchHelper.Callback() {
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder

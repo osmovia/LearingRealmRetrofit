@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.databinding.RegistrationFragmentBinding
 
 class RegistrationFragment : Fragment() {
@@ -21,10 +22,8 @@ class RegistrationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
         binding.buttonContinue.setOnClickListener {
-            findNavController().navigate()
+            findNavController().navigate(R.id.cardFragment)
         }
     }
 }

@@ -1,9 +1,7 @@
 package com.example.learingrealmandretrofit.api
 
 import com.example.learingrealmandretrofit.objects.Card
-import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.Deck
-import com.example.learingrealmandretrofit.objects.DeckRealm
 import com.example.learingrealmandretrofit.objects.response.*
 import retrofit2.Call
 import retrofit2.http.*
@@ -23,8 +21,6 @@ interface ApiInterface {
 
     @PUT("cards/{id}")
     fun updateCard(@Path("id") id : Int, @Body params : Card): Call<CardResponse>
-
-    @PUT()
 
     @DELETE("cards/{id}")
     fun deleteCard(@Path("id") id: Int): Call<Success>

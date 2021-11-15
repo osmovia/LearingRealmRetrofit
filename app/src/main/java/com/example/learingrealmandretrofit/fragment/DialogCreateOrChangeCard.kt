@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.example.learingrealmandretrofit.ConfigRealm
@@ -14,6 +13,8 @@ import com.example.learingrealmandretrofit.databinding.DialogCreateOrChangeCardB
 import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.response.CardResponse
+import com.example.learingrealmandretrofit.showErrorCodeToast
+import com.example.learingrealmandretrofit.showErrorToast
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,7 +35,7 @@ class DialogCreateOrChangeCard : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogCreateOrChangeCardBinding.inflate(layoutInflater)
-        dialog?.setCanceledOnTouchOutside(false)
+        dialog?.setCanceledOnTouchOutside(true)
         return binding.root
     }
 
@@ -149,12 +150,12 @@ class DialogCreateOrChangeCard : DialogFragment() {
     }
 
     private fun errorServer(statusCode: Int) {
-        Toast.makeText(requireContext(), "Oops an error occurred, please try again later. Error code : $statusCode", Toast.LENGTH_LONG).show()
+        context?.showErrorCodeToast(statusCode)
         findNavController().popBackStack()
     }
 
     private fun checkInternet() {
-        Toast.makeText(requireContext(), "Oops an error occurred, check connect internet.", Toast.LENGTH_LONG).show()
+        context?.showErrorToast()
         findNavController().popBackStack()
     }
 }

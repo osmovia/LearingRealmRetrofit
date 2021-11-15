@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/cardFragment">
+    app:startDestination="@id/registrationFragment">
 
     <dialog
         android:id="@+id/deleteCardFragment"
-        android:name="com.example.learingrealmandretrofit.fragment.DeleteCardFragment"
+        android:name="com.example.learingrealmandretrofit.fragment.DialogDeleteCard"
         android:label="DeleteWordFragment"
         tools:layout="@layout/dialog_delete_card">
     </dialog>
@@ -34,23 +34,20 @@
         <argument
             android:name="change"
             app:argType="string" />
-        <action
-            android:id="@+id/action_recyclerCardFragment_to_registrationFragment"
-            app:destination="@id/registrationFragment" />
-        <action
-            android:id="@+id/action_recyclerWordFragment_to_deckFragment"
-            app:destination="@id/deckFragment" />
     </fragment>
+
     <dialog
         android:id="@+id/dialogSaveOrChangeCard"
         android:name="com.example.learingrealmandretrofit.fragment.DialogCreateOrChangeCard"
         android:label="DialogSaveWord"
         tools:layout="@layout/dialog_create_or_change_card"/>
+
     <fragment
         android:id="@+id/registrationFragment"
         android:name="com.example.learingrealmandretrofit.fragment.RegistrationFragment"
         android:label="RegistrationFragment"
         tools:layout="@layout/registration_fragment"/>
+
     <fragment
         android:id="@+id/deckFragment"
         android:name="com.example.learingrealmandretrofit.fragment.DeckFragment"
@@ -63,6 +60,7 @@
             android:id="@+id/action_deckFragment_to_dialogDeleteDeck"
             app:destination="@id/dialogDeleteDeck" />
     </fragment>
+
     <dialog
         android:id="@+id/dialogCreateOrChangeDeck"
         android:name="com.example.learingrealmandretrofit.fragment.DialogCreateOrChangeDeck"

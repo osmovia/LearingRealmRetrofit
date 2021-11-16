@@ -10,4 +10,12 @@
     <color name="pure_black">#000000</color>
     <color name="dark_gray">#444444</color>
     <color name="gray_silver">#C0C0C0</color>
+    <color name="primary_color">#1A73E9</color>
+    <color name="red">#FF0000</color>
+    <color name="gray_600">#323030</color>
+    <color name="gray_400">#828282</color>
+    <color name="light_blue">#03A9F4</color>
+    <color name="red_500">#F44336</color>
+    <color name="black_opacity_85">#D9000000</color>
+
 </resources>

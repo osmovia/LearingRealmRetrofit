@@ -1,20 +1,16 @@
 package com.example.learingrealmandretrofit
 
-import android.app.Activity
 import android.content.Context
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import androidx.fragment.app.Fragment
+import android.widget.Toast
 
-fun Fragment.hideKeyboard() {
-    view?.let { activity?.hideKeyboard(it) }
-}
+fun Context.showErrorToast(text: Int = R.string.network_error_message) = Toast.makeText(
+    this,
+    getString(text),
+    Toast.LENGTH_LONG
+).show()
 
-fun Activity.hideKeyboard() {
-    hideKeyboard(currentFocus ?: View(this))
-}
-
-fun Context.hideKeyboard(view: View) {
-    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-}
+fun Context.showErrorCodeToast(code: Int) = Toast.makeText(
+    this,
+    getString(R.string.code_error_message, code),
+    Toast.LENGTH_LONG
+).show()

@@ -2,13 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/deckFragment"
+        android:id="@+id/deck_navigation"
         android:title="@string/list"
         android:icon="@drawable/ic_list"/>
 
     <item
-        android:id="@+id/cardFragment"
+        android:id="@+id/card_navigation"
         android:title="@string/card"
         android:icon="@drawable/ic_book"/>
+
+    <item
+        android:id="@+id/settings_navigation"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings"/>
 
 </menu>

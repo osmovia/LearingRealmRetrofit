@@ -11,8 +11,10 @@
     <string name="list_deletion">List deletion</string>
     <string name="delete_list">Delete list</string>
     <string name="delete_list_with_card">Delete list with card</string>
-
     <string name="network_error_message">Please check your internet connection</string>
     <string name="error_server">Oops an error occurred, please try again later.</string>
     <string name="code_error_message">Error code: %1$d</string>
+    <string name="card_deletion">Card deletion</string>
+    <string name="delete_card">Delete card</string>
+    <string name="remove_from_list">Remove from list</string>
 </resources>

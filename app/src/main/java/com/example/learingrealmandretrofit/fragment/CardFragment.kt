@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
-import com.example.learingrealmandretrofit.databinding.FragmentCardMainRecyclerBinding
+import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.response.CardListResponse
@@ -22,7 +22,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class CardFragment : Fragment() {
-    private lateinit var binding: FragmentCardMainRecyclerBinding
+    private lateinit var binding: CardFragmentRecyclerBinding
     private var currentSwipePosition = 0
 
     override fun onCreateView(
@@ -30,7 +30,7 @@ class CardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCardMainRecyclerBinding.inflate(layoutInflater)
+        binding = CardFragmentRecyclerBinding.inflate(layoutInflater)
         setHasOptionsMenu(true)
         return binding.root
     }
@@ -44,7 +44,7 @@ class CardFragment : Fragment() {
         getAllCardRetrofit()
 
         binding.buttonFloatingAction.setOnClickListener {
-            findNavController().navigate(R.id.action_recyclerCardFragment_to_dialogSaveOrChangeCard)
+            findNavController().navigate(R.id.action_cardFragment_to_dialogCreateOrChangeCard)
         }
 
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
@@ -60,7 +60,7 @@ class CardFragment : Fragment() {
                 currentSwipePosition = viewHolder.absoluteAdapterPosition
                 val currentSwipeCardId = pullCardsRealm()[viewHolder.absoluteAdapterPosition]?.id
                 findNavController().navigate(
-                    R.id.action_recyclerCardFragment_to_deleteCardFragment,
+                    R.id.action_cardFragment_to_dialogDeleteCard,
                     bundleOf(DialogDeleteCard.deleteWordKey to currentSwipeCardId))
             }
         }
@@ -73,13 +73,14 @@ class CardFragment : Fragment() {
         retrofitData.enqueue(object : Callback<CardListResponse?> {
             override fun onResponse(call: Call<CardListResponse?>, response: Response<CardListResponse?>) {
                 val statusCode = response.code()
-                val responseBody = response.body()!!.cards
-                response.isSuccessful
-                when(statusCode) {
-                    in 200..299 -> creteCardsRealm(responseBody)
-                    in 400..499 -> context?.showErrorToast()
-                    in 500..600 -> context?.showErrorToast()
-                    else -> context?.showErrorCodeToast(statusCode)
+                val responseBody = response.body()?.cards
+                if(response.isSuccessful && responseBody != null) {
+                    when (statusCode) {
+                        in 200..299 -> createCardsRealm(responseBody)
+                        in 400..499 -> context?.showErrorToast()
+                        in 500..600 -> context?.showErrorToast()
+                        else -> context?.showErrorCodeToast(statusCode)
+                    }
                 }
             }
             override fun onFailure(call: Call<CardListResponse?>, t: Throwable) {
@@ -88,7 +89,7 @@ class CardFragment : Fragment() {
         })
     }
 
-    private fun creteCardsRealm(arrayCards: List<Card>) {
+    private fun createCardsRealm(arrayCards: List<Card>) {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
@@ -123,7 +124,7 @@ class CardFragment : Fragment() {
         inflater: MenuInflater
     ) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu, menu)
+        inflater.inflate(R.menu.toolbar_logout, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -132,7 +133,7 @@ class CardFragment : Fragment() {
 
     fun onItemClick(cardRealm: CardRealm) {
         findNavController().navigate(
-            R.id.action_recyclerCardFragment_to_dialogSaveOrChangeCard,
+            R.id.action_cardFragment_to_dialogCreateOrChangeCard,
         bundleOf(DialogCreateOrChangeCard.cardRealmKey to cardRealm))
     }
 

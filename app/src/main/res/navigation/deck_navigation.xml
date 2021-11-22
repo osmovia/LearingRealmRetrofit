@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/deck"
+    android:id="@+id/deck_navigation"
     app:startDestination="@id/deckFragment">
 
     <fragment
@@ -33,7 +33,7 @@
     <fragment
         android:id="@+id/insideDeckCardFragment"
         android:name="com.example.learingrealmandretrofit.fragment.insidedeck.InsideDeckCardFragment"
-        android:label="{titleToolbar}"
+        android:label="InsideDeckCardFragment"
         tools:layout="@layout/card_fragment_recycler">
         <action
             android:id="@+id/action_insideDeckCardFragment_to_dialogCreateOrChangeDeck"
@@ -45,11 +45,12 @@
             android:id="@+id/action_insideDeckCardFragment_to_insideDeckCardDeleteDialog"
             app:destination="@id/insideDeckCardDeleteDialog" />
         <argument
-            android:name="titleToolbar"
-            app:argType="string" />
-        <argument
             android:name="deck"
-            app:argType="com.example.learingrealmandretrofit.objects.Deck" />
+            app:argType="com.example.learingrealmandretrofit.objects.Deck"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_insideDeckCardFragment_to_redScreen"
+            app:destination="@id/redScreen" />
     </fragment>
     <dialog
         android:id="@+id/insideDeckUpdateCardDialog"
@@ -61,4 +62,9 @@
         android:name="com.example.learingrealmandretrofit.fragment.DialogDeleteDeck"
         android:label="DialogDeleteDeck"
         tools:layout="@layout/dialog_delete_deck"/>
+    <fragment
+        android:id="@+id/redScreen"
+        android:name="com.example.learingrealmandretrofit.fragment.insidedeck.RedScreen"
+        android:label="RedScreen"
+        tools:layout="@layout/red_screen"/>
 </navigation>

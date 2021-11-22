@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +13,7 @@ import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.RecyclerAdapterDeck
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
+import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.Deck
 import com.example.learingrealmandretrofit.objects.DeckRealm
 import com.example.learingrealmandretrofit.objects.response.DeckListResponse
@@ -37,6 +37,8 @@ class DeckFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        Realm.init(context)
         deleteAllDecksRealm()
         getAllDecksRetrofit()
 
@@ -98,10 +100,13 @@ class DeckFragment : Fragment() {
     }
 
     fun onItemClick(deckRealm: DeckRealm) {
-        findNavController().navigate(
-            R.id.action_deckFragment_to_dialogCreateOrChangeDeck,
-            bundleOf(DialogCreateOrChangeDeck.deckRealmKey to deckRealm)
-        )
+//        val list = listOf<Card>()
+//        val deck = Deck(1,"", list)
+//        val direction = DeckFragmentDirections.actionDeckFragmentToInsideDeckCardFragment(
+//            deck = deck
+//        )
+//        findNavController().navigate(direction)
+        findNavController().navigate(R.id.action_deckFragment_to_insideDeckCardFragment)
     }
 
     private fun deleteAllDecksRealm() {

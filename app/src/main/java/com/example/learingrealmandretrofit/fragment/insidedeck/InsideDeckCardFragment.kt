@@ -11,7 +11,7 @@ import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBindi
 
 class InsideDeckCardFragment: Fragment() {
     private lateinit var binding: CardFragmentRecyclerBinding
-    private val args by navArgs<InsideDeckCardFragmentArgs>()
+//    private val args by navArgs<InsideDeckCardFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,8 +24,11 @@ class InsideDeckCardFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val currentDeck = args.deck
-        Log.d("KEK", "Deck : $currentDeck")
+//        val currentDeck = args.deck
+//        Log.d("KEK", "Deck : $currentDeck")
+        binding.buttonFloatingAction.setOnClickListener {
+            findNavController().navigate(R.id.action_insideDeckCardFragment_to_redScreen)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -41,4 +44,5 @@ class InsideDeckCardFragment: Fragment() {
             super.onOptionsItemSelected(item)
         }
     }
+
 }

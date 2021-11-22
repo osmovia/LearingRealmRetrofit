@@ -8,16 +8,18 @@
         android:id="@+id/tabsFragment"
         android:name="com.example.learingrealmandretrofit.fragment.TabsFragment"
         android:label="TabsFragment"
-        tools:layout="@layout/fragment_tabs"/>
-    <fragment
-        android:id="@+id/registrationFragment"
-        android:name="com.example.learingrealmandretrofit.fragment.RegistrationFragment"
-        android:label="RegistrationFragment"
-        tools:layout="@layout/registration_fragment">
+        tools:layout="@layout/fragment_tabs">
         <action
-            android:id="@+id/action_registrationFragment_to_tabsFragment"
-            app:destination="@id/tabsFragment"
-            app:popUpTo="@id/registrationFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_tabsFragment_to_authenticationFragment"
+            app:destination="@id/authenticationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/authenticationFragment"
+        android:name="com.example.learingrealmandretrofit.fragment.AuthenticationFragment"
+        android:label="AuthenticationFragment"
+        tools:layout="@layout/authentication_fragment">
+        <action
+            android:id="@+id/action_authenticationFragment_to_tabsFragment"
+            app:destination="@id/tabsFragment" />
     </fragment>
 </navigation>

@@ -25,46 +25,20 @@ abstract class SwipeToDeleteCard(context: Context) :
         return false
     }
 
-    override fun onChildDraw(
-        canvas: Canvas,
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        dX: Float,
-        dY: Float,
-        actionState: Int,
-        isCurrentlyActive: Boolean
-    ) {
+    override fun onChildDraw(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         val itemView = viewHolder.itemView
         val itemHeight = itemView.bottom - itemView.top
         val isCanceled = dX == 0f && !isCurrentlyActive
 
         if (isCanceled) {
-            clearCanvas(
-                canvas,
-                itemView.right + dX,
-                itemView.top.toFloat(),
-                itemView.right.toFloat(),
-                itemView.bottom.toFloat()
-            )
-            super.onChildDraw(
-                canvas, recyclerView,
-                viewHolder,
-                dX,
-                dY,
-                actionState,
-                isCurrentlyActive
-            )
+            clearCanvas(canvas, itemView.right + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
+            super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             return
         }
 
         // Draw the red delete background
         background.color = backgroundColor
-        background.setBounds(
-            itemView.right + dX.toInt(),
-            itemView.top,
-            itemView.right,
-            itemView.bottom
-        )
+        background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
         background.draw(canvas)
 
         // Calculate position of delete icon
@@ -75,23 +49,10 @@ abstract class SwipeToDeleteCard(context: Context) :
         val deleteIconBottom = deleteIconTop + intrinsicHeight
 
         // Draw the delete icon
-        deleteIcon!!.setBounds(
-            deleteIconLeft,
-            deleteIconTop,
-            deleteIconRight,
-            deleteIconBottom
-        )
+        deleteIcon!!.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
         deleteIcon.draw(canvas)
 
-        super.onChildDraw(
-            canvas,
-            recyclerView,
-            viewHolder,
-            dX,
-            dY,
-            actionState,
-            isCurrentlyActive
-        )
+        super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 
     override fun onSwiped(
@@ -100,19 +61,7 @@ abstract class SwipeToDeleteCard(context: Context) :
     ) {
     }
 
-    private fun clearCanvas(
-        c: Canvas?,
-        left: Float,
-        top: Float,
-        right: Float,
-        bottom: Float
-    ) {
-        c?.drawRect(
-            left,
-            top,
-            right,
-            bottom,
-            clearPaint
-        )
+    private fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
+        c?.drawRect(left, top, right, bottom, clearPaint)
     }
 }

@@ -10,7 +10,6 @@ import com.example.learingrealmandretrofit.databinding.DialogDeleteDeckBinding
 class DialogDeleteDeck : DialogFragment() {
     private lateinit var binding: DialogDeleteDeckBinding
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -20,9 +19,4 @@ class DialogDeleteDeck : DialogFragment() {
         dialog?.setCanceledOnTouchOutside(true)
         return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-    }
-
 }

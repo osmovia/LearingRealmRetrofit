@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/deckFragment"
         android:name="com.example.learingrealmandretrofit.fragment.DeckFragment"
-        android:label="DeckFragment"
+        android:label="List"
         tools:layout="@layout/deck_fragment_recycler">
         <action
             android:id="@+id/action_deckFragment_to_insideDeckCardFragment"
@@ -33,7 +33,6 @@
     <fragment
         android:id="@+id/insideDeckCardFragment"
         android:name="com.example.learingrealmandretrofit.fragment.insidedeck.InsideDeckCardFragment"
-        android:label="InsideDeckCardFragment"
         tools:layout="@layout/card_fragment_recycler">
         <action
             android:id="@+id/action_insideDeckCardFragment_to_dialogCreateOrChangeDeck"
@@ -48,9 +47,6 @@
             android:name="deck"
             app:argType="com.example.learingrealmandretrofit.objects.Deck"
             app:nullable="true" />
-        <action
-            android:id="@+id/action_insideDeckCardFragment_to_redScreen"
-            app:destination="@id/redScreen" />
     </fragment>
     <dialog
         android:id="@+id/insideDeckUpdateCardDialog"
@@ -62,9 +58,4 @@
         android:name="com.example.learingrealmandretrofit.fragment.DialogDeleteDeck"
         android:label="DialogDeleteDeck"
         tools:layout="@layout/dialog_delete_deck"/>
-    <fragment
-        android:id="@+id/redScreen"
-        android:name="com.example.learingrealmandretrofit.fragment.insidedeck.RedScreen"
-        android:label="RedScreen"
-        tools:layout="@layout/red_screen"/>
 </navigation>

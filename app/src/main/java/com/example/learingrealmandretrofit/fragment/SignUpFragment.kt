@@ -22,7 +22,7 @@ class SignUpFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.buttonContinue.setOnClickListener {
+        binding.textViewSignIn.setOnClickListener {
             findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
         }
     }

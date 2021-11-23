@@ -25,7 +25,7 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val mainNavController: NavController?  = activity?.findNavController(R.id.containerView)
-        binding.textViewSetting.setOnClickListener {
+        binding.buttonSignOut.setOnClickListener {
             mainNavController?.navigate(R.id.action_tabsFragment_to_authenticationFragment)
         }
     }

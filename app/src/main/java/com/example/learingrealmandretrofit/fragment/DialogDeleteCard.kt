@@ -59,7 +59,7 @@ class DialogDeleteCard : DialogFragment() {
                         }
                     } else {
                         noDeleteCard()
-                        context?.showErrorToast(R.string.error_server)
+                        context?.showErrorToast(R.string.connection_issues)
                     }
                 }
                 override fun onFailure(call: Call<Success?>, t: Throwable) {

@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.learingrealmandretrofit.fragment.SettingFragment"
-        android:label="SettingFragment"
+        android:label="Settings"
         tools:layout="@layout/settings_fragment"/>
 </navigation>

@@ -23,7 +23,6 @@ import retrofit2.Response
 
 class CardFragment : Fragment() {
     private lateinit var binding: CardFragmentRecyclerBinding
-    private var currentSwipePosition = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,21 +46,14 @@ class CardFragment : Fragment() {
             findNavController().navigate(R.id.action_cardFragment_to_dialogCreateOrChangeCard)
         }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
-            DialogDeleteCard.noDeleteWordKey
-        )?.observe(
-            viewLifecycleOwner
-        ) {
-            binding.recyclerCard.adapter?.notifyItemChanged(currentSwipePosition)
-        }
-
         val item = object : SwipeToDeleteCard(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                currentSwipePosition = viewHolder.absoluteAdapterPosition
                 val currentSwipeCardId = pullCardsRealm()[viewHolder.absoluteAdapterPosition]?.id
-                findNavController().navigate(
-                    R.id.action_cardFragment_to_dialogDeleteCard,
-                    bundleOf(DialogDeleteCard.deleteWordKey to currentSwipeCardId))
+                if (currentSwipeCardId != null) {
+                    val arrow = CardFragmentDirections.actionCardFragmentToDialogDeleteCard(currentSwipeCardId)
+                    findNavController().navigate(arrow)
+                    binding.recyclerCard.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
+                }
             }
         }
         val itemTouchHelper = ItemTouchHelper(item)

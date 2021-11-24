@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.learingrealmandretrofit.ConfigRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
@@ -20,11 +21,8 @@ import retrofit2.Response
 
 
 class DialogDeleteCard : DialogFragment() {
-    companion object {
-        const val noDeleteWordKey = "NO_DELETE_WORD_KEY"
-        const val deleteWordKey = "DELETE_WORD_KEY"
-
-    }
+    //Arguments
+    private val args: DialogDeleteCardArgs by navArgs()
     // Bindings
     private lateinit var binding: DialogDeleteCardBinding
     // Lifecycle
@@ -42,32 +40,30 @@ class DialogDeleteCard : DialogFragment() {
             removeCard()
         }
         binding.buttonNo.setOnClickListener{
-            noDeleteCard()
+            findNavController().popBackStack()
         }
     }
     // Functions
     private fun removeCard() {
-        arguments?.getInt(deleteWordKey)?.let {
-            BaseApi.retrofit.deleteCard(it).enqueue(object : Callback<Success?> {
+            BaseApi.retrofit.deleteCard(args.idCard).enqueue(object : Callback<Success?> {
                 override fun onResponse(call: Call<Success?>, response: Response<Success?>) {
                     if (response.isSuccessful && response.body() != null) {
                         if(response.body()?.success == true) {
-                            removeFromRealm(it)
+                            removeFromRealm(args.idCard)
                         } else {
-                            noDeleteCard()
+                            findNavController().popBackStack()
                             context?.showErrorToast()
                         }
                     } else {
-                        noDeleteCard()
+                        findNavController().popBackStack()
                         context?.showErrorToast(R.string.connection_issues)
                     }
                 }
                 override fun onFailure(call: Call<Success?>, t: Throwable) {
-                    noDeleteCard()
+                    findNavController().popBackStack()
                     context?.showErrorToast()
                 }
             })
-        }
     }
 
     private fun removeFromRealm(id: Int) {
@@ -85,10 +81,5 @@ class DialogDeleteCard : DialogFragment() {
         },{
             realm.close()
         })
-    }
-
-    private fun noDeleteCard() {
-        findNavController().previousBackStackEntry?.savedStateHandle?.set(noDeleteWordKey, "")
-        findNavController().popBackStack()
     }
 }

@@ -26,5 +26,9 @@
         android:id="@+id/dialogDeleteCard"
         android:name="com.example.learingrealmandretrofit.fragment.DialogDeleteCard"
         android:label="dialog_delete_card"
-        tools:layout="@layout/dialog_delete_card" />
+        tools:layout="@layout/dialog_delete_card" >
+        <argument
+            android:name="idCard"
+            app:argType="integer" />
+    </dialog>
 </navigation>

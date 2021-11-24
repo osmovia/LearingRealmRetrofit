@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
@@ -42,7 +44,17 @@ class DeckFragment : Fragment() {
         binding.floatingActionButtonDeck.setOnClickListener {
             findNavController().navigate(R.id.action_deckFragment_to_dialogCreateOrChangeDeck)
         }
+        val item = object : SwipeToDeleteCard(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                findNavController().navigate(DeckFragmentDirections.actionDeckFragmentToDialogDeleteDeck())
+                binding.recyclerDeck.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(item)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerDeck)
     }
+
+
 
     private fun getAllDecksRetrofit(){
         BaseApi.retrofit.getDeck().enqueue(object : Callback<DeckListResponse?> {

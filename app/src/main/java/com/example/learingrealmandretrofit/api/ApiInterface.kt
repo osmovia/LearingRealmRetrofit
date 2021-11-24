@@ -19,6 +19,9 @@ interface ApiInterface {
     @POST("decks")
     fun createdDeck(@Body params: Deck): Call<DeckResponse>
 
+    @POST("users")
+    fun createUser(@Body params: UserResponse): Call<Success>
+
     @PUT("cards/{id}")
     fun updateCard(@Path("id") id : Int, @Body params : Card): Call<CardResponse>
 

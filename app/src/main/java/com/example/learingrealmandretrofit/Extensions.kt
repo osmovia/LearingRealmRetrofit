@@ -1,7 +1,10 @@
 package com.example.learingrealmandretrofit
 
+import android.app.Activity
 import android.content.Context
+import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.core.view.isVisible
 
 fun Context.showErrorToast(text: Int = R.string.network_error_message) = Toast.makeText(
     this,
@@ -14,3 +17,11 @@ fun Context.showErrorCodeToast(code: Int) = Toast.makeText(
     getString(R.string.code_error_message, code),
     Toast.LENGTH_LONG
 ).show()
+
+fun Activity.showProgress() {
+    this.findViewById<FrameLayout>(R.id.mainProgressBarHolder).isVisible = true
+}
+
+fun Activity.hideProgress() {
+    this.findViewById<FrameLayout>(R.id.mainProgressBarHolder).isVisible = false
+}

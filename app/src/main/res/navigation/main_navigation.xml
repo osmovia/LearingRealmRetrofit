@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/tabsFragment">
+    app:startDestination="@id/authenticationFragment">
     <fragment
         android:id="@+id/tabsFragment"
         android:name="com.example.learingrealmandretrofit.fragment.TabsFragment"

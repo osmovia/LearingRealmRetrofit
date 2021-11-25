@@ -18,6 +18,7 @@ import com.example.learingrealmandretrofit.objects.Deck
 import com.example.learingrealmandretrofit.objects.DeckRealm
 import com.example.learingrealmandretrofit.objects.response.DeckListResponse
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import retrofit2.Call
 import retrofit2.Callback
@@ -53,8 +54,6 @@ class DeckFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(item)
         itemTouchHelper.attachToRecyclerView(binding.recyclerDeck)
     }
-
-
 
     private fun getAllDecksRetrofit(){
         BaseApi.retrofit.getDeck().enqueue(object : Callback<DeckListResponse?> {

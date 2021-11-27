@@ -8,16 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.learingrealmandretrofit.ConfigRealm
-import com.example.learingrealmandretrofit.R
-import com.example.learingrealmandretrofit.RecyclerAdapterDeck
+import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.Deck
 import com.example.learingrealmandretrofit.objects.DeckRealm
 import com.example.learingrealmandretrofit.objects.response.DeckListResponse
-import com.example.learingrealmandretrofit.showErrorToast
 import io.realm.Realm
 import io.realm.RealmResults
 import retrofit2.Call
@@ -42,7 +39,7 @@ class DeckFragment : Fragment() {
         deleteAllDecksRealm()
         getAllDecksRetrofit()
 
-        binding.buttonFloatingAction.setOnClickListener {
+        binding.floatingActionButtonDeck.setOnClickListener {
             findNavController().navigate(R.id.action_deckFragment_to_dialogCreateOrChangeDeck)
         }
     }
@@ -53,22 +50,19 @@ class DeckFragment : Fragment() {
                 call: Call<DeckListResponse?>,
                 response: Response<DeckListResponse?>
             ) {
-                Log.d("KEK", "Response : ${response.body()}")
-                if (response.isSuccessful) {
-                    Log.d("KEK", "isSuccessful")
-                    val responseBody = response.body()?.decks!!
+                val responseBody = response.body()?.decks
+                val statusCode = response.code()
+                if (response.isSuccessful && responseBody != null) {
                     createDecksRealm(responseBody)
                 } else {
-                    Log.d("KEK","isSuccessful error")
+                    context?.showErrorCodeToast(statusCode)
                 }
-
             }
             override fun onFailure(call: Call<DeckListResponse?>, t: Throwable) {
-                context?.showErrorToast(R.string.error_server)
+                context?.showErrorToast(R.string.connection_issues)
             }
         })
     }
-
 
     private fun createDecksRealm(arrayDeck: List<Deck>) {
         val config = ConfigRealm.config
@@ -100,13 +94,12 @@ class DeckFragment : Fragment() {
     }
 
     fun onItemClick(deckRealm: DeckRealm) {
-//        val list = listOf<Card>()
-//        val deck = Deck(1,"", list)
-//        val direction = DeckFragmentDirections.actionDeckFragmentToInsideDeckCardFragment(
-//            deck = deck
-//        )
-//        findNavController().navigate(direction)
-        findNavController().navigate(R.id.action_deckFragment_to_insideDeckCardFragment)
+        val list = listOf<Card>()
+        val deck = Deck(deckRealm.id,deckRealm.title, list)
+        val direction = DeckFragmentDirections.actionDeckFragmentToInsideDeckCardFragment(
+            deck = deck
+        )
+        findNavController().navigate(direction)
     }
 
     private fun deleteAllDecksRealm() {

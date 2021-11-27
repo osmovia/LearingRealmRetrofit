@@ -29,7 +29,7 @@ class SignInFragment : Fragment() {
         binding.buttonEntry.setOnClickListener {
             mainNavController?.navigate(R.id.action_authenticationFragment_to_tabsFragment)
         }
-        binding.buttonSignIn.setOnClickListener {
+        binding.textViewSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
         }
     }

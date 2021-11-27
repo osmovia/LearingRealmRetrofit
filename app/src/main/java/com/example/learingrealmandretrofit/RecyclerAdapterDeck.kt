@@ -10,7 +10,7 @@ import com.example.learingrealmandretrofit.objects.DeckRealm
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
-class RecyclerAdapterDeck (
+class RecyclerAdapterDeck(
     private val owner: DeckFragment?,
     private val deckList: OrderedRealmCollection<DeckRealm>,
     autoUpdate: Boolean
@@ -27,12 +27,9 @@ class RecyclerAdapterDeck (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeckViewHolder {
-        val itemView = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_deck_recycler, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_deck_recycler, parent, false)
         return DeckViewHolder(itemView)
     }
-
 
     class DeckViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textViewDeckName: TextView = itemView.findViewById(R.id.deck_name)

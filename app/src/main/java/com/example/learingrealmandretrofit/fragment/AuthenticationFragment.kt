@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavHost
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import com.example.learingrealmandretrofit.MainActivity
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.databinding.AuthenticationFragmentBinding
 
@@ -23,5 +26,13 @@ class AuthenticationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val navHost = childFragmentManager.findFragmentById(R.id.containerViewAuthentication) as NavHostFragment
+        val navController = navHost.navController
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.signUpFragment, R.id.signInFragment)
+        )
+        NavigationUI.setupActionBarWithNavController(
+            (requireActivity() as MainActivity), navController, appBarConfiguration
+        )
     }
 }

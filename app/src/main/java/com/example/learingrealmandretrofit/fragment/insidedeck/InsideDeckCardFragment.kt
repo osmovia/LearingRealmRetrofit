@@ -1,17 +1,18 @@
 package com.example.learingrealmandretrofit.fragment.insidedeck
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.learingrealmandretrofit.MainActivity
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
 
-class InsideDeckCardFragment: Fragment() {
+class InsideDeckCardFragment : Fragment() {
     private lateinit var binding: CardFragmentRecyclerBinding
-//    private val args by navArgs<InsideDeckCardFragmentArgs>()
+    private val args: InsideDeckCardFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,10 +25,9 @@ class InsideDeckCardFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        val currentDeck = args.deck
-//        Log.d("KEK", "Deck : $currentDeck")
-        binding.buttonFloatingAction.setOnClickListener {
-            findNavController().navigate(R.id.action_insideDeckCardFragment_to_redScreen)
+        val title = args.deck?.title
+        (requireActivity() as MainActivity).supportActionBar?.title = title
+        binding.floatingActionButtonCard.setOnClickListener {
         }
     }
 
@@ -36,7 +36,7 @@ class InsideDeckCardFragment: Fragment() {
         inflater.inflate(R.menu.toolbar_rename, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.renameItem) {
             findNavController().navigate(R.id.action_insideDeckCardFragment_to_dialogCreateOrChangeDeck)
             true
@@ -44,5 +44,4 @@ class InsideDeckCardFragment: Fragment() {
             super.onOptionsItemSelected(item)
         }
     }
-
 }

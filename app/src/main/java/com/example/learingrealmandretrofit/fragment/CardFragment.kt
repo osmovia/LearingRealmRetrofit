@@ -43,7 +43,7 @@ class CardFragment : Fragment() {
         deleteAllCardsRealm()
         getAllCardRetrofit()
 
-        binding.buttonFloatingAction.setOnClickListener {
+        binding.floatingActionButtonCard.setOnClickListener {
             findNavController().navigate(R.id.action_cardFragment_to_dialogCreateOrChangeCard)
         }
 
@@ -84,7 +84,7 @@ class CardFragment : Fragment() {
                 }
             }
             override fun onFailure(call: Call<CardListResponse?>, t: Throwable) {
-                context?.showErrorToast(R.string.error_server)
+                context?.showErrorToast(R.string.connection_issues)
             }
         })
     }
@@ -117,14 +117,6 @@ class CardFragment : Fragment() {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         return  realm.where(CardRealm::class.java).findAll().sort("word", Sort.ASCENDING)
-    }
-
-    override fun onCreateOptionsMenu(
-        menu: Menu,
-        inflater: MenuInflater
-    ) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.toolbar_logout, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

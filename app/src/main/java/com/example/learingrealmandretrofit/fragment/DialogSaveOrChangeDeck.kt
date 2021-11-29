@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.learingrealmandretrofit.databinding.DialogCreateOrUpdateDeckBinding
-import com.example.learingrealmandretrofit.objects.DeckRealm
+import com.example.learingrealmandretrofit.objects.Deck
 
 class DialogCreateOrChangeDeck : DialogFragment() {
 
@@ -14,8 +14,8 @@ class DialogCreateOrChangeDeck : DialogFragment() {
         const val deckRealmKey = "DECK_KEY"
     }
 
-    private val deck: DeckRealm?
-        get() = arguments?.getSerializable(deckRealmKey) as? DeckRealm?
+    private val deck: Deck?
+        get() = arguments?.getSerializable(deckRealmKey) as? Deck?
     private lateinit var binding : DialogCreateOrUpdateDeckBinding
 
     override fun onCreateView(

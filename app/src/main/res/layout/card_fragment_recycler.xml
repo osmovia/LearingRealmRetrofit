@@ -31,7 +31,7 @@
             tools:listitem="@layout/item_card_recycler" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButtonCard"
+            android:id="@+id/buttonCreateCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="24dp"

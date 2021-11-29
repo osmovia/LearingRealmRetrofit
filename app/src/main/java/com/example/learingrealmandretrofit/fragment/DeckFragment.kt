@@ -13,12 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
-import com.example.learingrealmandretrofit.objects.Card
+import com.example.learingrealmandretrofit.objects.CardParameters
+import com.example.learingrealmandretrofit.objects.DeckParameters
 import com.example.learingrealmandretrofit.objects.Deck
-import com.example.learingrealmandretrofit.objects.DeckRealm
 import com.example.learingrealmandretrofit.objects.response.DeckListResponse
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import retrofit2.Call
 import retrofit2.Callback
@@ -74,12 +73,12 @@ class DeckFragment : Fragment() {
         })
     }
 
-    private fun createDecksRealm(arrayDeck: List<Deck>) {
+    private fun createDecksRealm(arrayDeck: List<DeckParameters>) {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
             for (item in arrayDeck) {
-                val deckRealm = DeckRealm(
+                val deckRealm = Deck(
                     id = item.id,
                     title = item.title
                 )
@@ -97,15 +96,15 @@ class DeckFragment : Fragment() {
         })
     }
 
-    private fun pullDecksRealm() : RealmResults<DeckRealm> {
+    private fun pullDecksRealm() : RealmResults<Deck> {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
-        return realm.where(DeckRealm::class.java).findAll()
+        return realm.where(Deck::class.java).findAll()
     }
 
-    fun onItemClick(deckRealm: DeckRealm) {
-        val list = listOf<Card>()
-        val deck = Deck(deckRealm.id,deckRealm.title, list)
+    fun onItemClick(deck: Deck) {
+        val list = listOf<CardParameters>()
+        val deck = DeckParameters(deck.id,deck.title, list)
         val direction = DeckFragmentDirections.actionDeckFragmentToInsideDeckCardFragment(
             deck = deck
         )
@@ -117,7 +116,7 @@ class DeckFragment : Fragment() {
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
             val result = realmTransaction
-                .where(DeckRealm::class.java)
+                .where(Deck::class.java)
                 .findAll()
             result.deleteAllFromRealm()
         }, {

@@ -1,5 +1,5 @@
 package com.example.learingrealmandretrofit.objects.response
 
-import com.example.learingrealmandretrofit.objects.Deck
+import com.example.learingrealmandretrofit.objects.DeckParameters
 
-data class DeckListResponse(val decks: List<Deck>)
+data class DeckListResponse(val decks: List<DeckParameters>)

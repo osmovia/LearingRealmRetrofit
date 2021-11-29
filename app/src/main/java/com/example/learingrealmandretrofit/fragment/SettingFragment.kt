@@ -13,6 +13,7 @@ import com.example.learingrealmandretrofit.SessionManager
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.SettingsFragmentBinding
 import com.example.learingrealmandretrofit.objects.response.Success
+import com.example.learingrealmandretrofit.showErrorToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,7 +46,7 @@ class SettingFragment : Fragment() {
                     }
                 }
                 override fun onFailure(call: Call<Success?>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    context?.showErrorToast(R.string.connection_issues)
                 }
             })
         }

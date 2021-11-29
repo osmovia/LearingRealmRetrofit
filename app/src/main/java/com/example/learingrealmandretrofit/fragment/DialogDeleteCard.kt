@@ -11,7 +11,7 @@ import com.example.learingrealmandretrofit.ConfigRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DialogDeleteCardBinding
-import com.example.learingrealmandretrofit.objects.CardRealm
+import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.response.Success
 import com.example.learingrealmandretrofit.showErrorToast
 import io.realm.Realm
@@ -71,7 +71,7 @@ class DialogDeleteCard : DialogFragment() {
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
             val result = realmTransaction
-                .where(CardRealm::class.java)
+                .where(Card::class.java)
                 .equalTo("id", id)
                 .findFirst()
             result?.deleteFromRealm()

@@ -7,17 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.example.learingrealmandretrofit.R
-import com.example.learingrealmandretrofit.SessionManager
+import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.SignUpFragmentBinding
-import com.example.learingrealmandretrofit.hideProgress
 import com.example.learingrealmandretrofit.objects.request.SessionRequest
 import com.example.learingrealmandretrofit.objects.request.UserSignUpRequest
 import com.example.learingrealmandretrofit.objects.request.SignInUpRequest
 import com.example.learingrealmandretrofit.objects.response.SignUpResponse
-import com.example.learingrealmandretrofit.showProgress
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,6 +34,7 @@ class SignUpFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val mainNavController: NavController?  = activity?.findNavController(R.id.containerView)
 
         binding.textViewSignIn.setOnClickListener {
             findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
@@ -86,9 +86,9 @@ class SignUpFragment : Fragment() {
             }
 
             val user = UserSignUpRequest(email = email, password = password, passwordConfirm = passwordConfirm)
-            val userJson = SignInUpRequest(session = SessionRequest(), user = user)
+            val request = SignInUpRequest(session = SessionRequest(), user = user)
             activity?.showProgress()
-            BaseApi.retrofit.createUser(userJson).enqueue(object : Callback<SignUpResponse?> {
+            BaseApi.retrofit.createUser(request).enqueue(object : Callback<SignUpResponse?> {
                 override fun onResponse(call: Call<SignUpResponse?>, response: Response<SignUpResponse?>) {
                     activity?.hideProgress()
                     val body = response.body()
@@ -99,14 +99,14 @@ class SignUpFragment : Fragment() {
                             email = body.user.email,
                             idUser = body.session.userId
                             )
-                        Log.d("KEK", "Session : ${body.session}")
-                        Log.d("KEK", "User : ${body.user}")
-                        Log.d("KIK", "Status code : $statusCode")
+                        mainNavController?.navigate(R.id.action_authenticationFragment_to_tabsFragment)
+                    } else {
+                        context?.showErrorCodeToast(statusCode)
                     }
                 }
                 override fun onFailure(call: Call<SignUpResponse?>, t: Throwable) {
                     activity?.hideProgress()
-                    Log.d("KEK", "Error $t")
+                    context?.showErrorToast(R.string.connection_issues)
                 }
             })
         }

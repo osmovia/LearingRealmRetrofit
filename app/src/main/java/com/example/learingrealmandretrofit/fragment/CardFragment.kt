@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
+import com.example.learingrealmandretrofit.objects.CardParameters
 import com.example.learingrealmandretrofit.objects.Card
-import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.response.CardListResponse
 import io.realm.Realm
 import io.realm.RealmResults
@@ -79,12 +79,12 @@ class CardFragment : Fragment() {
         })
     }
 
-    private fun createCardsRealm(arrayCards: List<Card>) {
+    private fun createCardsRealm(arrayCards: List<CardParameters>) {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
             for (item in arrayCards) {
-                val cardRealm = CardRealm(
+                val cardRealm = Card(
                     id = item.id,
                     word = item.word,
                     translation = item.translation,
@@ -103,20 +103,20 @@ class CardFragment : Fragment() {
         })
     }
 
-    private fun pullCardsRealm() : RealmResults<CardRealm> {
+    private fun pullCardsRealm() : RealmResults<Card> {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
-        return  realm.where(CardRealm::class.java).findAll().sort("word", Sort.ASCENDING)
+        return  realm.where(Card::class.java).findAll().sort("word", Sort.ASCENDING)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return true
     }
 
-    fun onItemClick(cardRealm: CardRealm) {
+    fun onItemClick(card: Card) {
         findNavController().navigate(
             R.id.action_cardFragment_to_dialogCreateOrChangeCard,
-        bundleOf(DialogCreateOrChangeCard.cardRealmKey to cardRealm))
+        bundleOf(DialogCreateOrChangeCard.cardRealmKey to card))
     }
 
     private fun deleteAllCardsRealm() {
@@ -124,7 +124,7 @@ class CardFragment : Fragment() {
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
             val result = realmTransaction
-                .where(CardRealm::class.java)
+                .where(Card::class.java)
                 .findAll()
             result.deleteAllFromRealm()
         }, {

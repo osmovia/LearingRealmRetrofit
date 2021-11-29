@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.fragment.DeckFragment
-import com.example.learingrealmandretrofit.objects.DeckRealm
+import com.example.learingrealmandretrofit.objects.Deck
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
 class RecyclerAdapterDeck(
     private val owner: DeckFragment?,
-    private val deckList: OrderedRealmCollection<DeckRealm>,
+    private val deckList: OrderedRealmCollection<Deck>,
     autoUpdate: Boolean
-) : RealmRecyclerViewAdapter<DeckRealm, RecyclerAdapterDeck.DeckViewHolder>(deckList, autoUpdate) {
+) : RealmRecyclerViewAdapter<Deck, RecyclerAdapterDeck.DeckViewHolder>(deckList, autoUpdate) {
 
     override fun getItemCount(): Int = deckList.size
 

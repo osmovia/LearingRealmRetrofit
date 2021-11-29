@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class SwipeToDeleteCard(context: Context) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_delete_24)
-    private val intrinsicWidth = deleteIcon!!.intrinsicWidth
-    private val intrinsicHeight = deleteIcon!!.intrinsicHeight
+    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete) ?: context.resources.getDrawable(R.drawable.ic_delete, null)
+    private val intrinsicWidth = deleteIcon.intrinsicWidth
+    private val intrinsicHeight = deleteIcon.intrinsicHeight
     private val background = ColorDrawable()
     private val backgroundColor = Color.YELLOW
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
@@ -49,7 +49,7 @@ abstract class SwipeToDeleteCard(context: Context) :
         val deleteIconBottom = deleteIconTop + intrinsicHeight
 
         // Draw the delete icon
-        deleteIcon!!.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+        deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
         deleteIcon.draw(canvas)
 
         super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)

@@ -2,6 +2,8 @@ package com.example.learingrealmandretrofit.api
 
 import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.Deck
+import com.example.learingrealmandretrofit.objects.request.SignInRequest
+import com.example.learingrealmandretrofit.objects.request.SignInUpRequest
 import com.example.learingrealmandretrofit.objects.response.*
 import retrofit2.Call
 import retrofit2.http.*
@@ -20,7 +22,10 @@ interface ApiInterface {
     fun createdDeck(@Body params: Deck): Call<DeckResponse>
 
     @POST("users")
-    fun createUser(@Body params: UserResponse): Call<Success>
+    fun createUser(@Body params: SignInUpRequest): Call<SignUpResponse>
+
+    @POST("sessions")
+    fun signIn(@Body params: SignInRequest):  Call<SignUpResponse>
 
     @PUT("cards/{id}")
     fun updateCard(@Path("id") id : Int, @Body params : Card): Call<CardResponse>
@@ -29,6 +34,9 @@ interface ApiInterface {
     fun deleteCard(@Path("id") id: Int): Call<Success>
 
     @DELETE("decks/{id}")
-    fun deleteDeck(@Path("id")id : Int): Call<Success>
+    fun deleteDeck(@Path("id") id : Int): Call<Success>
+
+    @DELETE("sessions/{token}")
+    fun logOut(@Header("X-Session-Token") tokenSession: String, @Path("token") token: String): Call<Success>
 
 }

@@ -37,8 +37,6 @@ class CardFragment : Fragment() {
         view: View,
         savedInstanceState: Bundle?
     ) {
-        Realm.init(context)
-
         deleteAllCardsRealm()
         getAllCardRetrofit()
 

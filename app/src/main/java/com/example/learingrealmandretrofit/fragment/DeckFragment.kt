@@ -38,7 +38,6 @@ class DeckFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        Realm.init(context)
         deleteAllDecksRealm()
         getAllDecksRetrofit()
 

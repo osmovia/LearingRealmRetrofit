@@ -7,17 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.learingrealmandretrofit.R
+import com.example.learingrealmandretrofit.SessionManager
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.SignUpFragmentBinding
 import com.example.learingrealmandretrofit.hideProgress
-import com.example.learingrealmandretrofit.objects.response.Session
-import com.example.learingrealmandretrofit.objects.response.Success
-import com.example.learingrealmandretrofit.objects.response.User
-import com.example.learingrealmandretrofit.objects.response.UserResponse
+import com.example.learingrealmandretrofit.objects.request.SessionRequest
+import com.example.learingrealmandretrofit.objects.request.UserSignUpRequest
+import com.example.learingrealmandretrofit.objects.request.SignInUpRequest
+import com.example.learingrealmandretrofit.objects.response.SignUpResponse
 import com.example.learingrealmandretrofit.showProgress
 import retrofit2.Call
 import retrofit2.Callback
@@ -86,18 +85,28 @@ class SignUpFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val user = User(email = email, password = password, password_confirmation = passwordConfirm)
-            val session = Session("Android")
-            val userJson = UserResponse(session = session, user = user)
+            val user = UserSignUpRequest(email = email, password = password, passwordConfirm = passwordConfirm)
+            val userJson = SignInUpRequest(session = SessionRequest(), user = user)
             activity?.showProgress()
-            BaseApi.retrofit.createUser(userJson).enqueue(object : Callback<Success?> {
-                override fun onResponse(call: Call<Success?>, response: Response<Success?>) {
+            BaseApi.retrofit.createUser(userJson).enqueue(object : Callback<SignUpResponse?> {
+                override fun onResponse(call: Call<SignUpResponse?>, response: Response<SignUpResponse?>) {
                     activity?.hideProgress()
-                    val mainNavController: NavController?  = activity?.findNavController(R.id.containerView)
-                    mainNavController?.navigate(R.id.action_authenticationFragment_to_tabsFragment)
+                    val body = response.body()
+                    val statusCode = response.code()
+                    if (response.isSuccessful && body != null) {
+                        SessionManager(requireContext()).saveAuth(
+                            token = body.session.token,
+                            email = body.user.email,
+                            idUser = body.session.userId
+                            )
+                        Log.d("KEK", "Session : ${body.session}")
+                        Log.d("KEK", "User : ${body.user}")
+                        Log.d("KIK", "Status code : $statusCode")
+                    }
                 }
-                override fun onFailure(call: Call<Success?>, t: Throwable) {
+                override fun onFailure(call: Call<SignUpResponse?>, t: Throwable) {
                     activity?.hideProgress()
+                    Log.d("KEK", "Error $t")
                 }
             })
         }

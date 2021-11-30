@@ -5,12 +5,16 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import io.realm.Realm
+import io.realm.RealmConfiguration
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Realm.init(this)
+        val config: RealmConfiguration = RealmConfiguration.Builder().build()
+        Realm.deleteRealm(config)
         Realm.init(this)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.containerView) as NavHostFragment

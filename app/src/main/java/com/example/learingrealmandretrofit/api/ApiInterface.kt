@@ -2,6 +2,7 @@ package com.example.learingrealmandretrofit.api
 
 import com.example.learingrealmandretrofit.objects.CardParameters
 import com.example.learingrealmandretrofit.objects.DeckParameters
+import com.example.learingrealmandretrofit.objects.request.DeckCreateRequest
 import com.example.learingrealmandretrofit.objects.request.SignInRequest
 import com.example.learingrealmandretrofit.objects.request.SignInUpRequest
 import com.example.learingrealmandretrofit.objects.response.*
@@ -17,13 +18,13 @@ interface ApiInterface {
     fun getCards(@Header(tokenKey) token: String): Call<CardListResponse>
 
     @GET("decks")
-    fun getDeck(): Call<DeckListResponse>
+    fun getDeck(@Header(tokenKey) token: String): Call<DeckListResponse>
 
     @POST("cards")
     fun createCard(@Header(tokenKey) token: String, @Body params: CardParameters): Call<CardResponse>
 
     @POST("decks")
-    fun createdDeck(@Body params: DeckParameters): Call<DeckResponse>
+    fun createdDeck(@Header(tokenKey) token: String, @Body params: DeckCreateRequest): Call<DeckResponse>
 
     @POST("users")
     fun createUser(@Body params: SignInUpRequest): Call<SignUpResponse>

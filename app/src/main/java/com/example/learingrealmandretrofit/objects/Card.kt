@@ -5,6 +5,8 @@ import io.realm.RealmObject
 import io.realm.annotations.Required
 import java.io.Serializable
 import com.google.gson.Gson
+import io.realm.RealmResults
+import io.realm.annotations.LinkingObjects
 import io.realm.annotations.PrimaryKey
 
 open class Card(
@@ -15,7 +17,9 @@ open class Card(
     @Required
     var translation: String = "",
     @Required
-    var example: String = ""
+    var example: String = "",
+    @LinkingObjects("cards")
+    val owner: RealmResults<Deck>? = null
 ) : RealmObject(), Serializable{
     override fun toString(): String {
         return Gson().toJson(this)

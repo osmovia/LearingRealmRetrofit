@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
+import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.CardParameters
 import com.example.learingrealmandretrofit.objects.DeckParameters
 import com.example.learingrealmandretrofit.objects.Deck
 import com.example.learingrealmandretrofit.objects.response.DeckListResponse
 import io.realm.Realm
+import io.realm.RealmList
 import io.realm.RealmResults
 import retrofit2.Call
 import retrofit2.Callback
@@ -54,7 +56,8 @@ class DeckFragment : Fragment() {
     }
 
     private fun getAllDecksRetrofit(){
-        BaseApi.retrofit.getDeck().enqueue(object : Callback<DeckListResponse?> {
+        val token = context?.user()?.token ?: ""
+        BaseApi.retrofit.getDeck(token = token).enqueue(object : Callback<DeckListResponse?> {
             override fun onResponse(
                 call: Call<DeckListResponse?>,
                 response: Response<DeckListResponse?>
@@ -78,11 +81,21 @@ class DeckFragment : Fragment() {
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
             for (item in arrayDeck) {
-                val deckRealm = Deck(
-                    id = item.id,
-                    title = item.title
-                )
-                realmTransaction.insert(deckRealm)
+                val listCardRealm = RealmList<Card>()
+                val list = item.cards
+                val id = item.id
+                val title = item.title
+                for (it in list) {
+                    val card = Card(
+                        id = it.id,
+                        word = it.word,
+                        translation = it.translation,
+                        example = it.example
+                    )
+                    listCardRealm.add(card)
+                }
+                val deck = Deck(id = id, title = title, cards = listCardRealm)
+                realmTransaction.insert(deck)
             }
         }, {
             val deckResult = pullDecksRealm()

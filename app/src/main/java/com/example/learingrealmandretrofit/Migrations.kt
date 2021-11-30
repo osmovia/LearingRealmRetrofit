@@ -10,4 +10,10 @@ val migration = RealmMigration { realm, oldVersion, _ ->
         deckSchema?.className = "Deck"
         cardSchema?.className = "Card"
     }
+    if (oldVersion == 2L) {
+        val deckSchema = realm.schema.get("Deck")
+        val cardSchema = realm.schema.get("Card")
+
+        deckSchema?.addRealmListField("cards", cardSchema)
+    }
 }

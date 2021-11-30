@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
+import com.example.learingrealmandretrofit.objects.CardParameters
 import com.example.learingrealmandretrofit.objects.Card
-import com.example.learingrealmandretrofit.objects.CardRealm
 import com.example.learingrealmandretrofit.objects.response.CardListResponse
 import io.realm.Realm
 import io.realm.RealmResults
@@ -23,7 +23,6 @@ import retrofit2.Response
 
 class CardFragment : Fragment() {
     private lateinit var binding: CardFragmentRecyclerBinding
-    private var currentSwipePosition = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,30 +37,21 @@ class CardFragment : Fragment() {
         view: View,
         savedInstanceState: Bundle?
     ) {
-        Realm.init(context)
-
         deleteAllCardsRealm()
         getAllCardRetrofit()
 
-        binding.floatingActionButtonCard.setOnClickListener {
+        binding.buttonCreateCard.setOnClickListener {
             findNavController().navigate(R.id.action_cardFragment_to_dialogCreateOrChangeCard)
-        }
-
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
-            DialogDeleteCard.noDeleteWordKey
-        )?.observe(
-            viewLifecycleOwner
-        ) {
-            binding.recyclerCard.adapter?.notifyItemChanged(currentSwipePosition)
         }
 
         val item = object : SwipeToDeleteCard(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                currentSwipePosition = viewHolder.absoluteAdapterPosition
                 val currentSwipeCardId = pullCardsRealm()[viewHolder.absoluteAdapterPosition]?.id
-                findNavController().navigate(
-                    R.id.action_cardFragment_to_dialogDeleteCard,
-                    bundleOf(DialogDeleteCard.deleteWordKey to currentSwipeCardId))
+                if (currentSwipeCardId != null) {
+                    val arrow = CardFragmentDirections.actionCardFragmentToDialogDeleteCard(currentSwipeCardId)
+                    findNavController().navigate(arrow)
+                    binding.recyclerCard.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
+                }
             }
         }
         val itemTouchHelper = ItemTouchHelper(item)
@@ -69,7 +59,8 @@ class CardFragment : Fragment() {
     }
 
    private fun getAllCardRetrofit() {
-       val retrofitData = BaseApi.retrofit.getCards()
+       val token = context?.user()?.token ?: ""
+       val retrofitData = BaseApi.retrofit.getCards(token)
         retrofitData.enqueue(object : Callback<CardListResponse?> {
             override fun onResponse(call: Call<CardListResponse?>, response: Response<CardListResponse?>) {
                 val statusCode = response.code()
@@ -89,12 +80,12 @@ class CardFragment : Fragment() {
         })
     }
 
-    private fun createCardsRealm(arrayCards: List<Card>) {
+    private fun createCardsRealm(arrayCards: List<CardParameters>) {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
             for (item in arrayCards) {
-                val cardRealm = CardRealm(
+                val cardRealm = Card(
                     id = item.id,
                     word = item.word,
                     translation = item.translation,
@@ -113,20 +104,20 @@ class CardFragment : Fragment() {
         })
     }
 
-    private fun pullCardsRealm() : RealmResults<CardRealm> {
+    private fun pullCardsRealm() : RealmResults<Card> {
         val config = ConfigRealm.config
         val realm = Realm.getInstance(config)
-        return  realm.where(CardRealm::class.java).findAll().sort("word", Sort.ASCENDING)
+        return  realm.where(Card::class.java).findAll().sort("word", Sort.ASCENDING)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return true
     }
 
-    fun onItemClick(cardRealm: CardRealm) {
+    fun onItemClick(card: Card) {
         findNavController().navigate(
             R.id.action_cardFragment_to_dialogCreateOrChangeCard,
-        bundleOf(DialogCreateOrChangeCard.cardRealmKey to cardRealm))
+        bundleOf(DialogCreateOrChangeCard.cardRealmKey to card))
     }
 
     private fun deleteAllCardsRealm() {
@@ -134,7 +125,7 @@ class CardFragment : Fragment() {
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync ({ realmTransaction ->
             val result = realmTransaction
-                .where(CardRealm::class.java)
+                .where(Card::class.java)
                 .findAll()
             result.deleteAllFromRealm()
         }, {

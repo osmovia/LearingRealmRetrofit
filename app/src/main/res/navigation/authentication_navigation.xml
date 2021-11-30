@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.learingrealmandretrofit.fragment.SignUpFragment"
-        android:label="SIGN UP"
+        android:label="@string/sign_up"
         tools:layout="@layout/sign_up_fragment">
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
@@ -16,7 +16,7 @@
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.example.learingrealmandretrofit.fragment.SignInFragment"
-        android:label="SIGN IN"
+        android:label="@string/sign_in"
         tools:layout="@layout/sign_in_fragment">
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"

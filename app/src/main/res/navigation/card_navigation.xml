@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/cardFragment"
         android:name="com.example.learingrealmandretrofit.fragment.CardFragment"
-        android:label="Card"
+        android:label="@string/card"
         tools:layout="@layout/card_fragment_recycler">
         <action
             android:id="@+id/action_cardFragment_to_dialogCreateOrChangeCard"
@@ -20,11 +20,13 @@
     <dialog
         android:id="@+id/dialogCreateOrChangeCard"
         android:name="com.example.learingrealmandretrofit.fragment.DialogCreateOrChangeCard"
-        android:label="DialogCreateOrChangeCard"
         tools:layout="@layout/dialog_create_or_change_card"/>
     <dialog
         android:id="@+id/dialogDeleteCard"
         android:name="com.example.learingrealmandretrofit.fragment.DialogDeleteCard"
-        android:label="dialog_delete_card"
-        tools:layout="@layout/dialog_delete_card" />
+        tools:layout="@layout/dialog_delete_card" >
+        <argument
+            android:name="idCard"
+            app:argType="integer" />
+    </dialog>
 </navigation>

@@ -6,13 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
-import com.example.learingrealmandretrofit.ConfigRealm
-import com.example.learingrealmandretrofit.R
+import androidx.navigation.fragment.navArgs
+import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DialogDeleteCardBinding
-import com.example.learingrealmandretrofit.objects.CardRealm
-import com.example.learingrealmandretrofit.objects.response.Success
-import com.example.learingrealmandretrofit.showErrorToast
+import com.example.learingrealmandretrofit.objects.Card
+import com.example.learingrealmandretrofit.objects.response.CardResponse
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,11 +19,8 @@ import retrofit2.Response
 
 
 class DialogDeleteCard : DialogFragment() {
-    companion object {
-        const val noDeleteWordKey = "NO_DELETE_WORD_KEY"
-        const val deleteWordKey = "DELETE_WORD_KEY"
-
-    }
+    //Arguments
+    private val args: DialogDeleteCardArgs by navArgs()
     // Bindings
     private lateinit var binding: DialogDeleteCardBinding
     // Lifecycle
@@ -42,32 +38,32 @@ class DialogDeleteCard : DialogFragment() {
             removeCard()
         }
         binding.buttonNo.setOnClickListener{
-            noDeleteCard()
+            findNavController().popBackStack()
         }
     }
     // Functions
     private fun removeCard() {
-        arguments?.getInt(deleteWordKey)?.let {
-            BaseApi.retrofit.deleteCard(it).enqueue(object : Callback<Success?> {
-                override fun onResponse(call: Call<Success?>, response: Response<Success?>) {
-                    if (response.isSuccessful && response.body() != null) {
-                        if(response.body()?.success == true) {
-                            removeFromRealm(it)
-                        } else {
-                            noDeleteCard()
-                            context?.showErrorToast()
-                        }
-                    } else {
-                        noDeleteCard()
-                        context?.showErrorToast(R.string.connection_issues)
-                    }
+        val token = context?.user()?.token ?: ""
+        requireActivity().showProgress()
+        BaseApi.retrofit.deleteCard(id = args.idCard, token = token).enqueue(object : Callback<CardResponse?> {
+            override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
+                val responseBody = response.body()
+                val statusCode = response.code()
+                if (response.isSuccessful && responseBody != null) {
+                    requireActivity().hideProgress()
+                    removeFromRealm(responseBody.card.id)
+                } else {
+                    requireActivity().hideProgress()
+                    findNavController().popBackStack()
+                    context?.showErrorCodeToast(statusCode)
                 }
-                override fun onFailure(call: Call<Success?>, t: Throwable) {
-                    noDeleteCard()
-                    context?.showErrorToast()
-                }
-            })
-        }
+            }
+            override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
+                requireActivity().hideProgress()
+                findNavController().popBackStack()
+                context?.showErrorToast()
+            }
+        })
     }
 
     private fun removeFromRealm(id: Int) {
@@ -75,7 +71,7 @@ class DialogDeleteCard : DialogFragment() {
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
             val result = realmTransaction
-                .where(CardRealm::class.java)
+                .where(Card::class.java)
                 .equalTo("id", id)
                 .findFirst()
             result?.deleteFromRealm()
@@ -85,10 +81,5 @@ class DialogDeleteCard : DialogFragment() {
         },{
             realm.close()
         })
-    }
-
-    private fun noDeleteCard() {
-        findNavController().previousBackStackEntry?.savedStateHandle?.set(noDeleteWordKey, "")
-        findNavController().popBackStack()
     }
 }

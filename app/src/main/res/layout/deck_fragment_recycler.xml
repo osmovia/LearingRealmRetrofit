@@ -16,7 +16,7 @@
         tools:listitem="@layout/item_deck_recycler" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonDeck"
+        android:id="@+id/buttonCreateDeck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="36dp"

@@ -17,10 +17,11 @@
     <string name="card_deletion">Card deletion</string>
     <string name="delete_card">Delete card</string>
     <string name="remove_from_list">Remove from list</string>
-    <string name="register">Register</string>
     <string name="have_account">Already have an account?</string>
     <string name="dont_have_account">Don\'t have an account?</string>
-    <string name="sign_in">Sign in</string>
-    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
     <string name="entry">entry</string>
+    <string name="update_card">Update card</string>
+    <string name="settings">Settings</string>
 </resources>

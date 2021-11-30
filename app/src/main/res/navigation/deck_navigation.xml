@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/deckFragment"
         android:name="com.example.learingrealmandretrofit.fragment.DeckFragment"
-        android:label="List"
+        android:label="@string/list"
         tools:layout="@layout/deck_fragment_recycler">
         <action
             android:id="@+id/action_deckFragment_to_insideDeckCardFragment"
@@ -23,12 +23,10 @@
     <dialog
         android:id="@+id/dialogCreateOrChangeDeck"
         android:name="com.example.learingrealmandretrofit.fragment.DialogCreateOrChangeDeck"
-        android:label="DialogCreateOrChangeDeck"
         tools:layout="@layout/dialog_create_or_update_deck"/>
-    <fragment
+    <dialog
         android:id="@+id/insideDeckCardDeleteDialog"
         android:name="com.example.learingrealmandretrofit.fragment.insidedeck.InsideDeckDeleteCardDialog"
-        android:label="InsideDeckCardDeleteDialog"
         tools:layout="@layout/dialog_delete_card_and_from_list"/>
     <fragment
         android:id="@+id/insideDeckCardFragment"
@@ -45,17 +43,15 @@
             app:destination="@id/insideDeckCardDeleteDialog" />
         <argument
             android:name="deck"
-            app:argType="com.example.learingrealmandretrofit.objects.Deck"
+            app:argType="com.example.learingrealmandretrofit.objects.DeckParameters"
             app:nullable="true" />
     </fragment>
     <dialog
         android:id="@+id/insideDeckUpdateCardDialog"
         android:name="com.example.learingrealmandretrofit.fragment.insidedeck.InsideDeckUpdateCardDialog"
-        android:label="InsideDeckUpdateCardDialog"
         tools:layout="@layout/dialog_create_or_change_card"/>
     <dialog
         android:id="@+id/dialogDeleteDeck"
         android:name="com.example.learingrealmandretrofit.fragment.DialogDeleteDeck"
-        android:label="DialogDeleteDeck"
         tools:layout="@layout/dialog_delete_deck"/>
 </navigation>

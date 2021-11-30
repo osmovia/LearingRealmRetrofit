@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun authentication(): Boolean {
-        val token = SessionManager(this).fetchAuth().token
-        return token != null
+        return this.user().token != null
     }
 }

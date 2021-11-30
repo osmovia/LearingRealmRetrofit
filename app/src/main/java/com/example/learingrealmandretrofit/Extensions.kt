@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.core.view.isVisible
+import com.example.learingrealmandretrofit.objects.UserSharedPref
 
 fun Context.showErrorToast(text: Int = R.string.network_error_message) = Toast.makeText(
     this,
@@ -24,4 +25,8 @@ fun Activity.showProgress() {
 
 fun Activity.hideProgress() {
     this.findViewById<FrameLayout>(R.id.mainProgressBarHolder).isVisible = false
+}
+
+fun Context.user(): UserSharedPref {
+    return SharedPreferencesManager(this).fetchAuthentication()
 }

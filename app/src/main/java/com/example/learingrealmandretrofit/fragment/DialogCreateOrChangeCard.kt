@@ -7,14 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
-import com.example.learingrealmandretrofit.ConfigRealm
+import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DialogCreateOrChangeCardBinding
 import com.example.learingrealmandretrofit.objects.CardParameters
 import com.example.learingrealmandretrofit.objects.Card
 import com.example.learingrealmandretrofit.objects.response.CardResponse
-import com.example.learingrealmandretrofit.showErrorCodeToast
-import com.example.learingrealmandretrofit.showErrorToast
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
@@ -75,22 +73,21 @@ class DialogCreateOrChangeCard : DialogFragment() {
         val translate = binding.editTextTranslateWord.text.toString()
         val example = binding.editTextExample.text.toString()
         val card = CardParameters(word = word, translation = translate, example = example)
-        BaseApi.retrofit.createCard(card).enqueue(object : Callback<CardResponse?> {
-            override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
-                checkInternet()
-            }
+        val token = context?.user()?.token ?: ""
+        requireActivity().showProgress()
+        BaseApi.retrofit.createCard(token = token, params = card).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val statusCode = response.code()
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        createCardRealm(responseBody.card)
-                    } else {
-                        errorServer(statusCode)
-                    }
+                val responseBody = response.body()
+                if (response.isSuccessful && responseBody != null) {
+                    requireActivity().hideProgress()
+                    createCardRealm(responseBody.card)
                 } else {
                     errorServer(statusCode)
                 }
+            }
+            override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
+                checkInternet()
             }
         })
     }
@@ -99,19 +96,18 @@ class DialogCreateOrChangeCard : DialogFragment() {
         val word = binding.editTextOriginalWord.text.toString()
         val translate = binding.editTextTranslateWord.text.toString()
         val example = binding.editTextExample.text.toString()
-        val id = card!!.id
+        val id = card?.id ?: 0
         val card = CardParameters(word = word, translation = translate, example = example)
-        BaseApi.retrofit.updateCard(id, card).enqueue(object : Callback<CardResponse?> {
+        val token = context?.user()?.token ?: ""
+        requireActivity().showProgress()
+        BaseApi.retrofit.updateCard(id = id, params = card , token = token).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val statusCode = response.code()
-                if(response.isSuccessful){
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        updateCardRealm(responseBody.card)
+                val responseBody = response.body()
+                if(response.isSuccessful && responseBody != null){
+                    requireActivity().hideProgress()
+                    updateCardRealm(responseBody.card)
                     } else {
-                        errorServer(statusCode)
-                    }
-                } else {
                     errorServer(statusCode)
                 }
             }
@@ -150,14 +146,14 @@ class DialogCreateOrChangeCard : DialogFragment() {
     }
 
     private fun errorServer(statusCode: Int) {
+        requireActivity().hideProgress()
         context?.showErrorCodeToast(statusCode)
         findNavController().popBackStack()
     }
 
     private fun checkInternet() {
+        requireActivity().hideProgress()
         context?.showErrorToast()
         findNavController().popBackStack()
     }
 }
-
-

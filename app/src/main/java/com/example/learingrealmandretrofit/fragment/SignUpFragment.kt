@@ -1,7 +1,6 @@
 package com.example.learingrealmandretrofit.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -91,16 +90,18 @@ class SignUpFragment : Fragment() {
             BaseApi.retrofit.createUser(request).enqueue(object : Callback<SignUpResponse?> {
                 override fun onResponse(call: Call<SignUpResponse?>, response: Response<SignUpResponse?>) {
                     activity?.hideProgress()
-                    val body = response.body()
+                    val responseBody = response.body()
                     val statusCode = response.code()
-                    if (response.isSuccessful && body != null) {
-                        SessionManager(requireContext()).saveAuth(
-                            token = body.session.token,
-                            email = body.user.email,
-                            idUser = body.session.userId
+                    if (response.isSuccessful && responseBody != null) {
+                        SharedPreferencesManager(requireContext()).saveAuthentication(
+                            token = responseBody.session.token,
+                            email = responseBody.user.email,
+                            idUser = responseBody.session.userId
                             )
+                        activity?.hideProgress()
                         mainNavController?.navigate(R.id.action_authenticationFragment_to_tabsFragment)
                     } else {
+                        activity?.hideProgress()
                         context?.showErrorCodeToast(statusCode)
                     }
                 }

@@ -40,7 +40,7 @@ class DeckFragment : Fragment() {
         deleteAllDecksRealm()
         getAllDecksRetrofit()
 
-        binding.floatingActionButtonDeck.setOnClickListener {
+        binding.buttonCreateDeck.setOnClickListener {
             findNavController().navigate(R.id.action_deckFragment_to_dialogCreateOrChangeDeck)
         }
         val item = object : SwipeToDeleteCard(requireContext()) {

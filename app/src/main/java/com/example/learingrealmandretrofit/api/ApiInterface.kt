@@ -9,14 +9,18 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiInterface {
+    companion object {
+        private const val tokenKey: String = "X-Session-Token"
+    }
+
     @GET("cards")
-    fun getCards(): Call<CardListResponse>
+    fun getCards(@Header(tokenKey) token: String): Call<CardListResponse>
 
     @GET("decks")
     fun getDeck(): Call<DeckListResponse>
 
     @POST("cards")
-    fun createCard(@Body params: CardParameters): Call<CardResponse>
+    fun createCard(@Header(tokenKey) token: String, @Body params: CardParameters): Call<CardResponse>
 
     @POST("decks")
     fun createdDeck(@Body params: DeckParameters): Call<DeckResponse>
@@ -28,15 +32,15 @@ interface ApiInterface {
     fun signIn(@Body params: SignInRequest):  Call<SignUpResponse>
 
     @PUT("cards/{id}")
-    fun updateCard(@Path("id") id : Int, @Body params : CardParameters): Call<CardResponse>
+    fun updateCard(@Header(tokenKey) token: String,@Path("id") id : Int, @Body params : CardParameters): Call<CardResponse>
 
     @DELETE("cards/{id}")
-    fun deleteCard(@Path("id") id: Int): Call<Success>
+    fun deleteCard(@Header(tokenKey) token: String, @Path("id") id: Int): Call<CardResponse>
 
     @DELETE("decks/{id}")
     fun deleteDeck(@Path("id") id : Int): Call<Success>
 
     @DELETE("sessions/{token}")
-    fun logOut(@Header("X-Session-Token") tokenSession: String, @Path("token") token: String): Call<Success>
+    fun logOut(@Header(tokenKey) tokenSession: String, @Path("token") token: String): Call<Success>
 
 }

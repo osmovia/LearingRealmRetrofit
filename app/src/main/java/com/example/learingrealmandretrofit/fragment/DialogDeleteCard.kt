@@ -7,13 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.learingrealmandretrofit.ConfigRealm
-import com.example.learingrealmandretrofit.R
+import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.databinding.DialogDeleteCardBinding
 import com.example.learingrealmandretrofit.objects.Card
-import com.example.learingrealmandretrofit.objects.response.Success
-import com.example.learingrealmandretrofit.showErrorToast
+import com.example.learingrealmandretrofit.objects.response.CardResponse
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,25 +43,27 @@ class DialogDeleteCard : DialogFragment() {
     }
     // Functions
     private fun removeCard() {
-            BaseApi.retrofit.deleteCard(args.idCard).enqueue(object : Callback<Success?> {
-                override fun onResponse(call: Call<Success?>, response: Response<Success?>) {
-                    if (response.isSuccessful && response.body() != null) {
-                        if(response.body()?.success == true) {
-                            removeFromRealm(args.idCard)
-                        } else {
-                            findNavController().popBackStack()
-                            context?.showErrorToast()
-                        }
-                    } else {
-                        findNavController().popBackStack()
-                        context?.showErrorToast(R.string.connection_issues)
-                    }
-                }
-                override fun onFailure(call: Call<Success?>, t: Throwable) {
+        val token = context?.user()?.token ?: ""
+        requireActivity().showProgress()
+        BaseApi.retrofit.deleteCard(id = args.idCard, token = token).enqueue(object : Callback<CardResponse?> {
+            override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
+                val responseBody = response.body()
+                val statusCode = response.code()
+                if (response.isSuccessful && responseBody != null) {
+                    requireActivity().hideProgress()
+                    removeFromRealm(responseBody.card.id)
+                } else {
+                    requireActivity().hideProgress()
                     findNavController().popBackStack()
-                    context?.showErrorToast()
+                    context?.showErrorCodeToast(statusCode)
                 }
-            })
+            }
+            override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
+                requireActivity().hideProgress()
+                findNavController().popBackStack()
+                context?.showErrorToast()
+            }
+        })
     }
 
     private fun removeFromRealm(id: Int) {

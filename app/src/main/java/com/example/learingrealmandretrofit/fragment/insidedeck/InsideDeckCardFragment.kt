@@ -27,7 +27,7 @@ class InsideDeckCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val title = args.deck?.title
         (requireActivity() as MainActivity).supportActionBar?.title = title
-        binding.floatingActionButtonCard.setOnClickListener {
+        binding.buttonCreateCard.setOnClickListener {
         }
     }
 

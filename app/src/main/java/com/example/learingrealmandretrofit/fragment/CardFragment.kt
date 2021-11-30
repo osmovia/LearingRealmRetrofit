@@ -40,7 +40,7 @@ class CardFragment : Fragment() {
         deleteAllCardsRealm()
         getAllCardRetrofit()
 
-        binding.floatingActionButtonCard.setOnClickListener {
+        binding.buttonCreateCard.setOnClickListener {
             findNavController().navigate(R.id.action_cardFragment_to_dialogCreateOrChangeCard)
         }
 
@@ -59,7 +59,8 @@ class CardFragment : Fragment() {
     }
 
    private fun getAllCardRetrofit() {
-       val retrofitData = BaseApi.retrofit.getCards()
+       val token = context?.user()?.token ?: ""
+       val retrofitData = BaseApi.retrofit.getCards(token)
         retrofitData.enqueue(object : Callback<CardListResponse?> {
             override fun onResponse(call: Call<CardListResponse?>, response: Response<CardListResponse?>) {
                 val statusCode = response.code()

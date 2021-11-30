@@ -1,7 +1,6 @@
 package com.example.learingrealmandretrofit.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,11 +46,12 @@ class SignInFragment : Fragment() {
                     val responseBody = response.body()
                     val statusCode = response.code()
                     if (response.isSuccessful && responseBody != null) {
-                        SessionManager(requireContext()).saveAuth(
+                        SharedPreferencesManager(requireContext()).saveAuthentication(
                             email = responseBody.user.email,
                             idUser = responseBody.session.userId,
                             token = responseBody.session.token
                         )
+                        activity?.hideProgress()
                         mainNavController?.navigate(R.id.action_authenticationFragment_to_tabsFragment)
                     } else {
                         activity?.hideProgress()

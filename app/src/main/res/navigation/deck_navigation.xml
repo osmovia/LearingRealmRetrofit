@@ -7,51 +7,65 @@
 
     <fragment
         android:id="@+id/deckFragment"
-        android:name="com.example.learingrealmandretrofit.fragment.DeckFragment"
+        android:name="com.example.learingrealmandretrofit.deck.DeckFragment"
         android:label="@string/list"
         tools:layout="@layout/deck_fragment_recycler">
         <action
             android:id="@+id/action_deckFragment_to_insideDeckCardFragment"
-            app:destination="@id/insideDeckCardFragment" />
+            app:destination="@id/insideDeckCardFragment"/>
         <action
             android:id="@+id/action_deckFragment_to_dialogDeleteDeck"
-            app:destination="@id/dialogDeleteDeck" />
+            app:destination="@id/dialogDeleteDeck"/>
         <action
             android:id="@+id/action_deckFragment_to_dialogCreateOrChangeDeck"
-            app:destination="@id/dialogCreateOrChangeDeck" />
+            app:destination="@id/dialogCreateOrChangeDeck"/>
     </fragment>
+
     <dialog
         android:id="@+id/dialogCreateOrChangeDeck"
-        android:name="com.example.learingrealmandretrofit.fragment.DialogCreateOrChangeDeck"
-        tools:layout="@layout/dialog_create_or_update_deck"/>
+        android:name="com.example.learingrealmandretrofit.deck.DialogCreateOrChangeDeck"
+        tools:layout="@layout/dialog_create_or_update_deck">
+        <argument
+            android:name="deck"
+            app:argType="com.example.learingrealmandretrofit.deck.Deck"
+            app:nullable="true"/>
+    </dialog>
+
     <dialog
         android:id="@+id/insideDeckCardDeleteDialog"
-        android:name="com.example.learingrealmandretrofit.fragment.insidedeck.InsideDeckDeleteCardDialog"
+        android:name="com.example.learingrealmandretrofit.deck.insidedeck.InsideDeckDeleteCardDialog"
         tools:layout="@layout/dialog_delete_card_and_from_list"/>
+
     <fragment
         android:id="@+id/insideDeckCardFragment"
-        android:name="com.example.learingrealmandretrofit.fragment.insidedeck.InsideDeckCardFragment"
+        android:name="com.example.learingrealmandretrofit.deck.insidedeck.InsideDeckCardFragment"
         tools:layout="@layout/card_fragment_recycler">
         <action
             android:id="@+id/action_insideDeckCardFragment_to_dialogCreateOrChangeDeck"
-            app:destination="@id/dialogCreateOrChangeDeck" />
+            app:destination="@id/dialogCreateOrChangeDeck"/>
         <action
             android:id="@+id/action_insideDeckCardFragment_to_insideDeckUpdateCardDialog"
-            app:destination="@id/insideDeckUpdateCardDialog" />
+            app:destination="@id/insideDeckUpdateCardDialog"/>
         <action
             android:id="@+id/action_insideDeckCardFragment_to_insideDeckCardDeleteDialog"
-            app:destination="@id/insideDeckCardDeleteDialog" />
+            app:destination="@id/insideDeckCardDeleteDialog"/>
         <argument
             android:name="deck"
             app:argType="com.example.learingrealmandretrofit.objects.DeckParameters"
-            app:nullable="true" />
+            app:nullable="true"/>
     </fragment>
+
     <dialog
         android:id="@+id/insideDeckUpdateCardDialog"
-        android:name="com.example.learingrealmandretrofit.fragment.insidedeck.InsideDeckUpdateCardDialog"
+        android:name="com.example.learingrealmandretrofit.deck.insidedeck.InsideDeckUpdateCardDialog"
         tools:layout="@layout/dialog_create_or_change_card"/>
+
     <dialog
         android:id="@+id/dialogDeleteDeck"
-        android:name="com.example.learingrealmandretrofit.fragment.DialogDeleteDeck"
-        tools:layout="@layout/dialog_delete_deck"/>
+        android:name="com.example.learingrealmandretrofit.deck.DialogDeleteDeck"
+        tools:layout="@layout/dialog_delete_deck">
+        <argument
+            android:name="deck"
+            app:argType="com.example.learingrealmandretrofit.deck.Deck"/>
+    </dialog>
 </navigation>

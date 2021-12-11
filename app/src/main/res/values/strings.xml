@@ -10,7 +10,7 @@
     <string name="card">Card</string>
     <string name="list_deletion">List deletion</string>
     <string name="delete_list">Delete list</string>
-    <string name="delete_list_with_card">Delete list with card</string>
+    <string name="delete_list_with_cards">Delete list with cards</string>
     <string name="network_error_message">Please check your internet connection</string>
     <string name="connection_issues">Oops an error occurred, please try again later.</string>
     <string name="code_error_message">Error code: %1$d</string>
@@ -21,7 +21,26 @@
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
+    <string name="sign_out">Sign Out</string>
     <string name="entry">entry</string>
     <string name="update_card">Update card</string>
     <string name="settings">Settings</string>
+    <string name="invalid_email">Invalid email, check the email entry</string>
+    <string name="password_not_match">Password does not match please try again</string>
+    <string name="password_have_space">Password must not have a space</string>
+    <string name="password_minimum_8">Password minimum length 8 symbol</string>
+    <string name="empty_password">You did not enter a password</string>
+    <string name="my_null">null</string>
+    <string name="problem_realm">Oops problem database</string>
+    <string name="empty_title">You did not enter a title</string>
+    <string name="word">Word</string>
+    <string name="translation">Translation</string>
+    <string name="example">Example</string>
+    <string name="delete_this_card">Delete this card?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="save_or_update_title">Save or update title</string>
+    <string name="save_or_update_card">Save or update card</string>
+    <string name="title">Title</string>
+
 </resources>

@@ -15,24 +15,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:textColor="@color/primary_color"
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/card_deletion"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
+
         <TextView
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/delete_card"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
+
         <TextView
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/remove_from_list"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

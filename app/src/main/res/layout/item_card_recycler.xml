@@ -10,35 +10,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:hint="Original"
         android:textColor="@color/pure_black"
         android:textColorHighlight="@color/pure_black"
         android:textColorHint="@color/pure_black"
         android:textColorLink="@color/black"
-        android:textSize="24sp" />
+        android:textSize="24sp"/>
 
     <TextView
         android:id="@+id/textViewTranslate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:hint="Translate"
         android:textColor="@color/dark_gray"
         android:textColorHighlight="@color/dark_gray"
         android:textColorHint="@color/dark_gray"
         android:textColorLink="@color/dark_gray"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/textViewExample"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:hint="Example"
         android:textColor="@color/purple_200"
         android:textColorHighlight="@color/purple_200"
         android:textColorHint="@color/purple_200"
         android:textColorLink="@color/purple_200"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 
 </LinearLayout>

@@ -10,5 +10,5 @@ data class UserSignUpRequest(
     val password: String,
 
     @SerializedName("password_confirmation")
-    val passwordConfirm: String
+    val passwordConfirmation: String
 )

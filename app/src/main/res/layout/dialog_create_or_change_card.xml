@@ -23,12 +23,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Word"
+            android:hint="@string/word"
             android:inputType="text"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <EditText
             android:id="@+id/editTextTranslateWord"
@@ -36,12 +36,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
-            android:hint="Translate"
+            android:hint="@string/translation"
             android:inputType="text"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="@+id/editTextOriginalWord"
             app:layout_constraintStart_toStartOf="@+id/editTextOriginalWord"
-            app:layout_constraintTop_toBottomOf="@+id/editTextOriginalWord" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextOriginalWord"/>
 
         <EditText
             android:id="@+id/editTextExample"
@@ -49,12 +49,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
-            android:hint="Example"
+            android:hint="@string/example"
             android:inputType="text"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <Button
             android:id="@+id/button_create_or_update_card"
@@ -62,12 +62,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="Save or update word"
+            android:text="@string/save_or_update_card"
             app:layout_constraintEnd_toEndOf="@+id/editTextTranslateWord"
             app:layout_constraintStart_toStartOf="@+id/editTextTranslateWord"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTranslateWord" />
-
-
+            app:layout_constraintTop_toBottomOf="@+id/editTextTranslateWord"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

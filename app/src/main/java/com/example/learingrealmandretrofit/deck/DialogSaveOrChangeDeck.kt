@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.learingrealmandretrofit.Constants
 import com.example.learingrealmandretrofit.SharedPreferencesManager
 import com.example.learingrealmandretrofit.databinding.DialogCreateOrUpdateDeckBinding
 import com.example.learingrealmandretrofit.deck.viewmodel.CreateOrChangeDeckViewModel
@@ -32,15 +33,27 @@ class DialogCreateOrChangeDeck : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        fillFields()
-
         viewModel = ViewModelProvider(this).get(CreateOrChangeDeckViewModel::class.java)
+
+        if (arguments.deckId != 0) {
+            viewModel.pullDeck(arguments.deckId)
+        }
 
         viewModel.token.value = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken
 
+        viewModel.currentDeck.observe(viewLifecycleOwner, Observer { currentDeck ->
+                binding.editTextTitle.setText(currentDeck.title)
+        })
+
         viewModel.success.observe(viewLifecycleOwner, Observer { success ->
-            if (success) {
-                findNavController().popBackStack()
+            when (success) {
+                Constants.CREATE -> {
+                    findNavController().popBackStack()
+                }
+                Constants.UPDATE -> {
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set(Constants.TITLE_INSIDE_DECK, viewModel.newTitle.value)
+                    findNavController().popBackStack()
+                }
             }
         })
 
@@ -49,23 +62,11 @@ class DialogCreateOrChangeDeck : DialogFragment() {
         })
 
         binding.buttonCreateOrUpdateDeck.setOnClickListener {
-            val deck = arguments.deck
-            if (deck == null) {
+            if (arguments.deckId == 0) {
                 viewModel.createDeck(binding.editTextTitle.text.toString())
             } else {
-                val changeTitle = Deck(
-                    id = deck.id,
-                    title = binding.editTextTitle.text.toString(),
-                    cards = deck.cards
-                )
-                viewModel.updateDeck(changeTitle)
+                viewModel.updateDeck(binding.editTextTitle.text.toString())
             }
-        }
-    }
-
-    private fun fillFields() {
-        if (arguments.deck != null) {
-            binding.editTextTitle.setText(arguments.deck?.title)
         }
     }
 }

@@ -56,7 +56,7 @@ class DeckFragment : Fragment() {
         })
 
         binding.buttonCreateDeck.setOnClickListener {
-            val action = DeckFragmentDirections.actionDeckFragmentToDialogCreateOrChangeDeck(null)
+            val action = DeckFragmentDirections.actionDeckFragmentToDialogCreateOrChangeDeck()
             findNavController().navigate(action)
         }
 
@@ -75,7 +75,10 @@ class DeckFragment : Fragment() {
     }
 
     fun onItemClick(deck: Deck) {
-        val action = DeckFragmentDirections.actionDeckFragmentToDialogCreateOrChangeDeck(deck = deck)
+        val action = DeckFragmentDirections.actionDeckFragmentToInsideDeckCardFragment(
+            deckId = deck.id,
+            deckTitle = deck.title
+        )
         findNavController().navigate(action)
     }
 }

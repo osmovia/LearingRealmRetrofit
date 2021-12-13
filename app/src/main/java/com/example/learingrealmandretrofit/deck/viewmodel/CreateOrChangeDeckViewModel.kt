@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.ConfigurationRealm
+import com.example.learingrealmandretrofit.Constants
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
@@ -30,9 +31,17 @@ class CreateOrChangeDeckViewModel : ViewModel() {
     val showSpinner: LiveData<Boolean>
         get() = _showSpinner
 
-    private val _success = MutableLiveData<Boolean>()
-    val success: LiveData<Boolean>
+    private val _success = MutableLiveData<String>()
+    val success: LiveData<String>
         get() = _success
+
+    private val _currentDeck = MutableLiveData<Deck>()
+    val currentDeck: LiveData<Deck>
+        get() = _currentDeck
+
+    private val _newTitle = MutableLiveData<String>()
+    val newTitle: LiveData<String>
+        get() = _newTitle
 
     fun createDeck(title: String) {
         if (title.isEmpty()) {
@@ -69,7 +78,7 @@ class CreateOrChangeDeckViewModel : ViewModel() {
             )
             realmTransaction.insert(deckRealm)
         }, {
-            _success.value = true
+            _success.value = Constants.CREATE
             realm.close()
         }, {
             _showToast.value = R.string.problem_realm
@@ -77,15 +86,15 @@ class CreateOrChangeDeckViewModel : ViewModel() {
         })
     }
 
-    fun updateDeck(deck: Deck) {
-        if (deck.title.isEmpty()) {
+    fun updateDeck(titleDeck: String) {
+        if (titleDeck.isEmpty()) {
             _showToast.value = R.string.empty_title
             return
         }
         _showSpinner.value = true
-        val requestTitle = DeckTitleRequest(deck.title)
+        val requestTitle = DeckTitleRequest(titleDeck)
         val request = DeckCreateOrUpdateRequest(requestTitle)
-        BaseApi.retrofit.updateDeck(token = token.value.orEmpty(), id = deck.id, params = request)
+        BaseApi.retrofit.updateDeck(token = token.value.orEmpty(), id = _currentDeck.value?.id ?: return , params = request)
             .enqueue(object : Callback<DeckCreateOrUpdateResponse?> {
             override fun onResponse(call: Call<DeckCreateOrUpdateResponse?>, response: Response<DeckCreateOrUpdateResponse?>) {
                 val responseBody = response.body()
@@ -106,6 +115,7 @@ class CreateOrChangeDeckViewModel : ViewModel() {
     private fun updateDeckRealm(deck: DeckParameters) {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
+        _newTitle.value = deck.title
         realm.executeTransactionAsync({ realmTransaction ->
             val listRealm = RealmList<Card>()
             for (card in deck.cards) {
@@ -124,11 +134,17 @@ class CreateOrChangeDeckViewModel : ViewModel() {
             result?.title = deck.title
             result?.cards = listRealm
         }, {
-            _success.value = true
+            _success.value = Constants.UPDATE
             realm.close()
         }, {
             _showToast.value = R.string.problem_realm
             realm.close()
         })
+    }
+
+    fun pullDeck(deckId: Int) {
+        val config = ConfigurationRealm.configuration
+        val realm = Realm.getInstance(config)
+        _currentDeck.value = realm.where(Deck::class.java).equalTo("id", deckId).findFirst()
     }
 }

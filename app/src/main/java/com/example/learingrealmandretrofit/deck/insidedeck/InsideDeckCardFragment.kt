@@ -5,6 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.learingrealmandretrofit.Constants
 import com.example.learingrealmandretrofit.MainActivity
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
@@ -24,8 +25,16 @@ class InsideDeckCardFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val title = args.deck?.title
-        (requireActivity() as MainActivity).supportActionBar?.title = title
+
+        // Title deck start fragment
+        (requireActivity() as MainActivity).supportActionBar?.title = args.deckTitle
+
+        // New title if has changed
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(Constants.TITLE_INSIDE_DECK)
+            ?.observe(viewLifecycleOwner) { newTitle ->
+                (requireActivity() as MainActivity).supportActionBar?.title = newTitle
+            }
+
         binding.buttonCreateCard.setOnClickListener {
         }
     }
@@ -37,7 +46,8 @@ class InsideDeckCardFragment : Fragment() {
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.renameItem) {
-            findNavController().navigate(R.id.action_insideDeckCardFragment_to_dialogCreateOrChangeDeck)
+            val action = InsideDeckCardFragmentDirections.actionInsideDeckCardFragmentToDialogCreateOrChangeDeck(args.deckId)
+            findNavController().navigate(action)
             true
         } else {
             super.onOptionsItemSelected(item)

@@ -26,9 +26,9 @@
         android:name="com.example.learingrealmandretrofit.deck.DialogCreateOrChangeDeck"
         tools:layout="@layout/dialog_create_or_update_deck">
         <argument
-            android:name="deck"
-            app:argType="com.example.learingrealmandretrofit.deck.Deck"
-            app:nullable="true"/>
+            android:name="deckId"
+            app:argType="integer"
+            android:defaultValue="0" />
     </dialog>
 
     <dialog
@@ -50,9 +50,12 @@
             android:id="@+id/action_insideDeckCardFragment_to_insideDeckCardDeleteDialog"
             app:destination="@id/insideDeckCardDeleteDialog"/>
         <argument
-            android:name="deck"
-            app:argType="com.example.learingrealmandretrofit.objects.DeckParameters"
-            app:nullable="true"/>
+            android:name="deckId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="deckTitle"
+            app:argType="string" />
     </fragment>
 
     <dialog

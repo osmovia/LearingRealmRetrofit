@@ -99,8 +99,8 @@ class SignUpFragment : Fragment() {
             viewModel.inputLayoutPasswordConfirmation.value = null
         }
 
-        binding.buttonRegister.setOnClickListener {
-            viewModel.clickRegister(
+        binding.buttonRegistration.setOnClickListener {
+            viewModel.clickRegistration(
                 emailView = binding.email.text.toString(),
                 passwordView = binding.password.text.toString(),
                 passwordConfirmationView = binding.passwordConfirmation.text.toString()

@@ -72,7 +72,7 @@ class SignUpViewModel : ViewModel() {
         requestRegistration()
     }
 
-    fun clickRegister(emailView: String, passwordView: String, passwordConfirmationView: String) {
+    fun clickRegistration(emailView: String, passwordView: String, passwordConfirmationView: String) {
         email.value = emailView
         password.value = passwordView
         passwordConfirmation.value = passwordConfirmationView
@@ -104,7 +104,7 @@ class SignUpViewModel : ViewModel() {
                 _spinner.value = false
             }
             override fun onFailure(call: Call<AuthenticationResponse?>, t: Throwable) {
-                _success.value = false
+                _spinner.value = false
                 _showToast.value = R.string.connection_issues
             }
         })

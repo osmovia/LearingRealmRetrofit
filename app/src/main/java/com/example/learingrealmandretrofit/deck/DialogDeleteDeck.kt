@@ -49,7 +49,7 @@ class DialogDeleteDeck : DialogFragment() {
         })
 
         binding.viewDeleteList.setOnClickListener {
-            viewModel.deleteDeckRetrofit(deck = arguments.deck)
+            viewModel.deleteDeckRetrofit(deckId = arguments.deckId)
         }
     }
 }

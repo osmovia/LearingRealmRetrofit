@@ -28,7 +28,7 @@
             android:gravity="center"
             android:text="@string/delete_this_card"
             android:textColor="@color/black"
-            android:textSize="34sp" />
+            android:textSize="34sp"/>
 
         <RadioGroup
             android:layout_width="match_parent"

@@ -65,7 +65,8 @@
         android:name="com.example.learingrealmandretrofit.deck.DialogDeleteDeck"
         tools:layout="@layout/dialog_delete_deck">
         <argument
-            android:name="deck"
-            app:argType="com.example.learingrealmandretrofit.deck.Deck"/>
+            android:name="deckId"
+            app:argType="integer"
+            android:defaultValue="0" />
     </dialog>
 </navigation>

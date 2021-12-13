@@ -30,7 +30,7 @@ class SettingsFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 
-        viewModel.showSpinner.observe(viewLifecycleOwner, Observer {  showSpinner ->
+        viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
             if (showSpinner) {
                 activity?.showProgress()
             } else {

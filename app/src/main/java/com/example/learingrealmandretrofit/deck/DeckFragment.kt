@@ -62,7 +62,7 @@ class DeckFragment : Fragment() {
 
         val item = object : SwipeToDelete(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val currentSwipeDeckId = viewModel.gelAllDecksRealm.value?.get(viewHolder.absoluteAdapterPosition)
+                val currentSwipeDeckId = viewModel.gelAllDecksRealm.value?.get(viewHolder.absoluteAdapterPosition)?.id
                 if (currentSwipeDeckId != null) {
                     val action = DeckFragmentDirections.actionDeckFragmentToDialogDeleteDeck(currentSwipeDeckId)
                     findNavController().navigate(action)
@@ -78,5 +78,4 @@ class DeckFragment : Fragment() {
         val action = DeckFragmentDirections.actionDeckFragmentToDialogCreateOrChangeDeck(deck = deck)
         findNavController().navigate(action)
     }
-
 }

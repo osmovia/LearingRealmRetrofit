@@ -30,9 +30,9 @@ class DeleteDeckViewModel : ViewModel() {
     val success: LiveData<Boolean>
         get() = _success
 
-    fun deleteDeckRetrofit(deck: Deck) {
+    fun deleteDeckRetrofit(deckId: Int) {
         _showSpinner.value = true
-        BaseApi.retrofit.deleteDeck(id = deck.id, token = token.value.orEmpty()).enqueue(object : Callback<DeckCreateOrUpdateResponse?> {
+        BaseApi.retrofit.deleteDeck(id = deckId, token = token.value.orEmpty()).enqueue(object : Callback<DeckCreateOrUpdateResponse?> {
             override fun onResponse(call: Call<DeckCreateOrUpdateResponse?>, response: Response<DeckCreateOrUpdateResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
@@ -57,11 +57,10 @@ class DeleteDeckViewModel : ViewModel() {
                 .where(Deck::class.java)
                 .equalTo("id", deck.id)
                 .findFirst()
-            deleteDeck?.cards?.deleteAllFromRealm()
             deleteDeck?.deleteFromRealm()
         }, {
             _success.value = true
-           realm.close()
+            realm.close()
         }, {
             _showToast.value = R.string.problem_realm
             realm.close()

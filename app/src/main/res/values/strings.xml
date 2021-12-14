@@ -42,5 +42,6 @@
     <string name="save_or_update_title">Save or update title</string>
     <string name="save_or_update_card">Save or update card</string>
     <string name="title">Title</string>
+    <string name="select_lists">Select Lists</string>
 
 </resources>

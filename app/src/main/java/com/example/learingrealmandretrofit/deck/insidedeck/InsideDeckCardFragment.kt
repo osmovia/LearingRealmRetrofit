@@ -12,7 +12,7 @@ import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBindi
 
 class InsideDeckCardFragment : Fragment() {
     private lateinit var binding: CardFragmentRecyclerBinding
-    private val args: InsideDeckCardFragmentArgs by navArgs()
+    private val arguments: InsideDeckCardFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +27,7 @@ class InsideDeckCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         // Title deck start fragment
-        (requireActivity() as MainActivity).supportActionBar?.title = args.deckTitle
+        (requireActivity() as MainActivity).supportActionBar?.title = arguments.deckTitle
 
         // New title if has changed
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(Constants.TITLE_INSIDE_DECK)
@@ -46,7 +46,7 @@ class InsideDeckCardFragment : Fragment() {
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.renameItem) {
-            val action = InsideDeckCardFragmentDirections.actionInsideDeckCardFragmentToDialogCreateOrChangeDeck(args.deckId)
+            val action = InsideDeckCardFragmentDirections.actionInsideDeckCardFragmentToDialogCreateOrChangeDeck(arguments.deckId)
             findNavController().navigate(action)
             true
         } else {

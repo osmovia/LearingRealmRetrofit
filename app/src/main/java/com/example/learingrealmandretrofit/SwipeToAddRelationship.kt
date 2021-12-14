@@ -7,14 +7,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class SwipeToDelete(context: Context) :
-    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+abstract class SwipeToAddRelationship(context: Context) :
+    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
 
-    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete)!!
-    private val intrinsicWidth = deleteIcon.intrinsicWidth
-    private val intrinsicHeight = deleteIcon.intrinsicHeight
+    private val addRelations = ContextCompat.getDrawable(context, R.drawable.ic_list_add)!!
+    private val intrinsicWidth = addRelations.intrinsicWidth
+    private val intrinsicHeight = addRelations.intrinsicHeight
     private val background = ColorDrawable()
-    private val backgroundColor = Color.YELLOW
+    private val backgroundColor = Color.GREEN
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
     override fun onMove(
@@ -36,21 +36,21 @@ abstract class SwipeToDelete(context: Context) :
             return
         }
 
-        // Draw the yellow delete background
+        // Draw the green background
         background.color = backgroundColor
-        background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+        background.setBounds(itemView.left + dX.toInt(), itemView.top, itemView.left, itemView.bottom)
         background.draw(canvas)
 
-        // Calculate position of delete icon
-        val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
-        val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
-        val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
-        val deleteIconRight = itemView.right - deleteIconMargin
-        val deleteIconBottom = deleteIconTop + intrinsicHeight
+        // Calculate position of addRelations icon
+        val addRelationsIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+        val addRelationsIconMargin = (itemHeight - intrinsicHeight) / 2
+        val addRelationsIconLeft = itemView.left + addRelationsIconMargin
+        val addRelationsIconRight = addRelationsIconLeft + intrinsicWidth
+        val addRelationsIconBottom = addRelationsIconTop + intrinsicHeight
 
-        // Draw the delete icon
-        deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
-        deleteIcon.draw(canvas)
+        // Draw the addRelations icon
+        addRelations.setBounds(addRelationsIconLeft, addRelationsIconTop, addRelationsIconRight, addRelationsIconBottom)
+        addRelations.draw(canvas)
 
         super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }

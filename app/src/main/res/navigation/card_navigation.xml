@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_cardFragment_to_dialogDeleteCard"
             app:destination="@id/dialogDeleteCard"/>
+        <action
+            android:id="@+id/action_cardFragment_to_addCardToDeckFragment"
+            app:destination="@id/addCardToDeckFragment" />
     </fragment>
 
     <dialog
@@ -36,4 +39,15 @@
             android:name="cardId"
             app:argType="integer"/>
     </dialog>
+
+    <fragment
+        android:id="@+id/addCardToDeckFragment"
+        android:name="com.example.learingrealmandretrofit.card.AddCardToDeckFragment"
+        android:label="@string/select_lists"
+        tools:layout="@layout/deck_fragment_recycler">
+        <argument
+            android:name="cardId"
+            app:argType="integer" />
+    </fragment>
+
 </navigation>

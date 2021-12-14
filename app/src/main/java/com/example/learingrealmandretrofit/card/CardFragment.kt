@@ -58,7 +58,7 @@ class CardFragment : Fragment() {
              findNavController().navigate(action)
         }
 
-        val item = object : SwipeToDelete(requireContext()) {
+        val itemDelete = object : SwipeToDelete(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val currentSwipeCardId = viewModel.getAllCardsRealm.value?.get(viewHolder.absoluteAdapterPosition)?.id
                 if (currentSwipeCardId != null) {
@@ -68,8 +68,21 @@ class CardFragment : Fragment() {
                 }
             }
         }
-        val itemTouchHelper = ItemTouchHelper(item)
-        itemTouchHelper.attachToRecyclerView(binding.recyclerCard)
+        val itemTouchHelperDelete = ItemTouchHelper(itemDelete)
+        itemTouchHelperDelete.attachToRecyclerView(binding.recyclerCard)
+
+        val itemRelationship = object : SwipeToAddRelationship(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val currentSwipeCardId = viewModel.getAllCardsRealm.value?.get(viewHolder.absoluteAdapterPosition)?.id
+                if (currentSwipeCardId != null) {
+                    val action = CardFragmentDirections.actionCardFragmentToAddCardToDeckFragment(currentSwipeCardId)
+                    findNavController().navigate(action)
+                    binding.recyclerCard.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
+                }
+            }
+        }
+        val itemTouchHelperRelationship = ItemTouchHelper(itemRelationship)
+        itemTouchHelperRelationship.attachToRecyclerView(binding.recyclerCard)
     }
 
     fun onItemClick(card: Card) {

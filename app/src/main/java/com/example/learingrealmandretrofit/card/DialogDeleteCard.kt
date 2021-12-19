@@ -11,11 +11,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.DeleteCardViewModel
+import com.example.learingrealmandretrofit.card.viewmodel.factory.DeleteCardViewModelFactory
 import com.example.learingrealmandretrofit.databinding.DialogDeleteCardBinding
 
 class DialogDeleteCard : DialogFragment() {
     //Arguments
     private val arguments: DialogDeleteCardArgs by navArgs()
+    //ViewModelFactory
+    private lateinit var viewModelFactory: DeleteCardViewModelFactory
     //ViewModel
     private lateinit var viewModel: DeleteCardViewModel
     // Bindings
@@ -32,9 +35,9 @@ class DialogDeleteCard : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModel = ViewModelProvider(this).get(DeleteCardViewModel::class.java)
+        viewModelFactory = DeleteCardViewModelFactory(arguments.token, arguments.cardId)
 
-        viewModel.token.value = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken
+        viewModel = ViewModelProvider(this, viewModelFactory).get(DeleteCardViewModel::class.java)
 
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
             if (showSpinner) {
@@ -55,7 +58,7 @@ class DialogDeleteCard : DialogFragment() {
         })
 
         binding.buttonYes.setOnClickListener {
-            viewModel.removeCardRetrofit(cardId = arguments.cardId)
+            viewModel.removeCardRetrofit()
         }
         binding.buttonNo.setOnClickListener {
             findNavController().popBackStack()

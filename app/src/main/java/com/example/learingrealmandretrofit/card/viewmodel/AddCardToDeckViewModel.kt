@@ -17,10 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AddCardToDeckViewModel : ViewModel() {
-
-
-    val token = MutableLiveData<String>()
+class AddCardToDeckViewModel(private val token: String, private val cardId: Int) : ViewModel() {
 
     private val _getAllDecksRealm = MutableLiveData<RealmResults<Deck>>()
     val gelAllDecksRealm: LiveData<RealmResults<Deck>>
@@ -51,7 +48,7 @@ class AddCardToDeckViewModel : ViewModel() {
         _getAllDecksRealm.value = realm.where(Deck::class.java).findAll().sort("title", Sort.ASCENDING)
     }
 
-    private fun addCardToDeckRealm(cardId: Int, deckId: Int) {
+    private fun addCardToDeckRealm(deckId: Int) {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
@@ -68,7 +65,7 @@ class AddCardToDeckViewModel : ViewModel() {
             currentDeck?.cards?.add(currentCard)
 
         }, {
-            addCardToDeckRetrofit(cardId)
+            addCardToDeckRetrofit()
             realm.close()
         }, {
             _showToast.value = false
@@ -77,7 +74,7 @@ class AddCardToDeckViewModel : ViewModel() {
         })
     }
 
-    fun addCardToDeckRetrofit(cardId: Int) {
+    fun addCardToDeckRetrofit() {
         _showSpinner.value = true
 
         if (listSelectFlag.size == 0) {
@@ -86,13 +83,11 @@ class AddCardToDeckViewModel : ViewModel() {
         }
 
         listSelectFlag.firstOrNull()?.let { currentDeck ->
-            BaseApi.retrofit.addCardToDeck(token = token.value.orEmpty(), cardId = cardId, deckId = currentDeck.id)
+            BaseApi.retrofit.addCardToDeck(token = token, cardId = cardId, deckId = currentDeck.id)
                 .enqueue(object : Callback<SuccessResponse?> {
                 override fun onResponse(call: Call<SuccessResponse?>, response: Response<SuccessResponse?>) {
                     if (response.isSuccessful) {
-                        Log.d("KEKAS", "Response message: ${response.message()}")
-                        Log.d("KEKAS", "Respoce code: ${response.code()}")
-                        addCardToDeckRealm(cardId, currentDeck.id)
+                        addCardToDeckRealm(currentDeck.id)
                         listSelectFlag.remove(currentDeck)
                     } else {
                         _showToast.value = response.code().toString()

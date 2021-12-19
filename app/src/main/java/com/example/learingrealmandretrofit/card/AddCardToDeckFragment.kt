@@ -11,11 +11,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.AddCardToDeckViewModel
+import com.example.learingrealmandretrofit.card.viewmodel.factory.AddCardToDeckViewModelFactory
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.deck.Deck
 
 class AddCardToDeckFragment : Fragment() {
 
+    private lateinit var viewModelFactory: AddCardToDeckViewModelFactory
     private lateinit var viewModel: AddCardToDeckViewModel
     private lateinit var binding: DeckFragmentRecyclerBinding
     private val arguments: AddCardToDeckFragmentArgs by navArgs()
@@ -34,9 +36,9 @@ class AddCardToDeckFragment : Fragment() {
 
         binding.buttonCreateDeck.isInvisible = true
 
-        viewModel = ViewModelProvider(this).get(AddCardToDeckViewModel::class.java)
+        viewModelFactory = AddCardToDeckViewModelFactory(token = arguments.token, cardId = arguments.cardId)
 
-        viewModel.token.value = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken
+        viewModel = ViewModelProvider(this, viewModelFactory).get(AddCardToDeckViewModel::class.java)
 
         viewModel.showToast.observe(viewLifecycleOwner, Observer { message ->
             context?.showErrorCodeOrStringResource(message)
@@ -65,7 +67,7 @@ class AddCardToDeckFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.selectItem) {
-            viewModel.addCardToDeckRetrofit(arguments.cardId)
+            viewModel.addCardToDeckRetrofit()
             true
         } else {
             super.onOptionsItemSelected(item)

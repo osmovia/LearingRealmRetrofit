@@ -12,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DeleteCardViewModel : ViewModel() {
+class DeleteCardViewModel(private val token: String, private val cardId: Int) : ViewModel() {
 
     private val _success = MutableLiveData<Boolean>()
     val success: LiveData<Boolean>
@@ -26,19 +26,17 @@ class DeleteCardViewModel : ViewModel() {
     val showSpinner: LiveData<Boolean>
         get() = _showSpinner
 
-    val token = MutableLiveData<String>()
-
-    fun removeCardRetrofit(cardId: Int) {
+    fun removeCardRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofit.deleteCard(id = cardId, token = token.value.orEmpty()).enqueue(object : Callback<CardResponse?> {
+        BaseApi.retrofit.deleteCard(id = cardId, token = token).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     removeCardRealm(responseBody.card.id)
                 } else {
                     _showToast.value = response.code().toString()
+                    _showSpinner.value = false
                 }
-                _showSpinner.value = false
             }
             override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
                 _showSpinner.value = false
@@ -63,5 +61,6 @@ class DeleteCardViewModel : ViewModel() {
             _showToast.value = R.string.problem_realm
             realm.close()
         })
+        _showSpinner.value = false
     }
 }

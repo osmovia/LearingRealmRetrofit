@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.CreateOrChangeCardViewModel
+import com.example.learingrealmandretrofit.card.viewmodel.factory.CreateOrChangeCardViewModelFactory
 import com.example.learingrealmandretrofit.databinding.DialogCreateOrChangeCardBinding
 import com.example.learingrealmandretrofit.objects.CardParameters
 
@@ -18,6 +19,7 @@ class DialogCreateOrChangeCard : DialogFragment() {
 
     private val arguments: DialogCreateOrChangeCardArgs by navArgs()
     private lateinit var viewModel: CreateOrChangeCardViewModel
+    private lateinit var viewModelFactory: CreateOrChangeCardViewModelFactory
     private lateinit var binding: DialogCreateOrChangeCardBinding
 
     override fun onCreateView(
@@ -34,9 +36,11 @@ class DialogCreateOrChangeCard : DialogFragment() {
 
         fillFields()
 
-        viewModel = ViewModelProvider(this).get(CreateOrChangeCardViewModel::class.java)
+        viewModelFactory = CreateOrChangeCardViewModelFactory(
+            token = arguments.token
+        )
 
-        viewModel.token.value = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CreateOrChangeCardViewModel::class.java)
 
         viewModel.success.observe(viewLifecycleOwner, Observer { success ->
             if (success) {

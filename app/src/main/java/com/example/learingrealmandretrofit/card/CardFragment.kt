@@ -10,12 +10,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.CardViewModel
+import com.example.learingrealmandretrofit.card.viewmodel.factory.CardViewModelFactory
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
 
 class CardFragment : CardActionsFragment() {
 
     private lateinit var binding: CardFragmentRecyclerBinding
+    private lateinit var viewModelFactory: CardViewModelFactory
     private lateinit var viewModel: CardViewModel
+    private lateinit var token: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,11 +31,11 @@ class CardFragment : CardActionsFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModel = ViewModelProvider(this).get(CardViewModel::class.java)
+        token = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken ?: ""
 
-        viewModel.token.value = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken
+        viewModelFactory = CardViewModelFactory(token = token)
 
-        viewModel.getAllCardRetrofit()
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CardViewModel::class.java)
 
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
             if (showSpinner) {
@@ -53,7 +56,10 @@ class CardFragment : CardActionsFragment() {
         })
 
         binding.buttonCreateCard.setOnClickListener {
-            val action = CardFragmentDirections.actionCardFragmentToDialogCreateOrChangeCard(null)
+            val action = CardFragmentDirections.actionCardFragmentToDialogCreateOrChangeCard(
+                card = null,
+                token = token
+            )
             findNavController().navigate(action)
         }
 
@@ -61,7 +67,10 @@ class CardFragment : CardActionsFragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val currentSwipeCardId = viewModel.getAllCardsRealm.value?.get(viewHolder.absoluteAdapterPosition)?.id
                 if (currentSwipeCardId != null) {
-                    val action = CardFragmentDirections.actionCardFragmentToDialogDeleteCard(currentSwipeCardId)
+                    val action = CardFragmentDirections.actionCardFragmentToDialogDeleteCard(
+                        cardId = currentSwipeCardId,
+                        token = token
+                    )
                     findNavController().navigate(action)
                     binding.recyclerCard.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
                 }
@@ -74,7 +83,10 @@ class CardFragment : CardActionsFragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val currentSwipeCardId = viewModel.getAllCardsRealm.value?.get(viewHolder.absoluteAdapterPosition)?.id
                 if (currentSwipeCardId != null) {
-                    val action = CardFragmentDirections.actionCardFragmentToAddCardToDeckFragment(currentSwipeCardId)
+                    val action = CardFragmentDirections.actionCardFragmentToAddCardToDeckFragment(
+                        cardId = currentSwipeCardId,
+                        token = token
+                    )
                     findNavController().navigate(action)
                     binding.recyclerCard.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
                 }
@@ -85,7 +97,7 @@ class CardFragment : CardActionsFragment() {
     }
 
     override fun onCardClick(card: Card) {
-        val action = CardFragmentDirections.actionCardFragmentToDialogCreateOrChangeCard(card = card)
+        val action = CardFragmentDirections.actionCardFragmentToDialogCreateOrChangeCard(card = card, token = token)
         findNavController().navigate(action)
     }
 }

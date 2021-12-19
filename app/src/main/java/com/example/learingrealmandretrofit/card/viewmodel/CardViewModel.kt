@@ -16,9 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CardViewModel : ViewModel() {
-
-    val token = MutableLiveData<String>()
+class CardViewModel(private val token: String) : ViewModel() {
 
     private val _showToast = MutableLiveData<Any>()
     val showToast: LiveData<Any>
@@ -34,19 +32,20 @@ class CardViewModel : ViewModel() {
 
     init {
         pullCardsRealm()
+        getAllCardRetrofit()
     }
 
-    fun getAllCardRetrofit() {
+    private fun getAllCardRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofit.getCards(token.value.orEmpty()).enqueue(object : Callback<CardListResponse?> {
+        BaseApi.retrofit.getCards(token = token).enqueue(object : Callback<CardListResponse?> {
             override fun onResponse(call: Call<CardListResponse?>, response: Response<CardListResponse?>) {
                 val responseBody = response.body()
                 if(response.isSuccessful && responseBody != null) {
                     checkCurrentCardsInRealm(responseBody.cards)
                 } else {
+                    _showSpinner.value = false
                     _showToast.value = response.code().toString()
                 }
-                _showSpinner.value = false
             }
             override fun onFailure(call: Call<CardListResponse?>, t: Throwable) {
                 _showToast.value = R.string.connection_issues
@@ -80,6 +79,7 @@ class CardViewModel : ViewModel() {
             _showToast.value = R.string.problem_realm
             realm.close()
         })
+        _showSpinner.value = false
     }
 
     private fun pullCardsRealm() {

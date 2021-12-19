@@ -13,21 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CreateOrChangeCardViewModel : ViewModel() {
-
-    val token = MutableLiveData<String>()
-
-    private val _word = MutableLiveData<String>()
-    val word: LiveData<String>
-        get() = _word
-
-    private val _translate = MutableLiveData<String>()
-    val translate: LiveData<String>
-        get() = _translate
-
-    private val _example = MutableLiveData<String>()
-    val example: LiveData<String>
-        get() = _example
+class CreateOrChangeCardViewModel(private val token: String) : ViewModel() {
 
     private val _showSpinner = MutableLiveData<Boolean>()
     val showSpinner: LiveData<Boolean>
@@ -49,15 +35,15 @@ class CreateOrChangeCardViewModel : ViewModel() {
         }
 
         _showSpinner.value = true
-        BaseApi.retrofit.createCard(token = token.value.orEmpty(), params = cardView).enqueue(object : Callback<CardResponse?> {
+        BaseApi.retrofit.createCard(token = token, params = cardView).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     createCardRealm(responseBody.card)
                 } else {
                     _showToast.value = response.code().toString()
+                    _showSpinner.value = false
                 }
-                _showSpinner.value = false
             }
             override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
                 _showSpinner.value = false
@@ -84,6 +70,7 @@ class CreateOrChangeCardViewModel : ViewModel() {
             _showToast.value = R.string.problem_realm
             realm.close()
         })
+        _showSpinner.value = false
     }
 
     fun updateCardRetrofit(cardView: CardParameters) {
@@ -94,15 +81,15 @@ class CreateOrChangeCardViewModel : ViewModel() {
         }
 
             _showSpinner.value = true
-            BaseApi.retrofit.updateCard(id = cardView.id, params = cardView, token = token.value.orEmpty()).enqueue(object : Callback<CardResponse?> {
+            BaseApi.retrofit.updateCard(id = cardView.id, params = cardView, token = token).enqueue(object : Callback<CardResponse?> {
                 override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                     val responseBody = response.body()
                     if (response.isSuccessful && responseBody != null) {
                         updateCardRealm(responseBody.card)
                     } else {
                         _showToast.value = response.code().toString()
+                        _showSpinner.value = false
                     }
-                    _showSpinner.value = false
                 }
                 override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
                     _showSpinner.value = false
@@ -129,5 +116,6 @@ class CreateOrChangeCardViewModel : ViewModel() {
             _showToast.value = R.string.problem_realm
             realm.close()
         })
+        _showSpinner.value = false
     }
 }

@@ -18,9 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DeckViewModel : ViewModel() {
-
-    val token = MutableLiveData<String>()
+class DeckViewModel(private val token: String) : ViewModel() {
 
     private val _showSpinner = MutableLiveData<Boolean>()
     val showSpinner: LiveData<Boolean>
@@ -36,11 +34,12 @@ class DeckViewModel : ViewModel() {
 
     init {
         pullDecks()
+        getAllDecksRetrofit()
     }
 
-    fun getAllDecksRetrofit() {
+    private fun getAllDecksRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofit.getDecks(token = token.value.orEmpty()).enqueue(object : Callback<DeckListResponse?> {
+        BaseApi.retrofit.getDecks(token = token).enqueue(object : Callback<DeckListResponse?> {
             override fun onResponse(call: Call<DeckListResponse?>, response: Response<DeckListResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
@@ -61,25 +60,27 @@ class DeckViewModel : ViewModel() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
-            for (item in decksList) {
-                val listCardsRealm = RealmList<Card>()
-                val listCards = item.cards
-                for (card in listCards) {
+            for (deck in decksList) {
+                val newListCard = RealmList<Card>()
+                val currentListCard = deck.cards
+
+                currentListCard.forEach { card ->
                     val cardRealm = Card(
                         id = card.id,
                         word = card.word,
                         translation = card.translation,
                         example = card.example
                     )
-                    listCardsRealm.add(cardRealm)
+                    newListCard.add(cardRealm)
                 }
+
                 val coincideDeckId = realmTransaction
                     .where(Deck::class.java)
-                    .equalTo("id", item.id)
+                    .equalTo("id", deck.id)
                     .findFirst()
                 if (coincideDeckId == null) {
-                    val deck = Deck(id = item.id, title = item.title, cards = listCardsRealm)
-                    realmTransaction.insert(deck)
+                    val newDeck = Deck(id = deck.id, title = deck.title, cards = newListCard)
+                    realmTransaction.insert(newDeck)
                 }
             }
         }, {

@@ -14,11 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.deck.viewmodel.DeckViewModel
+import com.example.learingrealmandretrofit.deck.viewmodel.factory.DeckViewModelFactory
 
 class DeckFragment : Fragment() {
 
     private lateinit var binding: DeckFragmentRecyclerBinding
+    private lateinit var viewModelFactory: DeckViewModelFactory
     private lateinit var viewModel: DeckViewModel
+    private lateinit var token: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,11 +34,11 @@ class DeckFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModel = ViewModelProvider(this).get(DeckViewModel::class.java)
+        token = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken ?: ""
 
-        viewModel.token.value = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken
+        viewModelFactory = DeckViewModelFactory(token)
 
-        viewModel.getAllDecksRetrofit()
+        viewModel = ViewModelProvider(this, viewModelFactory).get(DeckViewModel::class.java)
 
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
             if (showSpinner) {
@@ -56,7 +59,7 @@ class DeckFragment : Fragment() {
         })
 
         binding.buttonCreateDeck.setOnClickListener {
-            val action = DeckFragmentDirections.actionDeckFragmentToDialogCreateOrChangeDeck()
+            val action = DeckFragmentDirections.actionDeckFragmentToDialogCreateOrChangeDeck(token = token)
             findNavController().navigate(action)
         }
 
@@ -64,7 +67,10 @@ class DeckFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val currentSwipeDeckId = viewModel.gelAllDecksRealm.value?.get(viewHolder.absoluteAdapterPosition)?.id
                 if (currentSwipeDeckId != null) {
-                    val action = DeckFragmentDirections.actionDeckFragmentToDialogDeleteDeck(currentSwipeDeckId)
+                    val action = DeckFragmentDirections.actionDeckFragmentToDialogDeleteDeck(
+                        currentSwipeDeckId,
+                        token = token
+                    )
                     findNavController().navigate(action)
                     binding.recyclerDeck.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
                 }
@@ -77,7 +83,8 @@ class DeckFragment : Fragment() {
     fun onItemClick(deck: Deck) {
         val action = DeckFragmentDirections.actionDeckFragmentToInsideDeckCardFragment(
             deckId = deck.id,
-            deckTitle = deck.title
+            deckTitle = deck.title,
+            token = token
         )
         findNavController().navigate(action)
     }

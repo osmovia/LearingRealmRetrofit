@@ -39,7 +39,7 @@ class InsideDeckUpdateCardDialog : DialogFragment() {
         fillFields()
 
         viewModelFactory = InsideDeckUpdateCardViewModelFactory(
-            token = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken ?: "",
+            token = arguments.token,
             deckId = arguments.deckId
         )
 

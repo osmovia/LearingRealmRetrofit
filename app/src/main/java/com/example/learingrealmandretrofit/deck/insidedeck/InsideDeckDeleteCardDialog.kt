@@ -37,7 +37,7 @@ class InsideDeckDeleteCardDialog: DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         viewModelFactory = InsideDeckDeleteCardViewModelFactory(
-            token = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken ?: "",
+            token = arguments.token,
             deckId = arguments.deckId,
             cardId = arguments.cardId
         )

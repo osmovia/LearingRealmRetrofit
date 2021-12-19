@@ -45,7 +45,7 @@ class InsideDeckCardFragment : CardActionsFragment() {
             }
 
         viewModelFactory = InsideDeckCardViewModelFactory(
-            token = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken ?: "",
+            token = arguments.token,
             deckId = arguments.deckId
         )
 
@@ -74,7 +74,11 @@ class InsideDeckCardFragment : CardActionsFragment() {
                 val currentSwipe = viewModel.getAllCardsRealm.value?.get(viewHolder.absoluteAdapterPosition)?.id
                 if (currentSwipe != null) {
                     val action = InsideDeckCardFragmentDirections
-                        .actionInsideDeckCardFragmentToInsideDeckCardDeleteDialog(cardId = currentSwipe, deckId = arguments.deckId)
+                        .actionInsideDeckCardFragmentToInsideDeckCardDeleteDialog(
+                            cardId = currentSwipe,
+                            deckId = arguments.deckId,
+                            token = arguments.token
+                        )
                     findNavController().navigate(action)
                     binding.recyclerCard.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
                 }
@@ -85,14 +89,22 @@ class InsideDeckCardFragment : CardActionsFragment() {
 
         binding.buttonCreateCard.setOnClickListener {
             val action = InsideDeckCardFragmentDirections
-                .actionInsideDeckCardFragmentToInsideDeckUpdateCardDialog(card = null, deckId = arguments.deckId)
+                .actionInsideDeckCardFragmentToInsideDeckUpdateCardDialog(
+                    card = null,
+                    deckId = arguments.deckId,
+                    token = arguments.token
+                )
             findNavController().navigate(action)
         }
     }
 
     override fun onCardClick(card: Card) {
         val action = InsideDeckCardFragmentDirections
-            .actionInsideDeckCardFragmentToInsideDeckUpdateCardDialog(card = card, deckId = arguments.deckId)
+            .actionInsideDeckCardFragmentToInsideDeckUpdateCardDialog(
+                card = card,
+                deckId = arguments.deckId,
+                token = arguments.token
+            )
         findNavController().navigate(action)
     }
 
@@ -104,7 +116,10 @@ class InsideDeckCardFragment : CardActionsFragment() {
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.renameItem) {
             val action = InsideDeckCardFragmentDirections
-                .actionInsideDeckCardFragmentToDialogCreateOrChangeDeck(arguments.deckId)
+                .actionInsideDeckCardFragmentToDialogCreateOrChangeDeck(
+                    deckId = arguments.deckId,
+                    token = arguments.token
+                )
             findNavController().navigate(action)
             true
         } else {

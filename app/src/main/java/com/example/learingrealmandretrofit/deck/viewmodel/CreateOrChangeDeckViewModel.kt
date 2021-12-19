@@ -17,9 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CreateOrChangeDeckViewModel : ViewModel() {
-
-    val token = MutableLiveData<String>()
+class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
 
     private val _showToast = MutableLiveData<Any>()
     val showToast: LiveData<Any>
@@ -49,7 +47,7 @@ class CreateOrChangeDeckViewModel : ViewModel() {
         _showSpinner.value = true
         val titleRequest = DeckTitleRequest(title)
         val request = DeckCreateOrUpdateRequest(titleRequest)
-        BaseApi.retrofit.createdDeck(token = token.value.orEmpty(), params = request).enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
+        BaseApi.retrofit.createdDeck(token = token, params = request).enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
             override fun onResponse(call: Call<DeckGetOrCreateOrUpdateResponse?>, response: Response<DeckGetOrCreateOrUpdateResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
@@ -92,7 +90,7 @@ class CreateOrChangeDeckViewModel : ViewModel() {
         _showSpinner.value = true
         val requestTitle = DeckTitleRequest(titleDeck)
         val request = DeckCreateOrUpdateRequest(requestTitle)
-        BaseApi.retrofit.updateDeck(token = token.value.orEmpty(), id = _currentDeck.value?.id ?: return , params = request)
+        BaseApi.retrofit.updateDeck(token = token, id = _currentDeck.value?.id ?: return , params = request)
             .enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
             override fun onResponse(call: Call<DeckGetOrCreateOrUpdateResponse?>, response: Response<DeckGetOrCreateOrUpdateResponse?>) {
                 val responseBody = response.body()
@@ -101,7 +99,6 @@ class CreateOrChangeDeckViewModel : ViewModel() {
                 } else {
                     _showToast.value = response.code().toString()
                 }
-                _showSpinner.value = false
             }
             override fun onFailure(call: Call<DeckGetOrCreateOrUpdateResponse?>, t: Throwable) {
                 _showToast.value = R.string.connection_issues

@@ -29,6 +29,9 @@
             android:name="deckId"
             app:argType="integer"
             android:defaultValue="0"/>
+        <argument
+            android:name="token"
+            app:argType="string" />
     </dialog>
 
     <dialog
@@ -41,6 +44,9 @@
         <argument
             android:name="cardId"
             app:argType="integer" />
+        <argument
+            android:name="token"
+            app:argType="string" />
     </dialog>
 
     <fragment
@@ -58,11 +64,13 @@
             app:destination="@id/insideDeckCardDeleteDialog"/>
         <argument
             android:name="deckId"
-            app:argType="integer"
-            android:defaultValue="0"/>
+            app:argType="integer" />
         <argument
             android:name="deckTitle"
             app:argType="string"/>
+        <argument
+            android:name="token"
+            app:argType="string" />
     </fragment>
 
     <dialog
@@ -75,8 +83,10 @@
             app:nullable="true"/>
         <argument
             android:name="deckId"
-            app:argType="integer"
-            android:defaultValue="0"/>
+            app:argType="integer" />
+        <argument
+            android:name="token"
+            app:argType="string" />
     </dialog>
 
     <dialog
@@ -85,7 +95,9 @@
         tools:layout="@layout/dialog_delete_deck">
         <argument
             android:name="deckId"
-            app:argType="integer"
-            android:defaultValue="0"/>
+            app:argType="integer" />
+        <argument
+            android:name="token"
+            app:argType="string" />
     </dialog>
 </navigation>

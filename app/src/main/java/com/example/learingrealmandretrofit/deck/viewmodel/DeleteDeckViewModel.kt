@@ -15,9 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DeleteDeckViewModel : ViewModel() {
-
-    val token = MutableLiveData<String>()
+class DeleteDeckViewModel(private val token: String, private val deckId: Int) : ViewModel() {
 
     private val _showToast = MutableLiveData<Any>()
     val showToast: LiveData<Any>
@@ -34,16 +32,16 @@ class DeleteDeckViewModel : ViewModel() {
     private val listCardId = mutableListOf<Int>()
 
 
-    fun deleteDeckRetrofit(deckId: Int, withCards: Boolean) {
+    fun deleteDeckRetrofit(withCards: Boolean) {
         _showSpinner.value = true
-        BaseApi.retrofit.deleteDeck(id = deckId, token = token.value.orEmpty()).enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
+        BaseApi.retrofit.deleteDeck(id = deckId, token = token).enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
             override fun onResponse(call: Call<DeckGetOrCreateOrUpdateResponse?>, response: Response<DeckGetOrCreateOrUpdateResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     if (withCards) {
-                        pullCardsForDelete(responseBody.deck.id)
+                        pullCardsForDelete()
                     } else {
-                        deleteOnlyDeckRealm(responseBody.deck.id)
+                        deleteOnlyDeckRealm()
                     }
                 } else {
                     _showSpinner.value = false
@@ -57,7 +55,7 @@ class DeleteDeckViewModel : ViewModel() {
         })
     }
 
-    private fun pullCardsForDelete(deckId: Int) {
+    private fun pullCardsForDelete() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
@@ -66,13 +64,13 @@ class DeleteDeckViewModel : ViewModel() {
                 .where(Deck::class.java)
                 .equalTo("id", deckId)
                 .findFirst()
-                ?.cards ?: return@executeTransactionAsync
+                ?.cards
 
-            for (card in allCards) {
+            allCards?.forEach { card ->
                 listCardId.add(card.id)
             }
         }, {
-            deleteCardsRetrofit(deckId)
+            deleteCardsRetrofit()
             realm.close()
         }, {
             _showSpinner.value = false
@@ -81,19 +79,19 @@ class DeleteDeckViewModel : ViewModel() {
         })
     }
 
-    private fun deleteCardsRetrofit(deckId: Int) {
+    private fun deleteCardsRetrofit() {
 
         if (listCardId.size == 0) {
-            deleteOnlyDeckRealm(deckId)
+            deleteOnlyDeckRealm()
         }
 
         listCardId.firstOrNull()?.let { cardId ->
-            BaseApi.retrofit.deleteCard(token = token.value.orEmpty(), cardId)
+            BaseApi.retrofit.deleteCard(token = token, cardId)
                 .enqueue(object : Callback<CardResponse?> {
                     override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                         val responseBody = response.body()
                         if (response.isSuccessful && responseBody != null) {
-                            deleteOneCardRealm(responseBody.card.id, deckId)
+                            deleteOneCardRealm(responseBody.card.id)
                         } else {
                             _showSpinner.value = false
                             _showToast.value = response.code().toString()
@@ -108,7 +106,7 @@ class DeleteDeckViewModel : ViewModel() {
         }
     }
 
-    private fun deleteOneCardRealm(cardId: Int, deckId: Int) {
+    private fun deleteOneCardRealm(cardId: Int) {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
@@ -119,7 +117,7 @@ class DeleteDeckViewModel : ViewModel() {
             deleteCard?.deleteFromRealm()
         }, {
             listCardId.remove(cardId)
-            deleteCardsRetrofit(deckId)
+            deleteCardsRetrofit()
             realm.close()
         }, {
             _showToast.value = R.string.problem_realm
@@ -128,7 +126,7 @@ class DeleteDeckViewModel : ViewModel() {
         })
     }
 
-    private fun deleteOnlyDeckRealm(deckId: Int) {
+    private fun deleteOnlyDeckRealm() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->

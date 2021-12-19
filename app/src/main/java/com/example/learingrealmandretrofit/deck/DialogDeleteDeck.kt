@@ -9,14 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.learingrealmandretrofit.SharedPreferencesManager
 import com.example.learingrealmandretrofit.databinding.DialogDeleteDeckBinding
 import com.example.learingrealmandretrofit.deck.viewmodel.DeleteDeckViewModel
+import com.example.learingrealmandretrofit.deck.viewmodel.factory.DeleteDeckViewModelFactory
 import com.example.learingrealmandretrofit.showErrorCodeOrStringResource
 
 class DialogDeleteDeck : DialogFragment() {
 
     private lateinit var binding: DialogDeleteDeckBinding
+
+    private lateinit var viewModelFactory: DeleteDeckViewModelFactory
 
     private lateinit var viewModel: DeleteDeckViewModel
 
@@ -34,9 +36,12 @@ class DialogDeleteDeck : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModel = ViewModelProvider(this).get(DeleteDeckViewModel::class.java)
+        viewModelFactory = DeleteDeckViewModelFactory(
+            token = arguments.token,
+            deckId = arguments.deckId
+        )
 
-        viewModel.token.value = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken
+        viewModel = ViewModelProvider(this, viewModelFactory).get(DeleteDeckViewModel::class.java)
 
         viewModel.showToast.observe(viewLifecycleOwner, Observer { message ->
             context?.showErrorCodeOrStringResource(message)
@@ -49,11 +54,11 @@ class DialogDeleteDeck : DialogFragment() {
         })
 
         binding.viewDeleteList.setOnClickListener {
-            viewModel.deleteDeckRetrofit(deckId = arguments.deckId, withCards = false)
+            viewModel.deleteDeckRetrofit(withCards = false)
         }
 
         binding.viewDeleteListWithCards.setOnClickListener {
-            viewModel.deleteDeckRetrofit(deckId = arguments.deckId, withCards = true)
+            viewModel.deleteDeckRetrofit(withCards = true)
         }
     }
 }

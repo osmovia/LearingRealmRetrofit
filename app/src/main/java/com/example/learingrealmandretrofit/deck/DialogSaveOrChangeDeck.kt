@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -13,11 +14,13 @@ import com.example.learingrealmandretrofit.Constants
 import com.example.learingrealmandretrofit.SharedPreferencesManager
 import com.example.learingrealmandretrofit.databinding.DialogCreateOrUpdateDeckBinding
 import com.example.learingrealmandretrofit.deck.viewmodel.CreateOrChangeDeckViewModel
+import com.example.learingrealmandretrofit.deck.viewmodel.factory.CreateOrChangeDeckViewModelFactory
 import com.example.learingrealmandretrofit.showErrorCodeOrStringResource
 
 class DialogCreateOrChangeDeck : DialogFragment() {
 
     private lateinit var binding: DialogCreateOrUpdateDeckBinding
+    private lateinit var viewModelFactory: CreateOrChangeDeckViewModelFactory
     private lateinit var viewModel: CreateOrChangeDeckViewModel
     private val arguments: DialogCreateOrChangeDeckArgs by navArgs()
 
@@ -33,13 +36,13 @@ class DialogCreateOrChangeDeck : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModel = ViewModelProvider(this).get(CreateOrChangeDeckViewModel::class.java)
+        viewModelFactory = CreateOrChangeDeckViewModelFactory(token = arguments.token)
+
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CreateOrChangeDeckViewModel::class.java)
 
         if (arguments.deckId != 0) {
             viewModel.pullDeck(arguments.deckId)
         }
-
-        viewModel.token.value = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken
 
         viewModel.currentDeck.observe(viewLifecycleOwner, Observer { currentDeck ->
                 binding.editTextTitle.setText(currentDeck.title)

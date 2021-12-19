@@ -9,8 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.learingrealmandretrofit.SharedPreferencesManager
-import com.example.learingrealmandretrofit.databinding.DialogDeleteCardOrDeleteFromListBinding
+import com.example.learingrealmandretrofit.databinding.DialogDeleteCardBinding
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.InsideDeckDeleteCardViewModel
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.factory.InsideDeckDeleteCardViewModelFactory
 import com.example.learingrealmandretrofit.hideProgress
@@ -19,7 +18,7 @@ import com.example.learingrealmandretrofit.showProgress
 
 class InsideDeckDeleteCardDialog: DialogFragment() {
 
-    private lateinit var binding: DialogDeleteCardOrDeleteFromListBinding
+    private lateinit var binding: DialogDeleteCardBinding
     private lateinit var viewModelFactory: InsideDeckDeleteCardViewModelFactory
     private lateinit var viewModel: InsideDeckDeleteCardViewModel
     private val arguments: InsideDeckDeleteCardDialogArgs by navArgs()
@@ -29,7 +28,7 @@ class InsideDeckDeleteCardDialog: DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DialogDeleteCardOrDeleteFromListBinding.inflate(layoutInflater)
+        binding = DialogDeleteCardBinding.inflate(layoutInflater)
         dialog?.setCanceledOnTouchOutside(true)
         return binding.root
     }
@@ -62,13 +61,12 @@ class InsideDeckDeleteCardDialog: DialogFragment() {
             }
         })
 
-        binding.deleteCardFromList.setOnClickListener {
-            viewModel.deleteCardFromListRetrofit()
-
+        binding.buttonYes.setOnClickListener {
+            viewModel.deleteCardRetrofit()
         }
 
-        binding.deleteCard.setOnClickListener {
-            viewModel.deleteCardRetrofit()
+        binding.buttonNo.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 }

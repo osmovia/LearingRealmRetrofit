@@ -50,7 +50,7 @@ class DeckFragment : Fragment() {
         })
 
         viewModel.gelAllDecksRealm.observe(viewLifecycleOwner, Observer { allDecks ->
-            val adapter = RecyclerAdapterDeck(this, allDecks, visibility = false, autoUpdate = true)
+            val adapter = RecyclerAdapterDeck(this, allDecks, autoUpdate = true)
             binding.recyclerDeck.layoutManager = LinearLayoutManager(context)
             binding.recyclerDeck.adapter = adapter
         })

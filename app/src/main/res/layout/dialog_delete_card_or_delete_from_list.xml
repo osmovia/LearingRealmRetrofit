@@ -25,6 +25,7 @@
             android:textSize="20sp"/>
 
         <TextView
+            android:id="@+id/deleteCard"
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,6 +33,7 @@
             android:textSize="16sp"/>
 
         <TextView
+            android:id="@+id/deleteCardFromList"
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

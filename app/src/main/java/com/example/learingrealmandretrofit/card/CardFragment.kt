@@ -2,7 +2,6 @@ package com.example.learingrealmandretrofit.card
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -13,7 +12,7 @@ import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.CardViewModel
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
 
-class CardFragment : Fragment() {
+class CardFragment : CardActionsFragment() {
 
     private lateinit var binding: CardFragmentRecyclerBinding
     private lateinit var viewModel: CardViewModel
@@ -55,7 +54,7 @@ class CardFragment : Fragment() {
 
         binding.buttonCreateCard.setOnClickListener {
             val action = CardFragmentDirections.actionCardFragmentToDialogCreateOrChangeCard(null)
-             findNavController().navigate(action)
+            findNavController().navigate(action)
         }
 
         val itemDelete = object : SwipeToDelete(requireContext()) {
@@ -85,7 +84,7 @@ class CardFragment : Fragment() {
         itemTouchHelperRelationship.attachToRecyclerView(binding.recyclerCard)
     }
 
-    fun onItemClick(card: Card) {
+    override fun onCardClick(card: Card) {
         val action = CardFragmentDirections.actionCardFragmentToDialogCreateOrChangeCard(card = card)
         findNavController().navigate(action)
     }

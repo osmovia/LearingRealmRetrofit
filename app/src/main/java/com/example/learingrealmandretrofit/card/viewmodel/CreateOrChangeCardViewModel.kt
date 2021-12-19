@@ -42,6 +42,12 @@ class CreateOrChangeCardViewModel : ViewModel() {
         get() = _success
 
     fun createCardRetrofit(cardView: CardParameters) {
+
+        if (cardView.example.isEmpty() || cardView.translation.isEmpty() || cardView.word.isEmpty()) {
+            _showToast.value = R.string.empty_fields
+            return
+        }
+
         _showSpinner.value = true
         BaseApi.retrofit.createCard(token = token.value.orEmpty(), params = cardView).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
@@ -80,9 +86,15 @@ class CreateOrChangeCardViewModel : ViewModel() {
         })
     }
 
-    fun updateCardRetrofit(card: CardParameters) {
+    fun updateCardRetrofit(cardView: CardParameters) {
+
+        if (cardView.example.isEmpty() || cardView.translation.isEmpty() || cardView.word.isEmpty()) {
+            _showToast.value = R.string.empty_fields
+            return
+        }
+
             _showSpinner.value = true
-            BaseApi.retrofit.updateCard(id = card.id, params = card , token = token.value.orEmpty()).enqueue(object : Callback<CardResponse?> {
+            BaseApi.retrofit.updateCard(id = cardView.id, params = cardView, token = token.value.orEmpty()).enqueue(object : Callback<CardResponse?> {
                 override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                     val responseBody = response.body()
                     if (response.isSuccessful && responseBody != null) {

@@ -33,6 +33,7 @@
     <string name="my_null">null</string>
     <string name="problem_realm">Oops problem database</string>
     <string name="empty_title">You did not enter a title</string>
+    <string name="empty_fields">Fields must not be empty</string>
     <string name="word">Word</string>
     <string name="translation">Translation</string>
     <string name="example">Example</string>

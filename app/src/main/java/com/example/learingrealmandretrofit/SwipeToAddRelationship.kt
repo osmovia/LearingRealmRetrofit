@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class SwipeToAddRelationship(context: Context) :
-    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
+    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
     private val addRelations = ContextCompat.getDrawable(context, R.drawable.ic_list_add)!!
     private val intrinsicWidth = addRelations.intrinsicWidth
@@ -44,8 +44,8 @@ abstract class SwipeToAddRelationship(context: Context) :
         // Calculate position of addRelations icon
         val addRelationsIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
         val addRelationsIconMargin = (itemHeight - intrinsicHeight) / 2
-        val addRelationsIconLeft = itemView.left + addRelationsIconMargin
-        val addRelationsIconRight = addRelationsIconLeft + intrinsicWidth
+        val addRelationsIconLeft = itemView.right - addRelationsIconMargin - intrinsicWidth
+        val addRelationsIconRight = itemView.right - addRelationsIconMargin
         val addRelationsIconBottom = addRelationsIconTop + intrinsicHeight
 
         // Draw the addRelations icon

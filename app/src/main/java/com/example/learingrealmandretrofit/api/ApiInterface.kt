@@ -50,19 +50,36 @@ interface ApiInterface {
     fun getDecks(
         @Header(tokenKey) token: String): Call<DeckListResponse>
 
+    @GET("decks/{id}")
+    fun getDeck(
+        @Header(tokenKey) token: String,
+        @Path("id") id: Int): Call<DeckGetOrCreateOrUpdateResponse>
+
     @POST("decks")
     fun createdDeck(
         @Header(tokenKey) token: String,
-        @Body params: DeckCreateOrUpdateRequest): Call<DeckCreateOrUpdateResponse>
+        @Body params: DeckCreateOrUpdateRequest): Call<DeckGetOrCreateOrUpdateResponse>
 
     @DELETE("decks/{id}")
     fun deleteDeck(
         @Header(tokenKey) token: String,
-        @Path("id") id: Int): Call<DeckCreateOrUpdateResponse>
+        @Path("id") id: Int): Call<DeckGetOrCreateOrUpdateResponse>
 
     @PUT("decks/{id}")
     fun updateDeck(
         @Header(tokenKey) token: String,
         @Path("id") id: Int,
-        @Body params: DeckCreateOrUpdateRequest): Call<DeckCreateOrUpdateResponse>
+        @Body params: DeckCreateOrUpdateRequest): Call<DeckGetOrCreateOrUpdateResponse>
+
+    @POST("decks/{deckId}/cards/{cardId}/add")
+    fun addCardToDeck(
+        @Header(tokenKey) token: String,
+        @Path("deckId") deckId: Int,
+        @Path("cardId") cardId: Int): Call<SuccessResponse>
+
+    @DELETE("decks/{deckId}/cards/{cardId}/remove")
+    fun removeCardFromDeck(
+        @Header(tokenKey) token: String,
+        @Path("deckId") deckId: Int,
+        @Path("cardId") cardId: Int): Call<SuccessResponse>
 }

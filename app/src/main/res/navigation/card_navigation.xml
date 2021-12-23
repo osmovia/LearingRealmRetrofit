@@ -11,14 +11,17 @@
         android:label="@string/card"
         tools:layout="@layout/card_fragment_recycler">
         <action
-            android:id="@+id/action_cardFragment_to_dialogCreateOrChangeCard"
-            app:destination="@id/dialogCreateOrChangeCard"/>
-        <action
             android:id="@+id/action_cardFragment_to_dialogDeleteCard"
             app:destination="@id/dialogDeleteCard"/>
         <action
             android:id="@+id/action_cardFragment_to_addCardToDeckFragment"
             app:destination="@id/addCardToDeckFragment"/>
+        <action
+            android:id="@+id/action_cardFragment_to_showDetailsCardFragment"
+            app:destination="@id/showDetailsCardFragment" />
+        <action
+            android:id="@+id/action_cardFragment_to_dialogCreateOrChangeCard"
+            app:destination="@id/dialogCreateOrChangeCard"/>
     </fragment>
 
     <dialog
@@ -51,6 +54,17 @@
         android:name="com.example.learingrealmandretrofit.card.AddCardToDeckFragment"
         android:label="@string/select_lists"
         tools:layout="@layout/deck_fragment_recycler">
+        <argument
+            android:name="cardId"
+            app:argType="integer"/>
+        <argument
+            android:name="token"
+            app:argType="string"/>
+    </fragment>
+    <fragment
+        android:id="@+id/showDetailsCardFragment"
+        android:name="com.example.learingrealmandretrofit.card.ShowDetailsCardFragment"
+        tools:layout="@layout/show_details_card">
         <argument
             android:name="cardId"
             app:argType="integer"/>

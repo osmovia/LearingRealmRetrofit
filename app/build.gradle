@@ -57,8 +57,6 @@ dependencies {
     //Retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    //Binding
-    implementation 'com.android.databinding:viewbinding:7.0.4'
     //Realm recycler
     implementation 'io.realm:android-adapters:2.1.1'
 }

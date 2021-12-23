@@ -3,8 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/osmov/AndroidStudioProjects/CurrentProject/LearingRealmRetrofit/app/src/main/res/layout/dialog_create_or_change_card.xml" value="0.22735507246376813" />
-        <entry key="..\:/Users/osmov/AndroidStudioProjects/CurrentProject/LearingRealmRetrofit/app/src/main/res/layout/dialog_delete_card.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/osmov/AndroidStudioProjects/LearingRealmAndRetrofit/app/src/main/res/drawable-v24/ic_baseline_add_48.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/osmov/AndroidStudioProjects/LearingRealmAndRetrofit/app/src/main/res/drawable-v24/ic_baseline_delete_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/osmov/AndroidStudioProjects/LearingRealmAndRetrofit/app/src/main/res/layout/activity_main.xml" value="0.23007246376811594" />
@@ -18,6 +16,27 @@
         <entry key="app/src/main/res/drawable-v24/ic_baseline_delete_24.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.5796875" />
         <entry key="app/src/main/res/drawable/button_rounded_delete.xml" value="0.35052083333333334" />
+        <entry key="app/src/main/res/drawable/gradient.xml" value="0.5796875" />
+        <entry key="app/src/main/res/drawable/gradient_1.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_10.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_11.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_12.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_13.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_14.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_15.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_16.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_17.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_18.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_19.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_2.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_20.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_3.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_4.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_5.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_6.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_7.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_8.xml" value="0.4791666666666667" />
+        <entry key="app/src/main/res/drawable/gradient_9.xml" value="0.4791666666666667" />
         <entry key="app/src/main/res/drawable/ic_book.xml" value="0.5796875" />
         <entry key="app/src/main/res/drawable/ic_delete.xml" value="0.5796875" />
         <entry key="app/src/main/res/drawable/ic_email_dark_grey.xml" value="0.49895833333333334" />
@@ -32,6 +51,7 @@
         <entry key="app/src/main/res/drawable/ic_person_gray_40.xml" value="0.5796875" />
         <entry key="app/src/main/res/drawable/ic_person_outline_gray_40.xml" value="0.5796875" />
         <entry key="app/src/main/res/drawable/ic_rename.xml" value="0.5796875" />
+        <entry key="app/src/main/res/drawable/ic_select.xml" value="0.4317708333333333" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.5796875" />
         <entry key="app/src/main/res/drawable/linear_gradient_green.xml" value="1.0" />
         <entry key="app/src/main/res/drawable/selector_ic_email.xml" value="0.5796875" />
@@ -54,13 +74,15 @@
         <entry key="app/src/main/res/layout/fragment_delete_word.xml" value="0.75" />
         <entry key="app/src/main/res/layout/fragment_save_word.xml" value="0.4296875" />
         <entry key="app/src/main/res/layout/fragment_tabs.xml" value="0.5635416666666667" />
-        <entry key="app/src/main/res/layout/item_card_recycler.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_card_recycler.xml" value="0.18" />
         <entry key="app/src/main/res/layout/item_deck_recycler.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_header_title.xml" value="0.3375" />
+        <entry key="app/src/main/res/layout/learing_card_view.xml" value="0.4635416666666667" />
         <entry key="app/src/main/res/layout/red_screen.xml" value="0.5635416666666667" />
         <entry key="app/src/main/res/layout/registration_fragment.xml" value="0.2" />
         <entry key="app/src/main/res/layout/registration_fragmnet.xml" value="0.33" />
         <entry key="app/src/main/res/layout/settings_fragment.xml" value="0.309375" />
+        <entry key="app/src/main/res/layout/show_details_card.xml" value="0.4635416666666667" />
         <entry key="app/src/main/res/layout/sign_in_fragment.xml" value="0.309375" />
         <entry key="app/src/main/res/layout/sign_up_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/toolbar_main_fragment.xml" value="0.3375" />
@@ -68,6 +90,7 @@
         <entry key="app/src/main/res/menu/menu.xml" value="0.3375" />
         <entry key="app/src/main/res/menu/menu_registration.xml" value="0.3375" />
         <entry key="app/src/main/res/menu/toolbar_rename.xml" value="0.5635416666666667" />
+        <entry key="app/src/main/res/menu/toolbar_select.xml" value="0.415625" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.5796875" />
       </map>

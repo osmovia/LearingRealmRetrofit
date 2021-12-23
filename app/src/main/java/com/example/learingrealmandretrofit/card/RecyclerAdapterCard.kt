@@ -4,11 +4,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.CardActionsFragment
 import com.example.learingrealmandretrofit.R
+import com.example.learingrealmandretrofit.getRandomColorGradient
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
+
 
 class RecyclerAdapterCard(
     private val owner: CardActionsFragment?,
@@ -20,9 +24,10 @@ class RecyclerAdapterCard(
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         val item = cardList[position]
+        val gradient = ResourcesCompat.getDrawable(holder.itemView.resources, getRandomColorGradient(position), null)
+        holder.cardView.background = gradient
         holder.textViewOriginal.text = item.word
         holder.textViewTranslate.text = item.translation
-        holder.textViwExample.text = item.example
         holder.itemContainer.setOnClickListener {
             owner?.onCardClick(item)
         }
@@ -37,7 +42,7 @@ class RecyclerAdapterCard(
     class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textViewOriginal: TextView = itemView.findViewById(R.id.textViewOriginal)
         var textViewTranslate: TextView = itemView.findViewById(R.id.textViewTranslate)
-        var textViwExample: TextView = itemView.findViewById(R.id.textViewExample)
         var itemContainer: ViewGroup = itemView.findViewById(R.id.itemContainerCard)
+        var cardView: CardView = itemView.findViewById(R.id.cardView)
     }
 }

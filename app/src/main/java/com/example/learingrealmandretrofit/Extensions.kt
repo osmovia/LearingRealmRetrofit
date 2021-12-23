@@ -44,3 +44,29 @@ fun Activity.hideProgress() {
 fun Context.user(): SessionSharedPreferencesRead {
     return SharedPreferencesManager(this).fetchAuthentication()
 }
+
+fun getRandomColorGradient(position: Int): Int {
+    val listColor = listOf(
+        R.drawable.gradient_1,
+        R.drawable.gradient_2,
+        R.drawable.gradient_3,
+        R.drawable.gradient_4,
+        R.drawable.gradient_5,
+        R.drawable.gradient_6,
+        R.drawable.gradient_7,
+        R.drawable.gradient_8,
+        R.drawable.gradient_9,
+        R.drawable.gradient_10,
+        R.drawable.gradient_11,
+        R.drawable.gradient_12,
+        R.drawable.gradient_13,
+        R.drawable.gradient_14,
+        R.drawable.gradient_15,
+        R.drawable.gradient_16,
+    )
+    return if (position <= 15) {
+        listColor[position]
+    } else {
+        listColor[position % listColor.size]
+    }
+}

@@ -97,7 +97,7 @@ class CardFragment : CardActionsFragment() {
     }
 
     override fun onCardClick(card: Card) {
-        val action = CardFragmentDirections.actionCardFragmentToDialogCreateOrChangeCard(card = card, token = token)
+        val action = CardFragmentDirections.actionCardFragmentToShowDetailsCardFragment(cardId = card.id, token = token)
         findNavController().navigate(action)
     }
 }

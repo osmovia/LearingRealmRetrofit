@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class SessionRequest(
     @SerializedName("operational_system")
-    val operatingSystem: String = "Android"
+    val operationalSystem: String = "Android"
 )

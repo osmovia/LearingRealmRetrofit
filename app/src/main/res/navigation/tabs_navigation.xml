@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation_test"
     app:startDestination="@id/card_navigation">
-    <include app:graph="@navigation/deck_navigation" />
-    <include app:graph="@navigation/card_navigation" />
-    <include app:graph="@navigation/settings_navigation" />
+
+    <include app:graph="@navigation/deck_navigation"/>
+    <include app:graph="@navigation/card_navigation"/>
+    <include app:graph="@navigation/settings_navigation"/>
 </navigation>

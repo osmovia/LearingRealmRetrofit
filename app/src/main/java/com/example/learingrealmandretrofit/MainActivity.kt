@@ -9,14 +9,16 @@ import io.realm.Realm
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         Realm.init(this)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.containerView) as NavHostFragment
         val navController = navHostFragment.navController
         val navGraph = navController.navInflater.inflate(R.navigation.main_navigation)
-        if (authentication()) {
+        if (authenticated()) {
             navGraph.setStartDestination(R.id.tabsFragment)
         } else {
             navGraph.setStartDestination(R.id.authenticationFragment)
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun authentication(): Boolean {
-        return this.user().token != null
+    private fun authenticated(): Boolean {
+        return this.user().sessionToken != null
     }
 }

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.DialogDeleteCard">
+    tools:context=".card.DialogDeleteCard">
 
     <LinearLayout
         android:id="@+id/linerLayoutDelete"
@@ -26,12 +26,11 @@
             android:layout_height="wrap_content"
             android:fontFamily="casual"
             android:gravity="center"
-            android:text="Delete this card?"
+            android:text="@string/delete_this_card"
             android:textColor="@color/black"
-            android:textSize="34sp" />
+            android:textSize="34sp"/>
 
         <RadioGroup
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -44,7 +43,7 @@
                 android:layout_marginEnd="30dp"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif"
-                android:text="Yes"
+                android:text="@string/yes"
                 android:background="@drawable/button_rounded_delete"
                 android:shadowRadius="3"
                 android:textColor="@color/black"
@@ -58,13 +57,13 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
                 android:fontFamily="sans-serif"
-                android:text="No"
+                android:text="@string/no"
                 android:background="@drawable/button_rounded_delete"
                 android:layout_weight="1"
                 android:textColor="@android:color/black"
                 app:backgroundTint="@null"/>
         </RadioGroup>
 
-
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

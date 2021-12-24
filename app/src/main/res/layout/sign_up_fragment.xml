@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -31,7 +29,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.682" />
+                app:layout_constraintVertical_bias="0.682"/>
 
             <LinearLayout
                 android:id="@+id/linearLayout"
@@ -49,7 +47,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_layout_email"
+                    android:id="@+id/layoutEmail"
                     style="@style/TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -61,11 +59,11 @@
                         android:id="@+id/email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_password"
+                    android:id="@+id/layoutPassword"
                     style="@style/TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -78,11 +76,11 @@
                         android:id="@+id/password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_confirm_password"
+                    android:id="@+id/layoutPasswordConfirmation"
                     style="@style/TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -91,7 +89,7 @@
                     app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/confirm_password"
+                        android:id="@+id/passwordConfirmation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"/>
@@ -99,7 +97,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/buttonRegister"
+                android:id="@+id/buttonRegistration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/entry"
@@ -108,21 +106,21 @@
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                app:layout_constraintVertical_bias="0.271" />
+                app:layout_constraintVertical_bias="0.271"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
-                app:layout_constraintEnd_toEndOf="@+id/buttonRegister"
-                app:layout_constraintStart_toStartOf="@+id/buttonRegister"
+                app:layout_constraintBottom_toTopOf="@+id/buttonRegistration"
+                app:layout_constraintEnd_toEndOf="@+id/buttonRegistration"
+                app:layout_constraintStart_toStartOf="@+id/buttonRegistration"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@string/have_account" />
+                    android:text="@string/have_account"/>
 
                 <TextView
                     android:id="@+id/textViewSignIn"
@@ -130,8 +128,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:text="@string/sign_in"
-                    android:textColor="@color/orange_500" />
-
+                    android:textColor="@color/orange_500"/>
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

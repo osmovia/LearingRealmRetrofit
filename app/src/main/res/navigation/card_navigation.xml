@@ -7,26 +7,69 @@
 
     <fragment
         android:id="@+id/cardFragment"
-        android:name="com.example.learingrealmandretrofit.fragment.CardFragment"
+        android:name="com.example.learingrealmandretrofit.card.CardFragment"
         android:label="@string/card"
         tools:layout="@layout/card_fragment_recycler">
         <action
-            android:id="@+id/action_cardFragment_to_dialogCreateOrChangeCard"
-            app:destination="@id/dialogCreateOrChangeCard" />
-        <action
             android:id="@+id/action_cardFragment_to_dialogDeleteCard"
-            app:destination="@id/dialogDeleteCard" />
+            app:destination="@id/dialogDeleteCard"/>
+        <action
+            android:id="@+id/action_cardFragment_to_addCardToDeckFragment"
+            app:destination="@id/addCardToDeckFragment"/>
+        <action
+            android:id="@+id/action_cardFragment_to_showDetailsCardFragment"
+            app:destination="@id/showDetailsCardFragment" />
+        <action
+            android:id="@+id/action_cardFragment_to_dialogCreateOrChangeCard"
+            app:destination="@id/dialogCreateOrChangeCard"/>
     </fragment>
+
     <dialog
         android:id="@+id/dialogCreateOrChangeCard"
-        android:name="com.example.learingrealmandretrofit.fragment.DialogCreateOrChangeCard"
-        tools:layout="@layout/dialog_create_or_change_card"/>
+        android:name="com.example.learingrealmandretrofit.card.DialogCreateOrChangeCard"
+        tools:layout="@layout/dialog_create_or_change_card">
+        <argument
+            android:name="card"
+            app:argType="com.example.learingrealmandretrofit.card.Card"
+            app:nullable="true"/>
+        <argument
+            android:name="token"
+            app:argType="string"/>
+    </dialog>
+
     <dialog
         android:id="@+id/dialogDeleteCard"
-        android:name="com.example.learingrealmandretrofit.fragment.DialogDeleteCard"
-        tools:layout="@layout/dialog_delete_card" >
+        android:name="com.example.learingrealmandretrofit.card.DialogDeleteCard"
+        tools:layout="@layout/dialog_delete_card">
         <argument
-            android:name="idCard"
-            app:argType="integer" />
+            android:name="cardId"
+            app:argType="integer"/>
+        <argument
+            android:name="token"
+            app:argType="string"/>
     </dialog>
+
+    <fragment
+        android:id="@+id/addCardToDeckFragment"
+        android:name="com.example.learingrealmandretrofit.card.AddCardToDeckFragment"
+        android:label="@string/select_lists"
+        tools:layout="@layout/deck_fragment_recycler">
+        <argument
+            android:name="cardId"
+            app:argType="integer"/>
+        <argument
+            android:name="token"
+            app:argType="string"/>
+    </fragment>
+    <fragment
+        android:id="@+id/showDetailsCardFragment"
+        android:name="com.example.learingrealmandretrofit.card.ShowDetailsCardFragment"
+        tools:layout="@layout/show_details_card">
+        <argument
+            android:name="cardId"
+            app:argType="integer"/>
+        <argument
+            android:name="token"
+            app:argType="string"/>
+    </fragment>
 </navigation>

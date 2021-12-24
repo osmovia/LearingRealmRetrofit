@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation">
+
     <fragment
         android:id="@+id/tabsFragment"
         android:name="com.example.learingrealmandretrofit.fragment.TabsFragment"
@@ -11,16 +12,17 @@
             android:id="@+id/action_tabsFragment_to_authenticationFragment"
             app:destination="@id/authenticationFragment"
             app:popUpTo="@id/tabsFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"/>
     </fragment>
+
     <fragment
         android:id="@+id/authenticationFragment"
-        android:name="com.example.learingrealmandretrofit.fragment.AuthenticationFragment"
+        android:name="com.example.learingrealmandretrofit.authentication.AuthenticationFragment"
         tools:layout="@layout/authentication_fragment">
         <action
             android:id="@+id/action_authenticationFragment_to_tabsFragment"
             app:destination="@id/tabsFragment"
             app:popUpTo="@id/authenticationFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

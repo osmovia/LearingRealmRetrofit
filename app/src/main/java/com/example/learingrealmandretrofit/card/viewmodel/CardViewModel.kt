@@ -37,16 +37,19 @@ class CardViewModel(private val token: String) : ViewModel() {
 
     private fun getAllCardRetrofit() {
         _showSpinner.value = true
+
         BaseApi.retrofit.getCards(token = token).enqueue(object : Callback<CardListResponse?> {
             override fun onResponse(call: Call<CardListResponse?>, response: Response<CardListResponse?>) {
                 val responseBody = response.body()
-                if(response.isSuccessful && responseBody != null) {
+
+                if (response.isSuccessful && responseBody != null) {
                     checkCurrentCardsInRealm(responseBody.cards)
                 } else {
                     _showSpinner.value = false
                     _showToast.value = response.code().toString()
                 }
             }
+
             override fun onFailure(call: Call<CardListResponse?>, t: Throwable) {
                 _showToast.value = R.string.connection_issues
                 _showSpinner.value = false
@@ -75,11 +78,14 @@ class CardViewModel(private val token: String) : ViewModel() {
             }
         }, {
             realm.close()
+            _showSpinner.value = false
+
+//            BaseApi.retrofit.getCardDecks(...)
         }, {
             _showToast.value = R.string.problem_realm
             realm.close()
+            _showSpinner.value = false
         })
-        _showSpinner.value = false
     }
 
     private fun pullCardsRealm() {

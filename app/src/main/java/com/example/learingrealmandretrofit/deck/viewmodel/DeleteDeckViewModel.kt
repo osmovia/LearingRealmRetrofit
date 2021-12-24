@@ -9,7 +9,7 @@ import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.deck.Deck
 import com.example.learingrealmandretrofit.objects.response.CardResponse
-import com.example.learingrealmandretrofit.objects.response.DeckGetOrCreateOrUpdateResponse
+import com.example.learingrealmandretrofit.objects.response.DeckResponse
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,8 +34,8 @@ class DeleteDeckViewModel(private val token: String, private val deckId: Int) : 
 
     fun deleteDeckRetrofit(withCards: Boolean) {
         _showSpinner.value = true
-        BaseApi.retrofit.deleteDeck(id = deckId, token = token).enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
-            override fun onResponse(call: Call<DeckGetOrCreateOrUpdateResponse?>, response: Response<DeckGetOrCreateOrUpdateResponse?>) {
+        BaseApi.retrofit.deleteDeck(id = deckId, token = token).enqueue(object : Callback<DeckResponse?> {
+            override fun onResponse(call: Call<DeckResponse?>, response: Response<DeckResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     if (withCards) {
@@ -48,7 +48,7 @@ class DeleteDeckViewModel(private val token: String, private val deckId: Int) : 
                     _showToast.value = response.code().toString()
                 }
             }
-            override fun onFailure(call: Call<DeckGetOrCreateOrUpdateResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<DeckResponse?>, t: Throwable) {
                 _showSpinner.value = false
                 _showToast.value = R.string.connection_issues
             }

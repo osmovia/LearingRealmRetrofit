@@ -7,9 +7,8 @@ import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
-import com.example.learingrealmandretrofit.deck.Deck
 import com.example.learingrealmandretrofit.objects.CardParameters
-import com.example.learingrealmandretrofit.objects.response.DeckGetOrCreateOrUpdateResponse
+import com.example.learingrealmandretrofit.objects.response.DeckResponse
 import io.realm.Realm
 import io.realm.RealmList
 import retrofit2.Call
@@ -49,10 +48,10 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
     private fun getCardsInsideDeck() {
         _showSpinner.value = true
         BaseApi.retrofit.getDeck(token = token, id = deckId)
-            .enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
+            .enqueue(object : Callback<DeckResponse?> {
             override fun onResponse(
-                call: Call<DeckGetOrCreateOrUpdateResponse?>,
-                response: Response<DeckGetOrCreateOrUpdateResponse?>
+                call: Call<DeckResponse?>,
+                response: Response<DeckResponse?>
             ) {
                 val responseBode = response.body()
                 if (response.isSuccessful && responseBode != null) {
@@ -63,7 +62,7 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
                 }
             }
 
-            override fun onFailure(call: Call<DeckGetOrCreateOrUpdateResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<DeckResponse?>, t: Throwable) {
                 _showToast.value = R.string.connection_issues
                 _showSpinner.value = false
             }

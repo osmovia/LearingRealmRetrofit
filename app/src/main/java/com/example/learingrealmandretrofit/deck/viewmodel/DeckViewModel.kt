@@ -70,6 +70,7 @@ class DeckViewModel(private val token: String) : ViewModel() {
             }
         }, {
             realm.close()
+//            BaseApi.retrofit.getCardDecks(...)
         }, {
             _showToast.value = R.string.problem_realm
             realm.close()

@@ -56,27 +56,27 @@ class DeleteDeckViewModel(private val token: String, private val deckId: Int) : 
     }
 
     private fun pullCardsForDelete() {
-        val config = ConfigurationRealm.configuration
-        val realm = Realm.getInstance(config)
-        realm.executeTransactionAsync({ realmTransaction ->
-
-            val allCards = realmTransaction
-                .where(Deck::class.java)
-                .equalTo("id", deckId)
-                .findFirst()
-                ?.cards
-
-            allCards?.forEach { card ->
-                listCardId.add(card.id)
-            }
-        }, {
-            deleteCardsRetrofit()
-            realm.close()
-        }, {
-            _showSpinner.value = false
-            _showToast.value = R.string.problem_realm
-            realm.close()
-        })
+//        val config = ConfigurationRealm.configuration
+//        val realm = Realm.getInstance(config)
+//        realm.executeTransactionAsync({ realmTransaction ->
+//
+//            val allCards = realmTransaction
+//                .where(Deck::class.java)
+//                .equalTo("id", deckId)
+//                .findFirst()
+//                ?.cards
+//
+//            allCards?.forEach { card ->
+//                listCardId.add(card.id)
+//            }
+//        }, {
+//            deleteCardsRetrofit()
+//            realm.close()
+//        }, {
+//            _showSpinner.value = false
+//            _showToast.value = R.string.problem_realm
+//            realm.close()
+//        })
     }
 
     private fun deleteCardsRetrofit() {

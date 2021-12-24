@@ -1,12 +1,11 @@
 package com.example.learingrealmandretrofit.card
 
-import com.example.learingrealmandretrofit.deck.Deck
+import com.example.learingrealmandretrofit.objects.CardDeck
 import io.realm.RealmObject
 import io.realm.annotations.Required
 import java.io.Serializable
 import com.google.gson.Gson
-import io.realm.RealmResults
-import io.realm.annotations.LinkingObjects
+import io.realm.RealmList
 import io.realm.annotations.PrimaryKey
 
 open class Card(
@@ -22,8 +21,7 @@ open class Card(
     @Required
     var example: String = "",
 
-    @LinkingObjects("cards")
-    val owner: RealmResults<Deck>? = null
+    var cardsDecks: RealmList<CardDeck> = RealmList()
 
 ) : RealmObject(), Serializable {
     override fun toString(): String {

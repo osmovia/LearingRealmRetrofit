@@ -7,9 +7,12 @@ import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
+import com.example.learingrealmandretrofit.deck.Deck
 import com.example.learingrealmandretrofit.objects.CardParameters
 import com.example.learingrealmandretrofit.objects.response.CardResponse
 import io.realm.Realm
+import io.realm.RealmList
+import io.realm.RealmResults
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,8 +39,13 @@ class ShowDetailsCardViewModel(private val token: String, private val cardId: In
     val success: LiveData<Boolean>
         get() = _success
 
+    private val _showAllDecksCard = MutableLiveData<MutableList<String>>()
+    val showAllDecksCard: LiveData<MutableList<String>>
+        get() = _showAllDecksCard
+
+
     init {
-        getCard()
+//        getCard()
         _stateView.value = false
     }
 
@@ -91,30 +99,33 @@ class ShowDetailsCardViewModel(private val token: String, private val cardId: In
         _showSpinner.value = false
     }
 
-    private fun getCard() {
-        val config = ConfigurationRealm.configuration
-        val realm = Realm.getInstance(config)
-        realm.executeTransactionAsync({ realmTransaction ->
-            val card = realmTransaction
-                .where(Card::class.java)
-                .equalTo("id", cardId)
-                .findFirst()
-            if (card != null) {
-                _showDetailsCard.postValue(
-                    CardParameters(
-                        id = card.id,
-                        word = card.word,
-                        example = card.example,
-                        translation = card.translation
-                    )
-                )
-            }
-        }, {
-            realm.close()
-        }, {
-            _showToast.value = R.string.problem_realm
-            realm.close()
-        })
-        _showSpinner.value = false
-    }
+//    private fun getCard() {
+//        val config = ConfigurationRealm.configuration
+//        val realm = Realm.getInstance(config)
+//        realm.executeTransactionAsync({ realmTransaction ->
+//            val card = realmTransaction
+//                .where(Card::class.java)
+//                .equalTo("id", cardId)
+//                .findFirst()
+//            if (card != null) {
+//                _showDetailsCard.postValue(
+//                    CardParameters(
+//                        id = card.id,
+//                        word = card.word,
+//                        example = card.example,
+//                        translation = card.translation
+//                    )
+//                )
+//                card.decks?.forEach{ deck ->
+//                    _showAllDecksCard.value?.add(deck.title)
+//                }
+//            }
+//        }, {
+//            realm.close()
+//        }, {
+//            _showToast.value = R.string.problem_realm
+//            realm.close()
+//        })
+//        _showSpinner.value = false
+//    }
 }

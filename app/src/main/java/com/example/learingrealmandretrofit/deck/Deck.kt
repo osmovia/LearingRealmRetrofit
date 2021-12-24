@@ -1,6 +1,6 @@
 package com.example.learingrealmandretrofit.deck
 
-import com.example.learingrealmandretrofit.card.Card
+import com.example.learingrealmandretrofit.objects.CardDeck
 import com.google.gson.Gson
 import io.realm.RealmList
 import io.realm.RealmObject
@@ -15,7 +15,8 @@ open class Deck(
     @Required
     var title: String = "",
 
-    var cards: RealmList<Card> = RealmList()
+    var cardsDecks: RealmList<CardDeck> = RealmList()
+
 ) : RealmObject(), Serializable {
     override fun toString(): String {
         return Gson().toJson(this)

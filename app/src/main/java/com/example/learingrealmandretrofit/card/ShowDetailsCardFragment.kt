@@ -35,6 +35,14 @@ class ShowDetailsCardFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(ShowDetailsCardViewModel::class.java)
 
+        viewModel.showAllDecksCard.observe(viewLifecycleOwner, Observer { titels ->
+            var allDeckTitle = "Lists: "
+            titels?.forEach {
+                allDeckTitle += it
+            }
+            binding.buttonLists.text = allDeckTitle
+        })
+
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
             if (showSpinner) {
                 requireActivity().showProgress()

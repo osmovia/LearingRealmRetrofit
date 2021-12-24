@@ -37,13 +37,13 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
 
 
      private fun pullCardsRealm() {
-         val config = ConfigurationRealm.configuration
-         val realm = Realm.getInstance(config)
-         _getAllCardsRealm.value = realm
-             .where(Deck::class.java)
-             .equalTo("id", deckId)
-             .findFirst()
-             ?.cards
+//         val config = ConfigurationRealm.configuration
+//         val realm = Realm.getInstance(config)
+//         _getAllCardsRealm.value = realm
+//             .where(Deck::class.java)
+//             .equalTo("id", deckId)
+//             .findFirst()
+//             ?.cards
     }
 
     private fun getCardsInsideDeck() {

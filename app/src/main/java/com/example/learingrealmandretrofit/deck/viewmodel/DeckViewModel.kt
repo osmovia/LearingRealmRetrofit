@@ -57,38 +57,38 @@ class DeckViewModel(private val token: String) : ViewModel() {
     }
 
     private fun checkCurrentDecksInRealm(decksList: List<DeckParameters>) {
-        val config = ConfigurationRealm.configuration
-        val realm = Realm.getInstance(config)
-        realm.executeTransactionAsync({ realmTransaction ->
-            for (deck in decksList) {
-                val newListCard = RealmList<Card>()
-                val currentListCard = deck.cards
-
-                currentListCard.forEach { card ->
-                    val cardRealm = Card(
-                        id = card.id,
-                        word = card.word,
-                        translation = card.translation,
-                        example = card.example
-                    )
-                    newListCard.add(cardRealm)
-                }
-
-                val coincideDeckId = realmTransaction
-                    .where(Deck::class.java)
-                    .equalTo("id", deck.id)
-                    .findFirst()
-                if (coincideDeckId == null) {
-                    val newDeck = Deck(id = deck.id, title = deck.title, cards = newListCard)
-                    realmTransaction.insert(newDeck)
-                }
-            }
-        }, {
-            realm.close()
-        }, {
-            _showToast.value = R.string.problem_realm
-            realm.close()
-        })
+//        val config = ConfigurationRealm.configuration
+//        val realm = Realm.getInstance(config)
+//        realm.executeTransactionAsync({ realmTransaction ->
+//            for (deck in decksList) {
+//                val newListCard = RealmList<Card>()
+//                val currentListCard = deck.cards
+//
+//                currentListCard.forEach { card ->
+//                    val cardRealm = Card(
+//                        id = card.id,
+//                        word = card.word,
+//                        translation = card.translation,
+//                        example = card.example
+//                    )
+//                    newListCard.add(cardRealm)
+//                }
+//
+//                val coincideDeckId = realmTransaction
+//                    .where(Deck::class.java)
+//                    .equalTo("id", deck.id)
+//                    .findFirst()
+//                if (coincideDeckId == null) {
+//                    val newDeck = Deck(id = deck.id, title = deck.title, cards = newListCard)
+//                    realmTransaction.insert(newDeck)
+//                }
+//            }
+//        }, {
+//            realm.close()
+//        }, {
+//            _showToast.value = R.string.problem_realm
+//            realm.close()
+//        })
     }
 
     private fun pullDecks() {

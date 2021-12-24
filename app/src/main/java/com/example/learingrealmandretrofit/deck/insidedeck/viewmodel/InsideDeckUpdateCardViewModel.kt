@@ -98,32 +98,32 @@ class InsideDeckUpdateCardViewModel(private val token: String, private val deckI
     }
 
     private fun addCardToDeckRealm(cardId: Int) {
-        val config = ConfigurationRealm.configuration
-        val realm = Realm.getInstance(config)
-        realm.executeTransactionAsync({ realmTransaction ->
-
-            val deck = realmTransaction
-                .where(Deck::class.java)
-                .equalTo("id", deckId)
-                .findFirst()
-                ?.cards
-
-            val card = realmTransaction
-                .where(Card::class.java)
-                .equalTo("id", cardId)
-                .findFirst()
-
-            deck?.add(card)
-
-        }, {
-            _success.value = true
-            _showSpinner.value = false
-            realm.close()
-        }, {
-            _showToast.value = R.string.problem_realm
-            _showSpinner.value = false
-            realm.close()
-        })
+//        val config = ConfigurationRealm.configuration
+//        val realm = Realm.getInstance(config)
+//        realm.executeTransactionAsync({ realmTransaction ->
+//
+//            val deck = realmTransaction
+//                .where(Deck::class.java)
+//                .equalTo("id", deckId)
+//                .findFirst()
+//                ?.cards
+//
+//            val card = realmTransaction
+//                .where(Card::class.java)
+//                .equalTo("id", cardId)
+//                .findFirst()
+//
+//            deck?.add(card)
+//
+//        }, {
+//            _success.value = true
+//            _showSpinner.value = false
+//            realm.close()
+//        }, {
+//            _showToast.value = R.string.problem_realm
+//            _showSpinner.value = false
+//            realm.close()
+//        })
     }
 
     fun updateCardRetrofit(card: CardParameters) {

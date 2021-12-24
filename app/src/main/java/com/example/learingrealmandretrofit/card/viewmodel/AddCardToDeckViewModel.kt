@@ -9,6 +9,9 @@ import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.deck.Deck
+import com.example.learingrealmandretrofit.objects.request.CardDeckIdRequest
+import com.example.learingrealmandretrofit.objects.request.CardDeckRequest
+import com.example.learingrealmandretrofit.objects.response.CardDeckResponse
 import com.example.learingrealmandretrofit.objects.response.SuccessResponse
 import io.realm.Realm
 import io.realm.RealmResults
@@ -62,7 +65,7 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
                 .equalTo("id", cardId)
                 .findFirst()
 
-            currentDeck?.cards?.add(currentCard)
+           // currentDeck?.cards?.add(currentCard)
 
         }, {
             addCardToDeckRetrofit()
@@ -75,31 +78,46 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
     }
 
     fun addCardToDeckRetrofit() {
-        _showSpinner.value = true
+        val request = CardDeckRequest(CardDeckIdRequest(cardId = cardId, deckId = listSelectFlag[0].id))
+        BaseApi.retrofit.createCardDeck(token = token, params = request).enqueue(object : Callback<CardDeckResponse?> {
+            override fun onResponse(call: Call<CardDeckResponse?>, response: Response<CardDeckResponse?>) {
+                val responseBody = response.body()
+                val message = response.message()
+                val code = response.code()
+                Log.d("KEKAS", "Code: $code")
+                Log.d("KEKAS", "Message: $message")
+                Log.d("KEKAS", "Body: $responseBody")
+            }
 
-        if (listSelectFlag.size == 0) {
-            _showSpinner.value = false
-            _success.value = true
-        }
-
-        listSelectFlag.firstOrNull()?.let { currentDeck ->
-            BaseApi.retrofit.addCardToDeck(token = token, cardId = cardId, deckId = currentDeck.id)
-                .enqueue(object : Callback<SuccessResponse?> {
-                override fun onResponse(call: Call<SuccessResponse?>, response: Response<SuccessResponse?>) {
-                    if (response.isSuccessful) {
-                        addCardToDeckRealm(currentDeck.id)
-                        listSelectFlag.remove(currentDeck)
-                    } else {
-                        _showToast.value = response.code().toString()
-                        _showSpinner.value = false
-                    }
-                }
-                override fun onFailure(call: Call<SuccessResponse?>, t: Throwable) {
-                    _showToast.value = R.string.connection_issues
-                    _showSpinner.value = false
-                }
-            })
-        }
+            override fun onFailure(call: Call<CardDeckResponse?>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
+//        _showSpinner.value = true
+//
+//        if (listSelectFlag.size == 0) {
+//            _showSpinner.value = false
+//            _success.value = true
+//        }
+//
+//        listSelectFlag.firstOrNull()?.let { currentDeck ->
+//            BaseApi.retrofit.addCardToDeck(token = token, cardId = cardId, deckId = currentDeck.id)
+//                .enqueue(object : Callback<SuccessResponse?> {
+//                override fun onResponse(call: Call<SuccessResponse?>, response: Response<SuccessResponse?>) {
+//                    if (response.isSuccessful) {
+//                        addCardToDeckRealm(currentDeck.id)
+//                        listSelectFlag.remove(currentDeck)
+//                    } else {
+//                        _showToast.value = response.code().toString()
+//                        _showSpinner.value = false
+//                    }
+//                }
+//                override fun onFailure(call: Call<SuccessResponse?>, t: Throwable) {
+//                    _showToast.value = R.string.connection_issues
+//                    _showSpinner.value = false
+//                }
+//            })
+//        }
     }
 
     fun changeStateCheckCheckbox(isChecked: Boolean, deck: Deck) {

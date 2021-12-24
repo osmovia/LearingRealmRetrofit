@@ -1,6 +1,7 @@
 package com.example.learingrealmandretrofit.api
 
 import com.example.learingrealmandretrofit.objects.CardParameters
+import com.example.learingrealmandretrofit.objects.request.CardDeckRequest
 import com.example.learingrealmandretrofit.objects.request.DeckCreateOrUpdateRequest
 import com.example.learingrealmandretrofit.objects.request.SignInRequest
 import com.example.learingrealmandretrofit.objects.request.SignUpRequest
@@ -82,4 +83,9 @@ interface ApiInterface {
         @Header(tokenKey) token: String,
         @Path("deckId") deckId: Int,
         @Path("cardId") cardId: Int): Call<SuccessResponse>
+
+    @POST("card_decks")
+    fun createCardDeck(
+        @Header(tokenKey) token: String,
+        @Body params: CardDeckRequest): Call<CardDeckResponse>
 }

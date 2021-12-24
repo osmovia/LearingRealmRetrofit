@@ -1,5 +1,6 @@
 package com.example.learingrealmandretrofit
 
+import io.realm.FieldAttribute
 import io.realm.RealmMigration
 
 val migration = RealmMigration { realm, oldVersion, _ ->
@@ -24,5 +25,19 @@ val migration = RealmMigration { realm, oldVersion, _ ->
         val cardSchema = schema.get("Card")
 
         deckSchema?.addRealmListField("cards", cardSchema)
+        oldVersion++
+    }
+    if (oldVersion == 3L) {
+        val deckSchema = schema.get("Deck")
+        val cardSchema = schema.get("Card")
+
+        schema.create("CardDeck")
+            .addField("id", Int::class.java, FieldAttribute.PRIMARY_KEY)
+            .addField("deckId", Int::class.java)
+            .addField("cardId", Int::class.java)
+
+
+        deckSchema?.removeField("cards")?.addRealmListField("cardsDecks", schema.get("CardDeck"))
+        cardSchema?.addRealmListField("cardsDecks", schema.get("CardDeck"))
     }
 }

@@ -18,10 +18,9 @@ open class Card(
     @Required
     var translation: String = "",
 
-    @Required
     var example: String = "",
 
-    var cardsDecks: RealmList<CardDeck> = RealmList()
+    var cardDecks: RealmList<CardDeck> = RealmList()
 
 ) : RealmObject(), Serializable {
     override fun toString(): String {

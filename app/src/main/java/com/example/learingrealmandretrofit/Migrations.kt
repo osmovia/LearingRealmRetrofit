@@ -13,31 +13,36 @@ val migration = RealmMigration { realm, oldVersion, _ ->
     }
 
     if (oldVersion == 1L) {
-        val deckSchema = schema.get("DeckRealm")
         val cardSchema = schema.get("CardRealm")
+        val deckSchema = schema.get("DeckRealm")
 
-        deckSchema?.className = "Deck"
         cardSchema?.className = "Card"
+        deckSchema?.className = "Deck"
+
         oldVersion++
     }
+
     if (oldVersion == 2L) {
-        val deckSchema = schema.get("Deck")
         val cardSchema = schema.get("Card")
+        val deckSchema = schema.get("Deck")
 
         deckSchema?.addRealmListField("cards", cardSchema)
+
         oldVersion++
     }
+
     if (oldVersion == 3L) {
-        val deckSchema = schema.get("Deck")
         val cardSchema = schema.get("Card")
+        val deckSchema = schema.get("Deck")
 
-        schema.create("CardDeck")
-            .addField("id", Int::class.java, FieldAttribute.PRIMARY_KEY)
-            .addField("deckId", Int::class.java)
-            .addField("cardId", Int::class.java)
+        val cardDeckSchema = schema.create("CardDeck")
+        cardDeckSchema.addField("id", Int::class.java, FieldAttribute.PRIMARY_KEY)
+        cardDeckSchema.addField("deckId", Int::class.java)
+        cardDeckSchema.addField("cardId", Int::class.java)
 
+        deckSchema?.removeField("cards")
 
-        deckSchema?.removeField("cards")?.addRealmListField("cardsDecks", schema.get("CardDeck"))
-        cardSchema?.addRealmListField("cardsDecks", schema.get("CardDeck"))
+        cardSchema?.addRealmListField("cardsDecks", cardDeckSchema)
+        deckSchema?.addRealmListField("cardsDecks", cardDeckSchema)
     }
 }

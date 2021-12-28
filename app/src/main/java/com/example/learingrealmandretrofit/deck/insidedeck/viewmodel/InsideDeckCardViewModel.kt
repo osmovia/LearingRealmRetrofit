@@ -7,10 +7,14 @@ import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
+import com.example.learingrealmandretrofit.deck.Deck
+import com.example.learingrealmandretrofit.objects.CardDeck
 import com.example.learingrealmandretrofit.objects.CardParameters
 import com.example.learingrealmandretrofit.objects.response.DeckResponse
 import io.realm.Realm
+import io.realm.RealmCollection
 import io.realm.RealmList
+import io.realm.RealmResults
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,20 +33,51 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
     val getAllCardsRealm: LiveData<RealmList<Card>>
         get() = _getAllCardsRealm
 
+    private val listCards = RealmList<Card>()
+
     init {
-        pullCardsRealm()
-        getCardsInsideDeck()
+        getAllCard()
+//        pullCardsRealm()
+//        getCardsInsideDeck()
     }
 
 
      private fun pullCardsRealm() {
-//         val config = ConfigurationRealm.configuration
-//         val realm = Realm.getInstance(config)
-//         _getAllCardsRealm.value = realm
-//             .where(Deck::class.java)
-//             .equalTo("id", deckId)
-//             .findFirst()
-//             ?.cards
+         val config = ConfigurationRealm.configuration
+         val realm = Realm.getInstance(config)
+//         _getAllCardsRealm.value
+         val nonema = realm
+             .where(Deck::class.java)
+             .equalTo("id", deckId)
+    }
+
+    private fun getAllCard() {
+        val config = ConfigurationRealm.configuration
+        val realm = Realm.getInstance(config)
+        realm.executeTransactionAsync({ realmTransaction ->
+
+            val cardDeck = realmTransaction
+                .where(Deck::class.java)
+                .equalTo("id", deckId)
+                .findFirst()
+                ?.cardDecks
+
+
+            cardDeck?.forEach {
+                val card = realmTransaction
+                    .where(Card::class.java)
+                    .equalTo("id", it.cardId)
+                    .findFirst()
+                listCards.add(card)
+            }
+            _getAllCardsRealm.postValue(listCards)
+        },{
+            realm.close()
+        },{
+            _showSpinner.value = false
+            _showToast.value = R.string.problem_realm
+            realm.close()
+        })
     }
 
     private fun getCardsInsideDeck() {
@@ -97,5 +132,4 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
         })
         _showSpinner.value = false
     }
-
 }

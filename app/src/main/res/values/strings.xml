@@ -45,5 +45,6 @@
     <string name="title">Title</string>
     <string name="select_lists">Select Lists</string>
     <string name="lists">Lists</string>
+    <string name="deck">Deck</string>
 
 </resources>

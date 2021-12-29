@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/deckFragment"
         android:name="com.example.learingrealmandretrofit.deck.DeckFragment"
-        android:label="@string/list"
+        android:label="@string/deck"
         tools:layout="@layout/deck_fragment_recycler">
         <action
             android:id="@+id/action_deckFragment_to_insideDeckCardFragment"

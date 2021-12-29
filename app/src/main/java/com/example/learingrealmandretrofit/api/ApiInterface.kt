@@ -1,5 +1,6 @@
 package com.example.learingrealmandretrofit.api
 
+import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.objects.CardParameters
 import com.example.learingrealmandretrofit.objects.request.CardDeckRequest
 import com.example.learingrealmandretrofit.objects.request.DeckCreateOrUpdateRequest
@@ -108,4 +109,10 @@ interface ApiInterface {
         @Header(tokenKey) token: String,
         @Body params: CardDeckRequest
     ): Call<CardDeckResponse>
+
+    @DELETE("card_decks/{id}")
+    fun deleteCardDeck(
+        @Header(tokenKey) token: String,
+        @Path("id") id: Int
+    ) : Call<CardDeckResponse>
 }

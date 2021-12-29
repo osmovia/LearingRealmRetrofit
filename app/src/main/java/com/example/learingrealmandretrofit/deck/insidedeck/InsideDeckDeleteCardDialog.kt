@@ -38,7 +38,8 @@ class InsideDeckDeleteCardDialog: DialogFragment() {
         viewModelFactory = InsideDeckDeleteCardViewModelFactory(
             token = arguments.token,
             deckId = arguments.deckId,
-            cardId = arguments.cardId
+            cardId = arguments.cardId,
+            cardDeckId = arguments.cardDeckId
         )
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(InsideDeckDeleteCardViewModel::class.java)

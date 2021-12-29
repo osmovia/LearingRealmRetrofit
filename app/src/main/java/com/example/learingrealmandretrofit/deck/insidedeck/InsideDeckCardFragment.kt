@@ -2,6 +2,7 @@ package com.example.learingrealmandretrofit.deck.insidedeck
 
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -11,12 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.Card
-import com.example.learingrealmandretrofit.card.RecyclerAdapterCard
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.InsideDeckCardViewModel
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.factory.InsideDeckCardViewModelFactory
 
-class InsideDeckCardFragment : CardActionsFragment() {
+class InsideDeckCardFragment : Fragment() {
 
     private lateinit var binding: CardFragmentRecyclerBinding
     private lateinit var viewModel: InsideDeckCardViewModel
@@ -51,8 +51,8 @@ class InsideDeckCardFragment : CardActionsFragment() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(InsideDeckCardViewModel::class.java)
 
-        viewModel.getAllCardsRealm.observe(viewLifecycleOwner, Observer { allCards ->
-            val adapter = RecyclerAdapterCard(this, allCards, true)
+        viewModel.getAllCardsRealm.observe(viewLifecycleOwner, Observer { allCardDecks ->
+            val adapter = RecyclerAdapterCardDeck(this, allCardDecks, true)
             binding.recyclerCard.layoutManager = LinearLayoutManager(context)
             binding.recyclerCard.adapter = adapter
         })
@@ -71,13 +71,14 @@ class InsideDeckCardFragment : CardActionsFragment() {
 
         val cardDelete = object : SwipeToDelete(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val currentSwipe = viewModel.getAllCardsRealm.value?.get(viewHolder.absoluteAdapterPosition)?.id
+                val currentSwipe = viewModel.getAllCardsRealm.value?.get(viewHolder.absoluteAdapterPosition)
                 if (currentSwipe != null) {
                     val action = InsideDeckCardFragmentDirections
                         .actionInsideDeckCardFragmentToInsideDeckCardDeleteDialog(
-                            cardId = currentSwipe,
+                            cardId = currentSwipe.cardId,
                             deckId = arguments.deckId,
-                            token = arguments.token
+                            token = arguments.token,
+                            cardDeckId = currentSwipe.id
                         )
                     findNavController().navigate(action)
                     binding.recyclerCard.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
@@ -98,7 +99,7 @@ class InsideDeckCardFragment : CardActionsFragment() {
         }
     }
 
-    override fun onCardClick(card: Card) {
+    fun onCardClick(card: Card) {
         val action = InsideDeckCardFragmentDirections
             .actionInsideDeckCardFragmentToInsideDeckUpdateCardDialog(
                 card = card,

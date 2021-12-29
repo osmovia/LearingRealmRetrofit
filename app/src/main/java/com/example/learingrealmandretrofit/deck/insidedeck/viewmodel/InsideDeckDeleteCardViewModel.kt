@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
-import com.example.learingrealmandretrofit.card.Card
-import com.example.learingrealmandretrofit.objects.response.CardResponse
+import com.example.learingrealmandretrofit.objects.CardDeck
+import com.example.learingrealmandretrofit.objects.response.CardDeckResponse
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class InsideDeckDeleteCardViewModel(private val token: String, private val deckId: Int, private val cardId: Int) : ViewModel() {
+class InsideDeckDeleteCardViewModel(private val token: String, private val deckId: Int, private val cardId: Int, private val cardDeckId: Int) : ViewModel() {
 
     private val _showToast = MutableLiveData<Any>()
     val showToast: LiveData<Any>
@@ -29,39 +29,41 @@ class InsideDeckDeleteCardViewModel(private val token: String, private val deckI
 
     fun deleteCardRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofit.deleteCard(token = token, id = cardId).enqueue(object : Callback<CardResponse?> {
-            override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
+        BaseApi.retrofit.deleteCardDeck(token = token, id = cardDeckId).enqueue(object : Callback<CardDeckResponse?> {
+            override fun onResponse(call: Call<CardDeckResponse?>, response: Response<CardDeckResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
-                    deleteCardRealm()
+                    deleteCardRealm(responseBody.cardDeck.id)
                 } else {
                     _showSpinner.value = false
                     _showToast.value = response.code().toString()
                 }
             }
-            override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
-                _showSpinner.value = false
+
+            override fun onFailure(call: Call<CardDeckResponse?>, t: Throwable) {
                 _showToast.value = R.string.connection_issues
+                _showSpinner.value = false
             }
         })
     }
 
-    private fun deleteCardRealm() {
+    private fun deleteCardRealm(cardDeckId: Int) {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
             val card = realmTransaction
-                .where(Card::class.java)
-                .equalTo("id", cardId)
+                .where(CardDeck::class.java)
+                .equalTo("id", cardDeckId)
                 .findFirst()
             card?.deleteFromRealm()
         }, {
             _success.value = true
+            _showSpinner.value = false
             realm.close()
         }, {
+            _showSpinner.value = false
             _showToast.value = R.string.problem_realm
             realm.close()
         })
-        _showSpinner.value = false
     }
 }

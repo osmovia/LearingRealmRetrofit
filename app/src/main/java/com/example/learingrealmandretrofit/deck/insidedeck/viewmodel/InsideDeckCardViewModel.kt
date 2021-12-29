@@ -29,55 +29,21 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
     val showSpinner: LiveData<Boolean>
         get() = _showSpinner
 
-    private val _getAllCardsRealm = MutableLiveData<RealmList<Card>>()
-    val getAllCardsRealm: LiveData<RealmList<Card>>
+    private val _getAllCardsRealm = MutableLiveData<RealmResults<CardDeck>>()
+    val getAllCardsRealm: LiveData<RealmResults<CardDeck>>
         get() = _getAllCardsRealm
-
-    private val listCards = RealmList<Card>()
 
     init {
         getAllCard()
-//        pullCardsRealm()
-//        getCardsInsideDeck()
-    }
-
-
-     private fun pullCardsRealm() {
-         val config = ConfigurationRealm.configuration
-         val realm = Realm.getInstance(config)
-//         _getAllCardsRealm.value
-         val nonema = realm
-             .where(Deck::class.java)
-             .equalTo("id", deckId)
     }
 
     private fun getAllCard() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
-        realm.executeTransactionAsync({ realmTransaction ->
-
-            val cardDeck = realmTransaction
-                .where(Deck::class.java)
-                .equalTo("id", deckId)
-                .findFirst()
-                ?.cardDecks
-
-
-            cardDeck?.forEach {
-                val card = realmTransaction
-                    .where(Card::class.java)
-                    .equalTo("id", it.cardId)
-                    .findFirst()
-                listCards.add(card)
-            }
-            _getAllCardsRealm.postValue(listCards)
-        },{
-            realm.close()
-        },{
-            _showSpinner.value = false
-            _showToast.value = R.string.problem_realm
-            realm.close()
-        })
+        _getAllCardsRealm.value = realm
+            .where(CardDeck::class.java)
+            .equalTo("deckId", deckId)
+            .findAll()
     }
 
     private fun getCardsInsideDeck() {

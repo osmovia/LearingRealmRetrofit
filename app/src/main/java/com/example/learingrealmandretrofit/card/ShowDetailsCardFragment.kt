@@ -19,6 +19,7 @@ class ShowDetailsCardFragment : Fragment() {
     private lateinit var viewModelFactory: ShowDetailsCardViewModelFactory
     private lateinit var viewModel: ShowDetailsCardViewModel
     private val arguments: ShowDetailsCardFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

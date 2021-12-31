@@ -5,8 +5,12 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +19,7 @@ import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.InsideDeckCardViewModel
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.factory.InsideDeckCardViewModelFactory
+import com.google.android.material.appbar.MaterialToolbar
 
 class InsideDeckCardFragment : Fragment() {
 
@@ -35,8 +40,17 @@ class InsideDeckCardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        // Title deck start fragment
-        (requireActivity() as MainActivity).supportActionBar?.title = arguments.deckTitle
+
+//        val title = arguments.deckTitle
+//        findNavController().currentDestination?.label = title
+
+        NavigationUI.setupWithNavController(binding.toolbarTabs, findNavController())
+
+        binding.toolbarTabs.title = "TEST"
+
+//        findNavController().currentDestination
+//         Title deck start fragment
+//        (requireActivity() as MainActivity).supportActionBar?.title = arguments.deckTitle
 
         // New title if has changed
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(Constants.TITLE_INSIDE_DECK)

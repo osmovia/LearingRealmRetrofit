@@ -40,22 +40,14 @@ class InsideDeckCardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController())
 
-//        val title = arguments.deckTitle
-//        findNavController().currentDestination?.label = title
-
-        NavigationUI.setupWithNavController(binding.toolbarTabs, findNavController())
-
-        binding.toolbarTabs.title = "TEST"
-
-//        findNavController().currentDestination
-//         Title deck start fragment
-//        (requireActivity() as MainActivity).supportActionBar?.title = arguments.deckTitle
+        binding.toolbarContainer.toolbarId.title = arguments.deckTitle
 
         // New title if has changed
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(Constants.TITLE_INSIDE_DECK)
             ?.observe(viewLifecycleOwner) { newTitle ->
-                (requireActivity() as MainActivity).supportActionBar?.title = newTitle
+                binding.toolbarContainer.toolbarId.title = newTitle
             }
 
         viewModelFactory = InsideDeckCardViewModelFactory(

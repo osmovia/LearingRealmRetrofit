@@ -1,9 +1,7 @@
 package com.example.learingrealmandretrofit.card
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -29,7 +27,11 @@ class ShowDetailsCardFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         activity?.onBackPressedDispatcher?.addCallback(this) {
-            viewModel.changeState(true)
+            if (viewModel.stateView.value == true) {
+                fillInFields()
+            } else {
+                findNavController().popBackStack()
+            }
         }
     }
 
@@ -46,8 +48,21 @@ class ShowDetailsCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController())
-        
+
         binding.toolbarContainer.toolbarId.inflateMenu(R.menu.toolbar_select)
+
+        binding.toolbarContainer.toolbarId.setNavigationOnClickListener {
+            if (viewModel.stateView.value == true) {
+                viewModel.showDetailsCard.observe(viewLifecycleOwner, Observer { card ->
+                    binding.wordId.setText(card.word)
+                    binding.examplesId.setText(card.example)
+                    binding.translationId.setText(card.translation)
+                })
+                viewModel.changeState(false)
+            } else {
+                findNavController().popBackStack()
+            }
+        }
 
         viewModelFactory = ShowDetailsCardViewModelFactory(token = arguments.token, cardId = arguments.cardId)
 
@@ -94,41 +109,27 @@ class ShowDetailsCardFragment : Fragment() {
 
         binding.toolbarContainer.toolbarId.setOnMenuItemClickListener { itemMenu ->
             when(itemMenu.itemId) {
-                R.id.selectItem -> { viewModel.changeState(false)}
-                R.id.home -> { Log.d("KEKA", "Clock back ok!!!") }
+                R.id.selectItem -> {
+                    viewModel.changeCard(
+                        CardParameters(
+                            id = arguments.cardId,
+                            word = binding.wordId.text.toString(),
+                            translation = binding.translationId.text.toString(),
+                            example = binding.examplesId.text.toString()
+                        )
+                    )
+                }
             }
             true
         }
-
     }
 
-
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        super.onCreateOptionsMenu(menu, inflater)
-//        inflater.inflate(R.menu.toolbar_select, menu)
-//        val iconSelect = menu.findItem(R.id.selectItem)
-//        iconSelect.isVisible = true
-//
-//
-//        viewModel.stateView.observe(viewLifecycleOwner, Observer { showIcon ->
-//            iconSelect.isVisible = showIcon
-//        })
-//    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.drawable.ic_baseline_add_48) {
-            viewModel.changeState(true)
-//            viewModel.changeCard(
-//                CardParameters(
-//                    id = arguments.cardId,
-//                    word = binding.wordId.text.toString(),
-//                    translation = binding.translationId.text.toString(),
-//                    example = binding.examplesId.text.toString()
-//                )
-//            )
-            true
-        } else {
-            super.onOptionsItemSelected(item)
-        }
+    private fun fillInFields() {
+        viewModel.showDetailsCard.observe(viewLifecycleOwner, Observer { card ->
+            binding.wordId.setText(card.word)
+            binding.examplesId.setText(card.example)
+            binding.translationId.setText(card.translation)
+        })
+        viewModel.changeState(false)
     }
 }

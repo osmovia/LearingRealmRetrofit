@@ -79,8 +79,6 @@ class CardViewModel(private val token: String) : ViewModel() {
         }, {
             realm.close()
             _showSpinner.value = false
-
-//            BaseApi.retrofit.getCardDecks(...)
         }, {
             _showToast.value = R.string.problem_realm
             realm.close()

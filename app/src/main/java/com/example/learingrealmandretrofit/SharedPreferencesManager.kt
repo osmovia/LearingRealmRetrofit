@@ -7,24 +7,18 @@ import com.example.learingrealmandretrofit.objects.SessionSharedPreferencesRead
 class SharedPreferencesManager(context: Context) {
     private var sharedPreferences: SharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
 
-    companion object {
-        const val userTokenKey = "com.example.learingrealmandretrofit.USER_TOKEN"
-        const val userIdKey = "com.example.learingrealmandretrofit.USER_ID"
-        const val userEmailKey = "com.example.learingrealmandretrofit.USER_EMAIL"
-    }
-
     fun saveAuthentication(token: String, email: String, userId: Int) {
         val editor = sharedPreferences.edit()
-        editor.putString(userTokenKey, token)
-        editor.putString(userEmailKey, email)
-        editor.putInt(userIdKey, userId)
+        editor.putString(Constants.USER_TOKEN_KEY, token)
+        editor.putString(Constants.USER_EMAIL_KEY, email)
+        editor.putInt(Constants.USER_KEY_ID, userId)
         editor.apply()
     }
 
     fun fetchAuthentication(): SessionSharedPreferencesRead {
-        val token = sharedPreferences.getString(userTokenKey, null)
-        val email = sharedPreferences.getString(userEmailKey, null)
-        val userId = sharedPreferences.getInt(userIdKey, 0)
+        val token = sharedPreferences.getString(Constants.USER_TOKEN_KEY, null)
+        val email = sharedPreferences.getString(Constants.USER_EMAIL_KEY, null)
+        val userId = sharedPreferences.getInt(Constants.USER_KEY_ID, 0)
         return SessionSharedPreferencesRead(sessionToken = token, email = email, userId = userId)
     }
 

@@ -34,7 +34,7 @@ class DeleteDeckViewModel(private val token: String, private val deckId: Int) : 
 
     fun deleteDeckRetrofit(withCards: Boolean) {
         _showSpinner.value = true
-        BaseApi.retrofit.deleteDeck(id = deckId, token = token).enqueue(object : Callback<DeckResponse?> {
+        BaseApi.retrofitHeader(token).deleteDeck(id = deckId).enqueue(object : Callback<DeckResponse?> {
             override fun onResponse(call: Call<DeckResponse?>, response: Response<DeckResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
@@ -86,7 +86,7 @@ class DeleteDeckViewModel(private val token: String, private val deckId: Int) : 
         }
 
         listCardId.firstOrNull()?.let { cardId ->
-            BaseApi.retrofit.deleteCard(token = token, cardId)
+            BaseApi.retrofitHeader(token).deleteCard(cardId)
                 .enqueue(object : Callback<CardResponse?> {
                     override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                         val responseBody = response.body()

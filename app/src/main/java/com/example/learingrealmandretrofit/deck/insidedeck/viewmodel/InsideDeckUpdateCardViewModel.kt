@@ -39,7 +39,7 @@ class InsideDeckUpdateCardViewModel(private val token: String, private val deckI
 
         _showSpinner.value = true
 
-        BaseApi.retrofit.createCard(token = token, params = cardView)
+        BaseApi.retrofitHeader(token).createCard(params = cardView)
             .enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()
@@ -80,7 +80,7 @@ class InsideDeckUpdateCardViewModel(private val token: String, private val deckI
 
     private fun addCardToDeckRetrofit(cardId: Int) {
 
-        BaseApi.retrofit.addCardToDeck(token = token, deckId = deckId, cardId = cardId)
+        BaseApi.retrofitHeader(token).addCardToDeck(deckId = deckId, cardId = cardId)
             .enqueue(object : Callback<SuccessResponse?> {
             override fun onResponse(call: Call<SuccessResponse?>, response: Response<SuccessResponse?>) {
                 if (response.isSuccessful) {
@@ -134,7 +134,7 @@ class InsideDeckUpdateCardViewModel(private val token: String, private val deckI
         }
 
         _showSpinner.value = true
-        BaseApi.retrofit.updateCard(id = card.id, params = card, token = token)
+        BaseApi.retrofitHeader(token).updateCard(id = card.id, params = card)
             .enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()

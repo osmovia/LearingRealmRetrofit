@@ -37,7 +37,7 @@ class DeckViewModel(private val token: String) : ViewModel() {
 
     private fun getAllDecksRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofit.getDecks(token = token).enqueue(object : Callback<DeckListResponse?> {
+        BaseApi.retrofitHeader(token).getDecks().enqueue(object : Callback<DeckListResponse?> {
             override fun onResponse(call: Call<DeckListResponse?>, response: Response<DeckListResponse?>) {
                 val responseBody = response.body()
 

@@ -28,7 +28,7 @@ class DeleteCardViewModel(private val token: String, private val cardId: Int) : 
 
     fun removeCardRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofit.deleteCard(id = cardId, token = token).enqueue(object : Callback<CardResponse?> {
+        BaseApi.retrofitHeader(token).deleteCard(id = cardId).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

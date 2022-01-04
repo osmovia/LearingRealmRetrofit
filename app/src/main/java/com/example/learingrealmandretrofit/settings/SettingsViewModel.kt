@@ -29,7 +29,7 @@ class SettingsViewModel : ViewModel() {
 
     fun signOutRetrofit(token: String) {
         _showSpinner.value = true
-        BaseApi.retrofit.signOut(token, token).enqueue(object : Callback<SuccessResponse?> {
+        BaseApi.retrofitHeader(token).signOut(token).enqueue(object : Callback<SuccessResponse?> {
             override fun onResponse(call: Call<SuccessResponse?>, response: Response<SuccessResponse?>) {
                 if (response.isSuccessful) {
                     deleteAllRealm()

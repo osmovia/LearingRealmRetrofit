@@ -57,7 +57,7 @@ class ShowDetailsCardViewModel(private val token: String, private val cardId: In
         }
         _showSpinner.value = true
 
-        BaseApi.retrofit.updateCard(token, cardId, cardView).enqueue(object : Callback<CardResponse?> {
+        BaseApi.retrofitHeader(token).updateCard(cardId, cardView).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

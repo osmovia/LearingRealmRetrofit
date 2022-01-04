@@ -7,4 +7,5 @@
         android:icon="@drawable/ic_select"
         android:title="@string/app_name"
         app:showAsAction="always"/>
+
 </menu>

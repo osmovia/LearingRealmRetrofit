@@ -11,7 +11,7 @@ import com.example.learingrealmandretrofit.deck.Deck
 import com.example.learingrealmandretrofit.objects.DeckParameters
 import com.example.learingrealmandretrofit.objects.request.DeckCreateOrUpdateRequest
 import com.example.learingrealmandretrofit.objects.request.DeckTitleRequest
-import com.example.learingrealmandretrofit.objects.response.DeckGetOrCreateOrUpdateResponse
+import com.example.learingrealmandretrofit.objects.response.DeckResponse
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
@@ -47,8 +47,8 @@ class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
         _showSpinner.value = true
         val titleRequest = DeckTitleRequest(title)
         val request = DeckCreateOrUpdateRequest(titleRequest)
-        BaseApi.retrofit.createdDeck(token = token, params = request).enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
-            override fun onResponse(call: Call<DeckGetOrCreateOrUpdateResponse?>, response: Response<DeckGetOrCreateOrUpdateResponse?>) {
+        BaseApi.retrofit.createdDeck(token = token, params = request).enqueue(object : Callback<DeckResponse?> {
+            override fun onResponse(call: Call<DeckResponse?>, response: Response<DeckResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     createDeckRealm(responseBody.deck)
@@ -57,7 +57,7 @@ class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
                 }
                 _showSpinner.value = false
             }
-            override fun onFailure(call: Call<DeckGetOrCreateOrUpdateResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<DeckResponse?>, t: Throwable) {
                 _showSpinner.value = false
                 _showToast.value = R.string.connection_issues
             }
@@ -91,8 +91,8 @@ class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
         val requestTitle = DeckTitleRequest(titleDeck)
         val request = DeckCreateOrUpdateRequest(requestTitle)
         BaseApi.retrofit.updateDeck(token = token, id = _currentDeck.value?.id ?: return , params = request)
-            .enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
-            override fun onResponse(call: Call<DeckGetOrCreateOrUpdateResponse?>, response: Response<DeckGetOrCreateOrUpdateResponse?>) {
+            .enqueue(object : Callback<DeckResponse?> {
+            override fun onResponse(call: Call<DeckResponse?>, response: Response<DeckResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     updateDeckRealm(responseBody.deck)
@@ -100,7 +100,7 @@ class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
                     _showToast.value = response.code().toString()
                 }
             }
-            override fun onFailure(call: Call<DeckGetOrCreateOrUpdateResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<DeckResponse?>, t: Throwable) {
                 _showToast.value = R.string.connection_issues
                 _showSpinner.value = false
             }

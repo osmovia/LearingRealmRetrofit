@@ -8,10 +8,13 @@ import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.deck.Deck
+import com.example.learingrealmandretrofit.objects.CardDeck
 import com.example.learingrealmandretrofit.objects.CardParameters
-import com.example.learingrealmandretrofit.objects.response.DeckGetOrCreateOrUpdateResponse
+import com.example.learingrealmandretrofit.objects.response.DeckResponse
 import io.realm.Realm
+import io.realm.RealmCollection
 import io.realm.RealmList
+import io.realm.RealmResults
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,33 +29,30 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
     val showSpinner: LiveData<Boolean>
         get() = _showSpinner
 
-    private val _getAllCardsRealm = MutableLiveData<RealmList<Card>>()
-    val getAllCardsRealm: LiveData<RealmList<Card>>
+    private val _getAllCardsRealm = MutableLiveData<RealmResults<CardDeck>>()
+    val getAllCardsRealm: LiveData<RealmResults<CardDeck>>
         get() = _getAllCardsRealm
 
     init {
-        pullCardsRealm()
-        getCardsInsideDeck()
+        getAllCard()
     }
 
-
-     private fun pullCardsRealm() {
-//         val config = ConfigurationRealm.configuration
-//         val realm = Realm.getInstance(config)
-//         _getAllCardsRealm.value = realm
-//             .where(Deck::class.java)
-//             .equalTo("id", deckId)
-//             .findFirst()
-//             ?.cards
+    private fun getAllCard() {
+        val config = ConfigurationRealm.configuration
+        val realm = Realm.getInstance(config)
+        _getAllCardsRealm.value = realm
+            .where(CardDeck::class.java)
+            .equalTo("deckId", deckId)
+            .findAll()
     }
 
     private fun getCardsInsideDeck() {
         _showSpinner.value = true
         BaseApi.retrofit.getDeck(token = token, id = deckId)
-            .enqueue(object : Callback<DeckGetOrCreateOrUpdateResponse?> {
+            .enqueue(object : Callback<DeckResponse?> {
             override fun onResponse(
-                call: Call<DeckGetOrCreateOrUpdateResponse?>,
-                response: Response<DeckGetOrCreateOrUpdateResponse?>
+                call: Call<DeckResponse?>,
+                response: Response<DeckResponse?>
             ) {
                 val responseBode = response.body()
                 if (response.isSuccessful && responseBode != null) {
@@ -63,7 +63,7 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
                 }
             }
 
-            override fun onFailure(call: Call<DeckGetOrCreateOrUpdateResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<DeckResponse?>, t: Throwable) {
                 _showToast.value = R.string.connection_issues
                 _showSpinner.value = false
             }
@@ -98,5 +98,4 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
         })
         _showSpinner.value = false
     }
-
 }

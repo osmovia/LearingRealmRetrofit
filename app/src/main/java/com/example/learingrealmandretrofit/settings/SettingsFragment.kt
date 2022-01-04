@@ -9,6 +9,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.databinding.SettingsFragmentBinding
 
@@ -27,6 +30,12 @@ class SettingsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.deckFragment, R.id.cardFragment, R.id.settingFragment)
+        )
+
+        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController(), appBarConfiguration)
 
         viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 

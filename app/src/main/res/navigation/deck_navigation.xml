@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/deckFragment"
         android:name="com.example.learingrealmandretrofit.deck.DeckFragment"
-        android:label="@string/list"
+        android:label="@string/deck"
         tools:layout="@layout/deck_fragment_recycler">
         <action
             android:id="@+id/action_deckFragment_to_insideDeckCardFragment"
@@ -37,7 +37,7 @@
     <dialog
         android:id="@+id/insideDeckCardDeleteDialog"
         android:name="com.example.learingrealmandretrofit.deck.insidedeck.InsideDeckDeleteCardDialog"
-        tools:layout="@layout/dialog_delete_card_or_delete_from_list">
+        tools:layout="@layout/dialog_delete_card">
         <argument
             android:name="deckId"
             app:argType="integer"/>
@@ -47,6 +47,9 @@
         <argument
             android:name="token"
             app:argType="string"/>
+        <argument
+            android:name="cardDeckId"
+            app:argType="integer"/>
     </dialog>
 
     <fragment

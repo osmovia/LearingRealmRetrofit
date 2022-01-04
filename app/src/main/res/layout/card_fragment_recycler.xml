@@ -5,38 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        <include
+            android:id="@+id/toolbarContainer"
+            layout="@layout/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerCard"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="8dp"
-            tools:listitem="@layout/item_card_recycler"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.162"
+            app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchView"
-            app:layout_constraintVertical_bias="0.256"/>
+            app:layout_constraintTop_toBottomOf="@+id/toolbarContainer"
+            app:layout_constraintVertical_bias="1.0"
+            tools:listitem="@layout/item_card_recycler"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/buttonCreateCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="24dp"
-            android:layout_marginEnd="80dp"
-            android:layout_marginBottom="120dp"
             android:backgroundTint="@color/purple_500"
             android:contentDescription="TODO"
             android:src="@drawable/ic_baseline_add_48"
@@ -44,19 +37,5 @@
             app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
-
-        <SearchView
-            android:id="@+id/searchView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:iconifiedByDefault="false"
-            android:queryHint="Search"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

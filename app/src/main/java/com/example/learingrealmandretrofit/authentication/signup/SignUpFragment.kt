@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.databinding.SignUpFragmentBinding
 
@@ -28,6 +30,10 @@ class SignUpFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.signUpFragment, R.id.signInFragment))
+
+        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController(), appBarConfiguration)
 
         val mainNavController: NavController?  = activity?.findNavController(R.id.containerView)
 

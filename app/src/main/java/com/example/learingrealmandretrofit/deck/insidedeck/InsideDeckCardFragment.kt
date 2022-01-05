@@ -5,9 +5,6 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
@@ -19,7 +16,6 @@ import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.InsideDeckCardViewModel
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.factory.InsideDeckCardViewModelFactory
-import com.google.android.material.appbar.MaterialToolbar
 
 class InsideDeckCardFragment : Fragment() {
 
@@ -43,6 +39,20 @@ class InsideDeckCardFragment : Fragment() {
         NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController())
 
         binding.toolbarContainer.toolbarId.title = arguments.deckTitle
+
+        binding.toolbarContainer.toolbarId.inflateMenu(R.menu.toolbar_rename)
+
+        binding.toolbarContainer.toolbarId.setOnMenuItemClickListener { itemMenu ->
+            if (itemMenu.itemId == R.id.renameItem) {
+                val action = InsideDeckCardFragmentDirections
+                    .actionInsideDeckCardFragmentToDialogCreateOrChangeDeck(
+                        deckId = arguments.deckId,
+                        token = arguments.token
+                    )
+                findNavController().navigate(action)
+            }
+            true
+        }
 
         // New title if has changed
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(Constants.TITLE_INSIDE_DECK)
@@ -113,24 +123,5 @@ class InsideDeckCardFragment : Fragment() {
                 token = arguments.token
             )
         findNavController().navigate(action)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.toolbar_rename, menu)
-    }
-
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.renameItem) {
-            val action = InsideDeckCardFragmentDirections
-                .actionInsideDeckCardFragmentToDialogCreateOrChangeDeck(
-                    deckId = arguments.deckId,
-                    token = arguments.token
-                )
-            findNavController().navigate(action)
-            true
-        } else {
-            super.onOptionsItemSelected(item)
-        }
     }
 }

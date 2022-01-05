@@ -108,7 +108,7 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
     fun addCardToDeckRetrofit() {
         _showSpinner.value = true
         val request = CardDeckRequest(CardDeckIdRequest(cardId = cardId, deckId = listSelectFlag[0].id))
-        BaseApi.retrofit.createCardDeck(token = token, params = request).enqueue(object : Callback<CardDeckResponse?> {
+        BaseApi.retrofitHeader(token).createCardDeck(params = request).enqueue(object : Callback<CardDeckResponse?> {
             override fun onResponse(call: Call<CardDeckResponse?>, response: Response<CardDeckResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

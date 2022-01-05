@@ -48,7 +48,7 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
 
     private fun getCardsInsideDeck() {
         _showSpinner.value = true
-        BaseApi.retrofit.getDeck(token = token, id = deckId)
+        BaseApi.retrofitHeader(token).getDeck(id = deckId)
             .enqueue(object : Callback<DeckResponse?> {
             override fun onResponse(
                 call: Call<DeckResponse?>,

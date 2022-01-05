@@ -38,7 +38,7 @@ class CardViewModel(private val token: String) : ViewModel() {
     private fun getAllCardRetrofit() {
         _showSpinner.value = true
 
-        BaseApi.retrofit.getCards(token = token).enqueue(object : Callback<CardListResponse?> {
+        BaseApi.retrofitHeader(token).getCards().enqueue(object : Callback<CardListResponse?> {
             override fun onResponse(call: Call<CardListResponse?>, response: Response<CardListResponse?>) {
                 val responseBody = response.body()
 

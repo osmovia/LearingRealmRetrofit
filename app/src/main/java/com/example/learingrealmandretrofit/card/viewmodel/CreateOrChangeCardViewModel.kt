@@ -35,7 +35,7 @@ class CreateOrChangeCardViewModel(private val token: String) : ViewModel() {
         }
 
         _showSpinner.value = true
-        BaseApi.retrofit.createCard(token = token, params = cardView).enqueue(object : Callback<CardResponse?> {
+        BaseApi.retrofitHeader(token).createCard(params = cardView).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
@@ -81,7 +81,7 @@ class CreateOrChangeCardViewModel(private val token: String) : ViewModel() {
         }
 
             _showSpinner.value = true
-            BaseApi.retrofit.updateCard(id = cardView.id, params = cardView, token = token).enqueue(object : Callback<CardResponse?> {
+            BaseApi.retrofitHeader(token).updateCard(id = cardView.id, params = cardView).enqueue(object : Callback<CardResponse?> {
                 override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                     val responseBody = response.body()
                     if (response.isSuccessful && responseBody != null) {

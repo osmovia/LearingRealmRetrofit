@@ -29,7 +29,7 @@ class InsideDeckDeleteCardViewModel(private val token: String, private val deckI
 
     fun deleteCardRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofit.deleteCardDeck(token = token, id = cardDeckId).enqueue(object : Callback<CardDeckResponse?> {
+        BaseApi.retrofitHeader(token).deleteCardDeck(id = cardDeckId).enqueue(object : Callback<CardDeckResponse?> {
             override fun onResponse(call: Call<CardDeckResponse?>, response: Response<CardDeckResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

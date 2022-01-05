@@ -47,7 +47,7 @@ class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
         _showSpinner.value = true
         val titleRequest = DeckTitleRequest(title)
         val request = DeckCreateOrUpdateRequest(titleRequest)
-        BaseApi.retrofit.createdDeck(token = token, params = request).enqueue(object : Callback<DeckResponse?> {
+        BaseApi.retrofitHeader(token).createdDeck(params = request).enqueue(object : Callback<DeckResponse?> {
             override fun onResponse(call: Call<DeckResponse?>, response: Response<DeckResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
@@ -90,7 +90,7 @@ class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
         _showSpinner.value = true
         val requestTitle = DeckTitleRequest(titleDeck)
         val request = DeckCreateOrUpdateRequest(requestTitle)
-        BaseApi.retrofit.updateDeck(token = token, id = _currentDeck.value?.id ?: return , params = request)
+        BaseApi.retrofitHeader(token).updateDeck(id = _currentDeck.value?.id ?: return , params = request)
             .enqueue(object : Callback<DeckResponse?> {
             override fun onResponse(call: Call<DeckResponse?>, response: Response<DeckResponse?>) {
                 val responseBody = response.body()

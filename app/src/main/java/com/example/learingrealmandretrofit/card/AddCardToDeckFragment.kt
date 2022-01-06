@@ -37,6 +37,17 @@ class AddCardToDeckFragment : Fragment() {
 
         binding.buttonCreateDeck.isInvisible = true
 
+        binding.toolbarContainer.toolbarId.inflateMenu(R.menu.toolbar_select)
+
+        binding.toolbarContainer.toolbarId.setOnMenuItemClickListener { itemMenu ->
+            when (itemMenu.itemId) {
+                R.id.selectItem -> viewModel.addAndRemoveCardFromDecksRetrofit()
+            }
+            true
+        }
+
+        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController())
+
         viewModelFactory = AddCardToDeckViewModelFactory(token = arguments.token, cardId = arguments.cardId)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(AddCardToDeckViewModel::class.java)
@@ -64,20 +75,6 @@ class AddCardToDeckFragment : Fragment() {
             binding.recyclerDeck.layoutManager = LinearLayoutManager(context)
             binding.recyclerDeck.adapter = adapter
         })
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.selectItem) {
-            viewModel.addCardToDeckRetrofit()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.toolbar_select, menu)
     }
 
     fun onCheckboxClick(isChecked: Boolean, deck: Deck) {

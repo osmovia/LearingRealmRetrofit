@@ -1,10 +1,7 @@
 package com.example.learingrealmandretrofit.api
 
 import com.example.learingrealmandretrofit.objects.CardParameters
-import com.example.learingrealmandretrofit.objects.request.CardDeckRequest
-import com.example.learingrealmandretrofit.objects.request.DeckCreateOrUpdateRequest
-import com.example.learingrealmandretrofit.objects.request.SignInRequest
-import com.example.learingrealmandretrofit.objects.request.SignUpRequest
+import com.example.learingrealmandretrofit.objects.request.*
 import com.example.learingrealmandretrofit.objects.response.*
 import retrofit2.Call
 import retrofit2.http.*
@@ -45,6 +42,12 @@ interface ApiInterface {
     fun deleteCard(
         @Path("id") id: Int
     ): Call<CardResponse>
+
+    @PUT("cards/{id}/decks")
+    fun addCardFromDecks(
+        @Path("id") id : Int,
+        @Body params: AddCardToDecksRequest
+    ) : Call<AddCardToDecksResponse>
 
     @GET("decks")
     fun getDecks(

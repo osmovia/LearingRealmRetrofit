@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,7 +30,7 @@ class InsideDeckDeleteCardDialog: DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogDeleteCardBinding.inflate(layoutInflater)
-        dialog?.setCanceledOnTouchOutside(true)
+        dialog?.setCanceledOnTouchOutside(false)
         return binding.root
     }
 
@@ -49,11 +50,7 @@ class InsideDeckDeleteCardDialog: DialogFragment() {
         })
 
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
-            if (showSpinner) {
-                activity?.showProgress()
-            } else {
-                activity?.hideProgress()
-            }
+            binding.containerSpinner.layoutProgress.isVisible = showSpinner
         })
 
         viewModel.success.observe(viewLifecycleOwner, Observer { success ->

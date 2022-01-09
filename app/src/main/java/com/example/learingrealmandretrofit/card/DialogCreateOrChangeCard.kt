@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -28,7 +29,7 @@ class DialogCreateOrChangeCard : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogCreateOrChangeCardBinding.inflate(layoutInflater)
-        dialog?.setCanceledOnTouchOutside(true)
+        dialog?.setCanceledOnTouchOutside(false)
         return binding.root
     }
 
@@ -49,11 +50,7 @@ class DialogCreateOrChangeCard : DialogFragment() {
         })
 
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
-            if (showSpinner) {
-                requireActivity().showProgress()
-            } else {
-                requireActivity().hideProgress()
-            }
+            binding.containerSpinner.layoutProgress.isVisible = showSpinner
         })
 
         viewModel.showToast.observe(viewLifecycleOwner, Observer { message ->

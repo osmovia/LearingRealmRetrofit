@@ -13,6 +13,8 @@ import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.DeleteCardViewModel
 import com.example.learingrealmandretrofit.card.viewmodel.factory.DeleteCardViewModelFactory
 import com.example.learingrealmandretrofit.databinding.DialogDeleteCardBinding
+import androidx.core.view.isVisible
+
 
 class DialogDeleteCard : DialogFragment() {
     //Arguments
@@ -29,7 +31,7 @@ class DialogDeleteCard : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogDeleteCardBinding.inflate(layoutInflater)
-        dialog?.setCanceledOnTouchOutside(true)
+        dialog?.setCanceledOnTouchOutside(false)
         return binding.root
     }
 
@@ -40,11 +42,7 @@ class DialogDeleteCard : DialogFragment() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(DeleteCardViewModel::class.java)
 
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
-            if (showSpinner) {
-                requireActivity().showProgress()
-            } else {
-                requireActivity().hideProgress()
-            }
+            binding.containerSpinner.layoutProgress.isVisible = showSpinner
         })
 
         viewModel.showToast.observe(viewLifecycleOwner, Observer { message ->

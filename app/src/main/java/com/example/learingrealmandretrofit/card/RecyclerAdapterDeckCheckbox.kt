@@ -7,22 +7,20 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.R
-import com.example.learingrealmandretrofit.deck.Deck
+import com.example.learingrealmandretrofit.objects.DeckForCheckbox
 import com.google.android.material.checkbox.MaterialCheckBox
-import io.realm.OrderedRealmCollection
-import io.realm.RealmRecyclerViewAdapter
 
 class RecyclerAdapterDeckCheckbox(
     private val owner: AddCardToDeckFragment?,
-    private val deckList: OrderedRealmCollection<Deck>,
-    autoUpdate: Boolean
-) : RealmRecyclerViewAdapter<Deck, RecyclerAdapterDeckCheckbox.DeckCheckbox>(deckList, autoUpdate) {
+    private val deckList: List<DeckForCheckbox>,
+) : RecyclerView.Adapter<RecyclerAdapterDeckCheckbox.DeckCheckbox>() {
 
     override fun getItemCount(): Int = deckList.size
 
     override fun onBindViewHolder(holder: DeckCheckbox, position: Int) {
         val item = deckList[position]
         holder.checkBox.isVisible = true
+        holder.checkBox.isChecked = item.haveCurrentCard
         holder.textViewDeckName.text = item.title
 
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->

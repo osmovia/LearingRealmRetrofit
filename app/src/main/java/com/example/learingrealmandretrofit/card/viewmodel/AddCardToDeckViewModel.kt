@@ -9,12 +9,11 @@ import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.deck.Deck
 import com.example.learingrealmandretrofit.objects.CardDeck
-import com.example.learingrealmandretrofit.objects.request.CardDeckIdRequest
-import com.example.learingrealmandretrofit.objects.request.CardDeckRequest
+import com.example.learingrealmandretrofit.objects.DeckForCheckbox
+import com.example.learingrealmandretrofit.objects.request.AddCardToDecksRequest
+import com.example.learingrealmandretrofit.objects.response.AddCardToDecksResponse
 import com.example.learingrealmandretrofit.objects.response.CardDeckIdResponse
-import com.example.learingrealmandretrofit.objects.response.CardDeckResponse
 import io.realm.Realm
-import io.realm.RealmResults
 import io.realm.Sort
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,11 +21,11 @@ import retrofit2.Response
 
 class AddCardToDeckViewModel(private val token: String, private val cardId: Int) : ViewModel() {
 
-    private val _getAllDecksRealm = MutableLiveData<RealmResults<Deck>>()
-    val gelAllDecksRealm: LiveData<RealmResults<Deck>>
-        get() = _getAllDecksRealm
+    private val _decks = MutableLiveData<List<DeckForCheckbox>>()
+    val decks: LiveData<List<DeckForCheckbox>>
+        get() = _decks
 
-    private val listSelectFlag = mutableListOf<Deck>()
+    private val decksId = mutableListOf<Int>()
 
     private val _showToast = MutableLiveData<Any>()
     val showToast: LiveData<Any>
@@ -40,6 +39,8 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
     val success: LiveData<Boolean>
         get() = _success
 
+    private val deckCheckbox = mutableListOf<DeckForCheckbox>()
+
     init {
         pullDecks()
     }
@@ -47,23 +48,54 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
     private fun pullDecks() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
-        _getAllDecksRealm.value = realm.where(Deck::class.java).findAll().sort("title", Sort.ASCENDING)
+
+        realm.executeTransactionAsync({ realmTransaction ->
+
+            val result = realmTransaction
+                .where(Deck::class.java)
+                .findAll()
+                .sort("title", Sort.ASCENDING)
+
+            result?.forEach { deck ->
+                deckCheckbox.add(
+                    DeckForCheckbox(deckId = deck.id, haveCurrentCard = false, title = deck.title)
+                )
+            }
+        }, {
+            findCardIndDeck()
+            realm.close()
+        }, {
+            realm.close()
+        })
     }
 
-    private fun createCardDeckRealm(id: CardDeckIdResponse) {
+    private fun addAndRemoveCardFromDecksRealm(response: AddCardToDecksResponse?) {
+
+        val listDeleteCardDecks = response?.deletedCardDecks ?: return
+        val listCreateCardDecks = response.createdCardDecks
+
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
 
-            val cardDeck = CardDeck(
-                id = id.id,
-                cardId = id.cardId,
-                deckId = id.deckId
-            )
+            listCreateCardDecks.forEach { cardDeck ->
+                val cardDeckRealm = CardDeck(
+                    id = cardDeck.id,
+                    cardId = cardDeck.cardId,
+                    deckId = cardDeck.deckId
+                )
+                realmTransaction.insert(cardDeckRealm)
+            }
 
-            realmTransaction.insert(cardDeck)
+            listDeleteCardDecks.forEach { cardDeck ->
+                val result = realmTransaction
+                    .where(CardDeck::class.java)
+                    .equalTo("id", cardDeck.id)
+                    .findFirst()
+                result?.deleteFromRealm()
+            }
         }, {
-            addCardDeckInCardAndDeck(id)
+            addCardDeckInCardsAndDecks(response.createdCardDecks)
             realm.close()
         }, {
             _showSpinner.value = false
@@ -72,28 +104,29 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
         })
     }
 
-    private fun addCardDeckInCardAndDeck(id: CardDeckIdResponse) {
+    private fun addCardDeckInCardsAndDecks(cardDecks: List<CardDeckIdResponse>) {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
 
-            val cardDeck = realmTransaction
-                .where(CardDeck::class.java)
-                .equalTo("id", id.id)
-                .findFirst()
+            cardDecks.forEach { itemCardDeck ->
+                val cardDeck = realmTransaction
+                    .where(CardDeck::class.java)
+                    .equalTo("id", itemCardDeck.id)
+                    .findFirst()
 
-            val deck = realmTransaction
-                .where(Deck::class.java)
-                .equalTo("id", id.deckId)
-                .findFirst()
-            deck?.cardDecks?.add(cardDeck)
+                val deck = realmTransaction
+                    .where(Deck::class.java)
+                    .equalTo("id", itemCardDeck.deckId)
+                    .findFirst()
+                deck?.cardDecks?.add(cardDeck)
 
-            val card = realmTransaction
-                .where(Card::class.java)
-                .equalTo("id", id.cardId)
-                .findFirst()
-            card?.cardDecks?.add(cardDeck)
-
+                val card = realmTransaction
+                    .where(Card::class.java)
+                    .equalTo("id", itemCardDeck.cardId)
+                    .findFirst()
+                card?.cardDecks?.add(cardDeck)
+            }
         }, {
             _success.value = true
             _showSpinner.value = false
@@ -105,68 +138,56 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
         })
     }
 
-    fun addCardToDeckRetrofit() {
+    fun addAndRemoveCardFromDecksRetrofit() {
         _showSpinner.value = true
-        val request = CardDeckRequest(CardDeckIdRequest(cardId = cardId, deckId = listSelectFlag[0].id))
-        BaseApi.retrofitHeader(token).createCardDeck(params = request).enqueue(object : Callback<CardDeckResponse?> {
-            override fun onResponse(call: Call<CardDeckResponse?>, response: Response<CardDeckResponse?>) {
+        val request = AddCardToDecksRequest(deckIds = decksId)
+        BaseApi.retrofitHeader(token).addCardFromDecks(params = request, id = cardId).enqueue(object : Callback<AddCardToDecksResponse?> {
+            override fun onResponse(call: Call<AddCardToDecksResponse?>, response: Response<AddCardToDecksResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
-                    createCardDeckRealm(responseBody.cardDeck)
+                    addAndRemoveCardFromDecksRealm(responseBody)
                 } else {
                     _showSpinner.value = false
                     _showToast.value = response.code().toString()
                 }
             }
-
-            override fun onFailure(call: Call<CardDeckResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<AddCardToDecksResponse?>, t: Throwable) {
                 _showSpinner.value = false
                 _showToast.value = R.string.connection_issues
             }
         })
-//        _showSpinner.value = true
-//
-//        if (listSelectFlag.size == 0) {
-//            _showSpinner.value = false
-//            _success.value = true
-//        }
-//
-//        listSelectFlag.firstOrNull()?.let { currentDeck ->
-//            BaseApi.retrofit.addCardToDeck(token = token, cardId = cardId, deckId = currentDeck.id)
-//                .enqueue(object : Callback<SuccessResponse?> {
-//                override fun onResponse(call: Call<SuccessResponse?>, response: Response<SuccessResponse?>) {
-//                    if (response.isSuccessful) {
-//                        addCardToDeckRealm(currentDeck.id)
-//                        listSelectFlag.remove(currentDeck)
-//                    } else {
-//                        _showToast.value = response.code().toString()
-//                        _showSpinner.value = false
-//                    }
-//                }
-//                override fun onFailure(call: Call<SuccessResponse?>, t: Throwable) {
-//                    _showToast.value = R.string.connection_issues
-//                    _showSpinner.value = false
-//                }
-//            })
-//        }
     }
 
-    fun changeStateCheckCheckbox(isChecked: Boolean, deck: Deck) {
+    fun changeStateCheckCheckbox(isChecked: Boolean, deck: DeckForCheckbox) {
         if (isChecked) {
-            for (it in listSelectFlag) {
-                if (it == deck) {
-                    return
-                }
-            }
-            listSelectFlag.add(deck)
+            decksId.add(deck.deckId)
         } else {
-            for (it in listSelectFlag) {
-                if (it == deck) {
-                    listSelectFlag.remove(deck)
-                    return
-                }
-            }
+            decksId.remove(deck.deckId)
         }
     }
 
+    private fun findCardIndDeck() {
+        deckCheckbox.forEachIndexed { index, deckFromCheckbox ->
+            val realm = Realm.getInstance(ConfigurationRealm.configuration)
+            realm.executeTransaction { realmTransaction ->
+
+                val cardDeck = realmTransaction
+                    .where(CardDeck::class.java)
+                    .equalTo("deckId", deckFromCheckbox.deckId)
+                    .and()
+                    .equalTo("cardId", cardId)
+                    .findFirst()
+
+                if (cardDeck != null) {
+                    deckCheckbox[index] = DeckForCheckbox(
+                        deckId = deckFromCheckbox.deckId,
+                        haveCurrentCard = true,
+                        title = deckFromCheckbox.title
+                    )
+                    decksId.add(deckFromCheckbox.deckId)
+                }
+            }
+        }
+        _decks.value = deckCheckbox
+    }
 }

@@ -14,7 +14,7 @@ import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.AddCardToDeckViewModel
 import com.example.learingrealmandretrofit.card.viewmodel.factory.AddCardToDeckViewModelFactory
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
-import com.example.learingrealmandretrofit.deck.Deck
+import com.example.learingrealmandretrofit.objects.DeckForCheckbox
 
 class AddCardToDeckFragment : Fragment() {
 
@@ -36,6 +36,17 @@ class AddCardToDeckFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding.buttonCreateDeck.isInvisible = true
+
+        binding.toolbarContainer.toolbarId.inflateMenu(R.menu.toolbar_select)
+
+        binding.toolbarContainer.toolbarId.setOnMenuItemClickListener { itemMenu ->
+            when (itemMenu.itemId) {
+                R.id.selectItem -> viewModel.addAndRemoveCardFromDecksRetrofit()
+            }
+            true
+        }
+
+        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController())
 
         viewModelFactory = AddCardToDeckViewModelFactory(token = arguments.token, cardId = arguments.cardId)
 
@@ -59,28 +70,14 @@ class AddCardToDeckFragment : Fragment() {
             }
         })
 
-        viewModel.gelAllDecksRealm.observe(viewLifecycleOwner, Observer { allDecks ->
-            val adapter = RecyclerAdapterDeckCheckbox(this, allDecks, autoUpdate = true)
+        viewModel.decks.observe(viewLifecycleOwner, Observer { allDecks ->
+            val adapter = RecyclerAdapterDeckCheckbox(this, allDecks)
             binding.recyclerDeck.layoutManager = LinearLayoutManager(context)
             binding.recyclerDeck.adapter = adapter
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.selectItem) {
-            viewModel.addCardToDeckRetrofit()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.toolbar_select, menu)
-    }
-
-    fun onCheckboxClick(isChecked: Boolean, deck: Deck) {
+    fun onCheckboxClick(isChecked: Boolean, deck: DeckForCheckbox) {
         viewModel.changeStateCheckCheckbox(isChecked, deck)
     }
 

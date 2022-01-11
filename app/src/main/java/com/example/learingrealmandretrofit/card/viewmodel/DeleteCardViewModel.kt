@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
+import com.example.learingrealmandretrofit.objects.CardDeck
 import com.example.learingrealmandretrofit.objects.response.CardResponse
 import io.realm.Realm
 import retrofit2.Call
@@ -55,12 +56,32 @@ class DeleteCardViewModel(private val token: String, private val cardId: Int) : 
                 .findFirst()
             result?.deleteFromRealm()
         }, {
-            _success.value = true
+            deleteCardDeckRealm(cardId)
             realm.close()
         }, {
             _showToast.value = R.string.problem_realm
+            _showSpinner.value = false
             realm.close()
         })
         _showSpinner.value = false
+    }
+
+    private fun deleteCardDeckRealm(cardId: Int) {
+        val realm = Realm.getInstance(ConfigurationRealm.configuration)
+        realm.executeTransactionAsync({ realmTransaction ->
+            val cardDeck = realmTransaction
+                .where(CardDeck::class.java)
+                .equalTo("cardId", cardId)
+                .findAll()
+
+            cardDeck.deleteAllFromRealm()
+        },{
+            _showSpinner.value = false
+            _success.value = true
+            realm.close()
+        }, {
+            _showSpinner.value = false
+            realm.close()
+        })
     }
 }

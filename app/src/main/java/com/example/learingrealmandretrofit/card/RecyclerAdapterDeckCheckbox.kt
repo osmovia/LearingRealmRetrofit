@@ -4,27 +4,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learingrealmandretrofit.R
-import com.example.learingrealmandretrofit.objects.DeckForCheckbox
+import com.example.learingrealmandretrofit.deck.Deck
 import com.google.android.material.checkbox.MaterialCheckBox
+import io.realm.RealmList
 
 class RecyclerAdapterDeckCheckbox(
     private val owner: AddCardToDeckFragment?,
-    private val deckList: List<DeckForCheckbox>,
+    private val deckIds: MutableList<Int>,
+    private val decks: RealmList<Deck>,
 ) : RecyclerView.Adapter<RecyclerAdapterDeckCheckbox.DeckCheckbox>() {
 
-    override fun getItemCount(): Int = deckList.size
+    override fun getItemCount(): Int = decks.size
 
     override fun onBindViewHolder(holder: DeckCheckbox, position: Int) {
-        val item = deckList[position]
-        holder.checkBox.isVisible = true
-        holder.checkBox.isChecked = item.haveCurrentCard
-        holder.textViewDeckName.text = item.title
+        val deck = decks[position]
 
-        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            owner?.onCheckboxClick(isChecked, item)
+        holder.checkBox.isClickable = false
+        holder.checkBox.isVisible = true
+        holder.textViewDeckName.text = deck?.title
+        holder.checkBox.isChecked = deckIds.contains(deck?.id)
+
+        holder.containerCheckbox.setOnClickListener {
+            if (deck != null) {
+                owner?.onCheckboxClick(
+                    deck = deck,
+                    position = position
+                )
+            }
         }
     }
 
@@ -36,5 +46,6 @@ class RecyclerAdapterDeckCheckbox(
     class DeckCheckbox(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textViewDeckName: TextView = itemView.findViewById(R.id.deck_name)
         val checkBox: MaterialCheckBox = itemView.findViewById(R.id.checkbox)
+        val containerCheckbox: ConstraintLayout = itemView.findViewById(R.id.containerCheckbox)
     }
 }

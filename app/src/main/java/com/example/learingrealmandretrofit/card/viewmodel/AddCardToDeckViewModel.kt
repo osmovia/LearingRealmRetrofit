@@ -8,24 +8,27 @@ import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.deck.Deck
-import com.example.learingrealmandretrofit.objects.CardDeck
-import com.example.learingrealmandretrofit.objects.DeckForCheckbox
+import com.example.learingrealmandretrofit.objects.*
 import com.example.learingrealmandretrofit.objects.request.AddCardToDecksRequest
 import com.example.learingrealmandretrofit.objects.response.AddCardToDecksResponse
-import com.example.learingrealmandretrofit.objects.response.CardDeckIdResponse
+import com.example.learingrealmandretrofit.objects.response.CardDeckResponse
 import io.realm.Realm
+import io.realm.RealmList
 import io.realm.Sort
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class AddCardToDeckViewModel(private val token: String, private val cardId: Int) : ViewModel() {
 
-    private val _decks = MutableLiveData<List<DeckForCheckbox>>()
-    val decks: LiveData<List<DeckForCheckbox>>
+    private val _decks = RealmList<Deck>()
+    val deck: RealmList<Deck>
         get() = _decks
 
-    private val decksId = mutableListOf<Int>()
+    private val _decksIds = mutableListOf<Int>()
+    val decksIds: MutableList<Int>
+        get() = _decksIds
 
     private val _showToast = MutableLiveData<Any>()
     val showToast: LiveData<Any>
@@ -39,30 +42,42 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
     val success: LiveData<Boolean>
         get() = _success
 
-    private val deckCheckbox = mutableListOf<DeckForCheckbox>()
+    private val _listsReady = MutableLiveData<Boolean>()
+    val listsReady: LiveData<Boolean>
+        get() = _listsReady
+
+    private val _updateRecycler = MutableLiveData<Int>()
+    val updateRecycler: LiveData<Int>
+        get() = _updateRecycler
 
     init {
         pullDecks()
     }
 
     private fun pullDecks() {
-        val config = ConfigurationRealm.configuration
-        val realm = Realm.getInstance(config)
+        val realm = Realm.getInstance(ConfigurationRealm.configuration)
 
         realm.executeTransactionAsync({ realmTransaction ->
-
-            val result = realmTransaction
+            val decks = realmTransaction
                 .where(Deck::class.java)
                 .findAll()
                 .sort("title", Sort.ASCENDING)
 
-            result?.forEach { deck ->
-                deckCheckbox.add(
-                    DeckForCheckbox(deckId = deck.id, haveCurrentCard = false, title = deck.title)
-                )
+            _decks.addAll(realmTransaction.copyFromRealm(decks))
+
+            run firstLoop@{ _decks.forEach { deck ->
+                run secondLoop@{ deck.cardDecks.forEach { cardDeck ->
+                    if (cardDeck.cardId == cardId) {
+                        decksIds.add(cardDeck.deckId)
+                        return@secondLoop
+                    }
+                }
+                }
             }
+            }
+
         }, {
-            findCardIndDeck()
+            _listsReady.value = true
             realm.close()
         }, {
             realm.close()
@@ -104,7 +119,7 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
         })
     }
 
-    private fun addCardDeckInCardsAndDecks(cardDecks: List<CardDeckIdResponse>) {
+    private fun addCardDeckInCardsAndDecks(cardDecks: List<CardDeckResponse>) {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         realm.executeTransactionAsync({ realmTransaction ->
@@ -140,8 +155,8 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
 
     fun addAndRemoveCardFromDecksRetrofit() {
         _showSpinner.value = true
-        val request = AddCardToDecksRequest(deckIds = decksId)
-        BaseApi.retrofitHeader(token).addCardFromDecks(params = request, id = cardId).enqueue(object : Callback<AddCardToDecksResponse?> {
+        val request = AddCardToDecksRequest(deckIds = _decksIds)
+        BaseApi.retrofitHeader(token).updateDecksForCardResponse(params = request, id = cardId).enqueue(object : Callback<AddCardToDecksResponse?> {
             override fun onResponse(call: Call<AddCardToDecksResponse?>, response: Response<AddCardToDecksResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
@@ -158,36 +173,12 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
         })
     }
 
-    fun changeStateCheckCheckbox(isChecked: Boolean, deck: DeckForCheckbox) {
-        if (isChecked) {
-            decksId.add(deck.deckId)
+    fun changeStateCheckCheckbox(deck: Deck, position: Int) {
+        if (_decksIds.contains(deck.id)) {
+            _decksIds.remove(deck.id)
         } else {
-            decksId.remove(deck.deckId)
+            _decksIds.add(deck.id)
         }
-    }
-
-    private fun findCardIndDeck() {
-        deckCheckbox.forEachIndexed { index, deckFromCheckbox ->
-            val realm = Realm.getInstance(ConfigurationRealm.configuration)
-            realm.executeTransaction { realmTransaction ->
-
-                val cardDeck = realmTransaction
-                    .where(CardDeck::class.java)
-                    .equalTo("deckId", deckFromCheckbox.deckId)
-                    .and()
-                    .equalTo("cardId", cardId)
-                    .findFirst()
-
-                if (cardDeck != null) {
-                    deckCheckbox[index] = DeckForCheckbox(
-                        deckId = deckFromCheckbox.deckId,
-                        haveCurrentCard = true,
-                        title = deckFromCheckbox.title
-                    )
-                    decksId.add(deckFromCheckbox.deckId)
-                }
-            }
-        }
-        _decks.value = deckCheckbox
+        _updateRecycler.value = position
     }
 }

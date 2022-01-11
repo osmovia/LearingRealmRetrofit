@@ -14,7 +14,7 @@ import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.AddCardToDeckViewModel
 import com.example.learingrealmandretrofit.card.viewmodel.factory.AddCardToDeckViewModelFactory
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
-import com.example.learingrealmandretrofit.objects.DeckForCheckbox
+import com.example.learingrealmandretrofit.deck.Deck
 
 class AddCardToDeckFragment : Fragment() {
 
@@ -70,15 +70,24 @@ class AddCardToDeckFragment : Fragment() {
             }
         })
 
-        viewModel.decks.observe(viewLifecycleOwner, Observer { allDecks ->
-            val adapter = RecyclerAdapterDeckCheckbox(this, allDecks)
-            binding.recyclerDeck.layoutManager = LinearLayoutManager(context)
-            binding.recyclerDeck.adapter = adapter
+        viewModel.listsReady.observe(viewLifecycleOwner, Observer { listsReady ->
+            if (listsReady) {
+                    val adapter = RecyclerAdapterDeckCheckbox(
+                        this,
+                        deckIds = viewModel.decksIds,
+                        decks = viewModel.deck)
+                    binding.recyclerDeck.layoutManager = LinearLayoutManager(context)
+                    binding.recyclerDeck.adapter = adapter
+            }
+        })
+
+        viewModel.updateRecycler.observe(viewLifecycleOwner, Observer { position ->
+            binding.recyclerDeck.adapter?.notifyItemChanged(position)
         })
     }
 
-    fun onCheckboxClick(isChecked: Boolean, deck: DeckForCheckbox) {
-        viewModel.changeStateCheckCheckbox(isChecked, deck)
+    fun onCheckboxClick(deck: Deck, position :Int) {
+        viewModel.changeStateCheckCheckbox(deck, position)
     }
 
 }

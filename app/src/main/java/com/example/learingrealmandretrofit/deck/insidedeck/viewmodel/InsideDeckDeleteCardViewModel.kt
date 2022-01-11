@@ -7,7 +7,7 @@ import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.objects.CardDeck
-import com.example.learingrealmandretrofit.objects.response.CardDeckResponse
+import com.example.learingrealmandretrofit.objects.response.CardDeckMainResponse
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,8 +29,8 @@ class InsideDeckDeleteCardViewModel(private val token: String, private val deckI
 
     fun deleteCardRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofitHeader(token).deleteCardDeck(id = cardDeckId).enqueue(object : Callback<CardDeckResponse?> {
-            override fun onResponse(call: Call<CardDeckResponse?>, response: Response<CardDeckResponse?>) {
+        BaseApi.retrofitHeader(token).deleteCardDeck(id = cardDeckId).enqueue(object : Callback<CardDeckMainResponse?> {
+            override fun onResponse(call: Call<CardDeckMainResponse?>, response: Response<CardDeckMainResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     deleteCardRealm(responseBody.cardDeck.id)
@@ -40,7 +40,7 @@ class InsideDeckDeleteCardViewModel(private val token: String, private val deckI
                 }
             }
 
-            override fun onFailure(call: Call<CardDeckResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<CardDeckMainResponse?>, t: Throwable) {
                 _showToast.value = R.string.connection_issues
                 _showSpinner.value = false
             }

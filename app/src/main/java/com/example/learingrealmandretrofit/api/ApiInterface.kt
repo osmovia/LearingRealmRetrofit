@@ -44,8 +44,8 @@ interface ApiInterface {
     ): Call<CardResponse>
 
     @PUT("cards/{id}/decks")
-    fun addCardFromDecks(
-        @Path("id") id : Int,
+    fun updateDecksForCardResponse(
+        @Path("id") id: Int,
         @Body params: AddCardToDecksRequest
     ) : Call<AddCardToDecksResponse>
 
@@ -93,10 +93,10 @@ interface ApiInterface {
     @POST("card_decks")
     fun createCardDeck(
         @Body params: CardDeckRequest
-    ): Call<CardDeckResponse>
+    ): Call<CardDeckMainResponse>
 
     @DELETE("card_decks/{id}")
     fun deleteCardDeck(
         @Path("id") id: Int
-    ) : Call<CardDeckResponse>
+    ) : Call<CardDeckMainResponse>
 }

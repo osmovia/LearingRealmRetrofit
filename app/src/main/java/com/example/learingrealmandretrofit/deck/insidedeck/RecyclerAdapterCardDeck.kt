@@ -22,13 +22,15 @@ class RecyclerAdapterCardDeck(
     override fun getItemCount(): Int = cardDeckList.size
 
     override fun onBindViewHolder(holder: CardDeckViewHolder, position: Int) {
-        val item = cardDeckList[position].card?.first() ?: return
+        val item = cardDeckList[position].card?.first()
         val gradient = ResourcesCompat.getDrawable(holder.itemView.resources, getRandomColorGradient(position), null)
         holder.cardView.background = gradient
-        holder.textViewOriginal.text = item.word
-        holder.textViewTranslate.text = item.translation
+        holder.textViewOriginal.text = item?.word
+        holder.textViewTranslate.text = item?.translation
         holder.itemContainer.setOnClickListener {
-            owner?.onCardClick(item)
+            if (item != null) {
+                owner?.onCardClick(item)
+            }
         }
     }
 

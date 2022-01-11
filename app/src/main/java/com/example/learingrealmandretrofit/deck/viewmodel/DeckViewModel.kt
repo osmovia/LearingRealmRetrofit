@@ -60,8 +60,11 @@ class DeckViewModel(private val token: String) : ViewModel() {
         val realm = Realm.getInstance(config)
 
         realm.executeTransactionAsync({ realmTransaction ->
-            for (deck in decksList) {
-                val persistedDeck = realmTransaction.where(Deck::class.java).equalTo("id", deck.id).findFirst()
+            decksList.forEach { deck ->
+                val persistedDeck = realmTransaction
+                    .where(Deck::class.java)
+                    .equalTo("id", deck.id)
+                    .findFirst()
 
                 if (persistedDeck == null) {
                     val newDeck = Deck(id = deck.id, title = deck.title)
@@ -70,7 +73,6 @@ class DeckViewModel(private val token: String) : ViewModel() {
             }
         }, {
             realm.close()
-//            BaseApi.retrofit.getCardDecks(...)
         }, {
             _showToast.value = R.string.problem_realm
             realm.close()

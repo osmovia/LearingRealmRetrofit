@@ -9,7 +9,6 @@ import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.deck.Deck
 import com.example.learingrealmandretrofit.objects.CardDeck
-import com.example.learingrealmandretrofit.objects.response.CardResponse
 import com.example.learingrealmandretrofit.objects.response.DeckDeletedWitchCardsResponse
 import com.example.learingrealmandretrofit.objects.response.DeckResponse
 import io.realm.Realm
@@ -80,28 +79,26 @@ class DeleteDeckViewModel(private val token: String, private val deckId: Int) : 
                 .equalTo("id", deckId)
                 .findFirst()
 
-            val cardDecks = realmTransaction
+            val cardDecksForDeck = realmTransaction
                 .where(CardDeck::class.java)
                 .equalTo("deckId", deckId)
                 .findAll()
 
-            cardDecks?.forEach { cardDeck ->
+            cardDecksForDeck?.forEach { cardDeck ->
                 val card = realmTransaction
                     .where(Card::class.java)
                     .equalTo("id", cardDeck.cardId)
                     .findFirst()
                 card?.deleteFromRealm()
 
-                val result = realmTransaction
+                val cardDecksForCards = realmTransaction
                     .where(CardDeck::class.java)
                     .equalTo("cardId", cardDeck.cardId)
                     .findAll()
-                result?.deleteAllFromRealm()
-
+                cardDecksForCards?.deleteAllFromRealm()
             }
-            cardDecks?.deleteAllFromRealm()
+            cardDecksForDeck?.deleteAllFromRealm()
             deck?.deleteFromRealm()
-
         }, {
             _showSpinner.value = false
             _success.value = true
@@ -138,6 +135,5 @@ class DeleteDeckViewModel(private val token: String, private val deckId: Int) : 
             _showSpinner.value = false
             realm.close()
         })
-
     }
 }

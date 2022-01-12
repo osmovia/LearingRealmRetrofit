@@ -9,11 +9,9 @@ import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.deck.Deck
 import com.example.learingrealmandretrofit.objects.CardDeck
-import com.example.learingrealmandretrofit.objects.CardParameters
-import com.example.learingrealmandretrofit.objects.response.DeckResponse
+import com.example.learingrealmandretrofit.objects.CardDeckParameters
+import com.example.learingrealmandretrofit.objects.response.CardDeckListResponse
 import io.realm.Realm
-import io.realm.RealmCollection
-import io.realm.RealmList
 import io.realm.RealmResults
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,68 +32,109 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
         get() = _getAllCardsRealm
 
     init {
-        getAllCard()
+        getCardsInsideDeck()
     }
 
-    private fun getAllCard() {
+    private fun getAllCardDeck() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         _getAllCardsRealm.value = realm
             .where(CardDeck::class.java)
             .equalTo("deckId", deckId)
             .findAll()
+        _showSpinner.value = false
     }
 
     private fun getCardsInsideDeck() {
         _showSpinner.value = true
-        BaseApi.retrofitHeader(token).getDeck(id = deckId)
-            .enqueue(object : Callback<DeckResponse?> {
+        BaseApi.retrofitHeader(token).getCardDecks().enqueue(object : Callback<CardDeckListResponse?> {
             override fun onResponse(
-                call: Call<DeckResponse?>,
-                response: Response<DeckResponse?>
+                call: Call<CardDeckListResponse?>,
+                response: Response<CardDeckListResponse?>
             ) {
                 val responseBode = response.body()
                 if (response.isSuccessful && responseBode != null) {
-                    checkCurrentCardsInRealm(responseBode.deck.cards)
+                    checkCurrentCardsInRealm(responseBode.cardDecks)
                 } else {
+                    getAllCardDeck()
                     _showToast.value = response.code().toString()
-                    _showSpinner.value = false
                 }
             }
 
-            override fun onFailure(call: Call<DeckResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<CardDeckListResponse?>, t: Throwable) {
+                getAllCardDeck()
                 _showToast.value = R.string.connection_issues
-                _showSpinner.value = false
             }
         })
     }
 
-    private fun checkCurrentCardsInRealm(cards: List<CardParameters>) {
-        val config = ConfigurationRealm.configuration
-        val realm = Realm.getInstance(config)
+    private fun checkCurrentCardsInRealm(cards: List<CardDeckParameters>) {
+        val createCardDeckId = mutableListOf<Int>()
+
+        val realm = Realm.getInstance(ConfigurationRealm.configuration)
         realm.executeTransactionAsync({ realmTransaction ->
-            for (card in cards) {
-                val currentCard = realmTransaction
-                    .where(Card::class.java)
-                    .equalTo("id", card.id)
+
+            cards.forEach { cardDeckParameters ->
+                val currentCardDeck = realmTransaction
+                    .where(CardDeck::class.java)
+                    .equalTo("id", cardDeckParameters.id)
                     .findFirst()
 
-                if (currentCard == null) {
-                    val newCard = Card(
-                        id = card.id,
-                        word = card.word,
-                        example = card.example,
-                        translation = card.translation
+                if (currentCardDeck == null) {
+                    createCardDeckId.add(cardDeckParameters.id)
+                    realmTransaction.insert(
+                        CardDeck(
+                            id = cardDeckParameters.id,
+                            deckId = cardDeckParameters.deckId,
+                            cardId = cardDeckParameters.cardId
+                        )
                     )
-                    realmTransaction.insert(newCard)
                 }
             }
         }, {
             realm.close()
+            if (createCardDeckId.size == 0) {
+                getAllCardDeck()
+            } else {
+                addCardDeckInCardsAndDecks(createCardDeckId)
+            }
         }, {
+            realm.close()
+            _showSpinner.value = false
+            _showToast.value = R.string.problem_realm
+        })
+    }
+
+    private fun addCardDeckInCardsAndDecks(createCardDeckId: MutableList<Int>) {
+        val config = ConfigurationRealm.configuration
+        val realm = Realm.getInstance(config)
+        realm.executeTransactionAsync({ realmTransaction ->
+
+            createCardDeckId.forEach { cardDeckId ->
+                val cardDeckResult = realmTransaction
+                    .where(CardDeck::class.java)
+                    .equalTo("id", cardDeckId)
+                    .findFirst()
+
+                val deck = realmTransaction
+                    .where(Deck::class.java)
+                    .equalTo("id", cardDeckResult?.deckId)
+                    .findFirst()
+                deck?.cardDecks?.add(cardDeckResult)
+
+                val card = realmTransaction
+                    .where(Card::class.java)
+                    .equalTo("id", cardDeckResult?.cardId)
+                    .findFirst()
+                card?.cardDecks?.add(cardDeckResult)
+            }
+        }, {
+            realm.close()
+            getAllCardDeck()
+        }, {
+            _showSpinner.value = false
             _showToast.value = R.string.problem_realm
             realm.close()
         })
-        _showSpinner.value = false
     }
 }

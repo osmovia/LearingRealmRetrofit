@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.Observer
@@ -46,6 +47,10 @@ class DialogCreateOrChangeDeck : DialogFragment() {
 
         viewModel.currentDeck.observe(viewLifecycleOwner, Observer { currentDeck ->
                 binding.editTextTitle.setText(currentDeck.title)
+        })
+
+        viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
+            binding.containerSpinner.layoutProgress.isVisible = showSpinner
         })
 
         viewModel.success.observe(viewLifecycleOwner, Observer { success ->

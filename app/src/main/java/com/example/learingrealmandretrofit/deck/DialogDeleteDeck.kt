@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +13,9 @@ import androidx.navigation.fragment.navArgs
 import com.example.learingrealmandretrofit.databinding.DialogDeleteDeckBinding
 import com.example.learingrealmandretrofit.deck.viewmodel.DeleteDeckViewModel
 import com.example.learingrealmandretrofit.deck.viewmodel.factory.DeleteDeckViewModelFactory
+import com.example.learingrealmandretrofit.hideProgress
 import com.example.learingrealmandretrofit.showErrorCodeOrStringResource
+import com.example.learingrealmandretrofit.showProgress
 
 class DialogDeleteDeck : DialogFragment() {
 
@@ -45,6 +48,10 @@ class DialogDeleteDeck : DialogFragment() {
 
         viewModel.showToast.observe(viewLifecycleOwner, Observer { message ->
             context?.showErrorCodeOrStringResource(message)
+        })
+
+        viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
+            binding.containerSpinner.layoutProgress.isVisible = showSpinner
         })
 
         viewModel.success.observe(viewLifecycleOwner, Observer { success ->

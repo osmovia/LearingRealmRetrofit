@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.learingrealmandretrofit.databinding.DialogCreateOrChangeCardBinding
+import com.example.learingrealmandretrofit.databinding.DialogCreateCardBinding
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.InsideDeckCreateCardViewModel
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.factory.InsideDeckCreateCardViewModelFactory
 import com.example.learingrealmandretrofit.objects.CardParameters
@@ -18,7 +18,7 @@ import com.example.learingrealmandretrofit.showErrorCodeOrStringResource
 
 class InsideDeckCreateCardDialog : DialogFragment() {
 
-    private lateinit var binding: DialogCreateOrChangeCardBinding
+    private lateinit var binding: DialogCreateCardBinding
     private lateinit var viewModel: InsideDeckCreateCardViewModel
     private lateinit var viewModelFactory: InsideDeckCreateCardViewModelFactory
     private val arguments: InsideDeckCreateCardDialogArgs by navArgs()
@@ -28,7 +28,7 @@ class InsideDeckCreateCardDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DialogCreateOrChangeCardBinding.inflate(layoutInflater)
+        binding = DialogCreateCardBinding.inflate(layoutInflater)
         dialog?.setCanceledOnTouchOutside(false)
         return binding.root
     }

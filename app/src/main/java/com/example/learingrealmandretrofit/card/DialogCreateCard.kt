@@ -13,7 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.CreateCardViewModel
 import com.example.learingrealmandretrofit.card.viewmodel.factory.CreateCardViewModelFactory
-import com.example.learingrealmandretrofit.databinding.DialogCreateOrChangeCardBinding
+import com.example.learingrealmandretrofit.databinding.DialogCreateCardBinding
 import com.example.learingrealmandretrofit.objects.CardParameters
 
 class DialogCreateCard : DialogFragment() {
@@ -21,14 +21,14 @@ class DialogCreateCard : DialogFragment() {
     private val arguments: DialogCreateCardArgs by navArgs()
     private lateinit var viewModel: CreateCardViewModel
     private lateinit var viewModelFactory: CreateCardViewModelFactory
-    private lateinit var binding: DialogCreateOrChangeCardBinding
+    private lateinit var binding: DialogCreateCardBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DialogCreateOrChangeCardBinding.inflate(layoutInflater)
+        binding = DialogCreateCardBinding.inflate(layoutInflater)
         dialog?.setCanceledOnTouchOutside(false)
         return binding.root
     }
@@ -54,12 +54,12 @@ class DialogCreateCard : DialogFragment() {
         })
 
         binding.buttonSaveCard.setOnClickListener {
-                val cardParameters = CardParameters(
-                    word = binding.editTextOriginalWord.text.toString(),
-                    example = binding.editTextExample.text.toString(),
-                    translation = binding.editTextTranslateWord.text.toString()
-                )
-                viewModel.createCardRetrofit(cardParameters)
+            val cardParameters = CardParameters(
+                word = binding.editTextOriginalWord.text.toString(),
+                example = binding.editTextExample.text.toString(),
+                translation = binding.editTextTranslateWord.text.toString()
+            )
+            viewModel.createCardRetrofit(cardParameters)
         }
     }
 }

@@ -32,10 +32,10 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
         get() = _getAllCardsRealm
 
     init {
-        getCardsInsideDeck()
+        getCardsForDeck()
     }
 
-    private fun getAllCardDeck() {
+    private fun getCardDecksForDeck() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         _getAllCardsRealm.value = realm
@@ -45,7 +45,7 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
         _showSpinner.value = false
     }
 
-    private fun getCardsInsideDeck() {
+    private fun getCardsForDeck() {
         _showSpinner.value = true
         BaseApi.retrofitHeader(token).getCardDecks().enqueue(object : Callback<CardDeckListResponse?> {
             override fun onResponse(
@@ -56,13 +56,13 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
                 if (response.isSuccessful && responseBode != null) {
                     checkCurrentCardsInRealm(responseBode.cardDecks)
                 } else {
-                    getAllCardDeck()
+                    getCardDecksForDeck()
                     _showToast.value = response.code().toString()
                 }
             }
 
             override fun onFailure(call: Call<CardDeckListResponse?>, t: Throwable) {
-                getAllCardDeck()
+                getCardDecksForDeck()
                 _showToast.value = R.string.connection_issues
             }
         })
@@ -94,7 +94,7 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
         }, {
             realm.close()
             if (createCardDeckId.size == 0) {
-                getAllCardDeck()
+                getCardDecksForDeck()
             } else {
                 addCardDeckInCardsAndDecks(createCardDeckId)
             }
@@ -130,7 +130,7 @@ class InsideDeckCardViewModel(private val token: String, private val deckId: Int
             }
         }, {
             realm.close()
-            getAllCardDeck()
+            getCardDecksForDeck()
         }, {
             _showSpinner.value = false
             _showToast.value = R.string.problem_realm

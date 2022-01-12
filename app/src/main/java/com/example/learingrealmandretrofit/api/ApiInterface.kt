@@ -99,4 +99,9 @@ interface ApiInterface {
     fun deleteCardDeck(
         @Path("id") id: Int
     ) : Call<CardDeckMainResponse>
+
+    @DELETE("decks/{deckId}/cards")
+    fun deleteDeckWitchCards(
+        @Path("deckId") deckId: Int
+    ) : Call<DeckDeletedWitchCardsResponse>
 }

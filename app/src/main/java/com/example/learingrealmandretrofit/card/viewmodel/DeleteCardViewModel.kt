@@ -55,31 +55,19 @@ class DeleteCardViewModel(private val token: String, private val cardId: Int) : 
                 .equalTo("id", cardId)
                 .findFirst()
             result?.deleteFromRealm()
-        }, {
-            deleteCardDeckRealm(cardId)
-            realm.close()
-        }, {
-            _showToast.value = R.string.problem_realm
-            _showSpinner.value = false
-            realm.close()
-        })
-        _showSpinner.value = false
-    }
 
-    private fun deleteCardDeckRealm(cardId: Int) {
-        val realm = Realm.getInstance(ConfigurationRealm.configuration)
-        realm.executeTransactionAsync({ realmTransaction ->
             val cardDeck = realmTransaction
                 .where(CardDeck::class.java)
                 .equalTo("cardId", cardId)
                 .findAll()
-
             cardDeck.deleteAllFromRealm()
-        },{
+
+        }, {
             _showSpinner.value = false
             _success.value = true
             realm.close()
         }, {
+            _showToast.value = R.string.problem_realm
             _showSpinner.value = false
             realm.close()
         })

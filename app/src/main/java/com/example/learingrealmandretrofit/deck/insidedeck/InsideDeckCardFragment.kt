@@ -117,11 +117,7 @@ class InsideDeckCardFragment : Fragment() {
 
     fun onCardClick(card: Card) {
         val action = InsideDeckCardFragmentDirections
-            .actionInsideDeckCardFragmentToInsideDeckUpdateCardDialog(
-                card = card,
-                deckId = arguments.deckId,
-                token = arguments.token
-            )
+            .actionInsideDeckCardFragmentToShowDetailsCardFragment2(cardId = card.id, token = arguments.token)
         findNavController().navigate(action)
     }
 }

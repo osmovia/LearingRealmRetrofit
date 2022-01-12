@@ -26,7 +26,7 @@
 
     <dialog
         android:id="@+id/dialogCreateOrChangeCard"
-        android:name="com.example.learingrealmandretrofit.card.DialogCreateOrChangeCard"
+        android:name="com.example.learingrealmandretrofit.card.DialogCreateCard"
         tools:layout="@layout/dialog_create_or_change_card">
         <argument
             android:name="card"

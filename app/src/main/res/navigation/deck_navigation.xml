@@ -81,7 +81,7 @@
 
     <dialog
         android:id="@+id/insideDeckUpdateCardDialog"
-        android:name="com.example.learingrealmandretrofit.deck.insidedeck.InsideDeckUpdateCardDialog"
+        android:name="com.example.learingrealmandretrofit.deck.insidedeck.InsideDeckCreateCardDialog"
         tools:layout="@layout/dialog_create_or_change_card">
         <argument
             android:name="card"

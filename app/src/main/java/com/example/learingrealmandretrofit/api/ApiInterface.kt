@@ -53,11 +53,6 @@ interface ApiInterface {
     fun getDecks(
     ): Call<DeckListResponse>
 
-    @GET("decks/{id}")
-    fun getDeck(
-        @Path("id") id: Int
-    ): Call<DeckResponse>
-
     @POST("decks")
     fun createdDeck(
         @Body params: DeckCreateOrUpdateRequest
@@ -74,25 +69,13 @@ interface ApiInterface {
         @Body params: DeckCreateOrUpdateRequest
     ): Call<DeckResponse>
 
-    @POST("decks/{deckId}/cards/{cardId}/add")
-    fun addCardToDeck(
-        @Path("deckId") deckId: Int,
-        @Path("cardId") cardId: Int
-    ): Call<SuccessResponse>
-
-    @DELETE("decks/{deckId}/cards/{cardId}/remove")
-    fun removeCardFromDeck(
-        @Path("deckId") deckId: Int,
-        @Path("cardId") cardId: Int
-    ): Call<SuccessResponse>
-
     @GET("card_decks")
     fun getCardDecks(
     ): Call<CardDeckListResponse>
 
     @POST("card_decks")
     fun createCardDeck(
-        @Body params: CardDeckRequest
+        @Body params: CardDeckMainRequest
     ): Call<CardDeckMainResponse>
 
     @DELETE("card_decks/{id}")

@@ -11,7 +11,6 @@ import com.example.learingrealmandretrofit.deck.Deck
 import com.example.learingrealmandretrofit.objects.*
 import com.example.learingrealmandretrofit.objects.request.AddCardToDecksRequest
 import com.example.learingrealmandretrofit.objects.response.AddCardToDecksResponse
-import com.example.learingrealmandretrofit.objects.response.CardDeckResponse
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.Sort
@@ -109,22 +108,8 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
                     .findFirst()
                 result?.deleteFromRealm()
             }
-        }, {
-            addCardDeckInCardsAndDecks(response.createdCardDecks)
-            realm.close()
-        }, {
-            _showSpinner.value = false
-            _showToast.value = R.string.problem_realm
-            realm.close()
-        })
-    }
 
-    private fun addCardDeckInCardsAndDecks(cardDecks: List<CardDeckResponse>) {
-        val config = ConfigurationRealm.configuration
-        val realm = Realm.getInstance(config)
-        realm.executeTransactionAsync({ realmTransaction ->
-
-            cardDecks.forEach { itemCardDeck ->
+            response.createdCardDecks.forEach { itemCardDeck ->
                 val cardDeck = realmTransaction
                     .where(CardDeck::class.java)
                     .equalTo("id", itemCardDeck.id)

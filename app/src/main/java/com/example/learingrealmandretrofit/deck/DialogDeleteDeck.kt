@@ -13,9 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.learingrealmandretrofit.databinding.DialogDeleteDeckBinding
 import com.example.learingrealmandretrofit.deck.viewmodel.DeleteDeckViewModel
 import com.example.learingrealmandretrofit.deck.viewmodel.factory.DeleteDeckViewModelFactory
-import com.example.learingrealmandretrofit.hideProgress
 import com.example.learingrealmandretrofit.showErrorCodeOrStringResource
-import com.example.learingrealmandretrofit.showProgress
 
 class DialogDeleteDeck : DialogFragment() {
 
@@ -61,11 +59,11 @@ class DialogDeleteDeck : DialogFragment() {
         })
 
         binding.viewDeleteList.setOnClickListener {
-            viewModel.deleteDeckRetrofit(withCards = false)
+            viewModel.deleteDeckRetrofit()
         }
 
         binding.viewDeleteListWithCards.setOnClickListener {
-            viewModel.deleteDeckRetrofit(withCards = true)
+            viewModel.deleteDeckWithCardsRetrofit()
         }
     }
 }

@@ -8,15 +8,19 @@ import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.deck.Deck
+import com.example.learingrealmandretrofit.objects.CardDeck
 import com.example.learingrealmandretrofit.objects.CardParameters
+import com.example.learingrealmandretrofit.objects.request.CardDeckRequest
+import com.example.learingrealmandretrofit.objects.request.CardDeckMainRequest
+import com.example.learingrealmandretrofit.objects.response.CardDeckMainResponse
+import com.example.learingrealmandretrofit.objects.response.CardDeckResponse
 import com.example.learingrealmandretrofit.objects.response.CardResponse
-import com.example.learingrealmandretrofit.objects.response.SuccessResponse
 import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class InsideDeckUpdateCardViewModel(private val token: String, private val deckId: Int) : ViewModel() {
+class InsideDeckCreateCardViewModel(private val token: String, private val deckId: Int) : ViewModel() {
 
     private val _showSpinner = MutableLiveData<Boolean>()
     val showSpinner: LiveData<Boolean>
@@ -69,7 +73,7 @@ class InsideDeckUpdateCardViewModel(private val token: String, private val deckI
             )
             realmTransaction.insert(cardRealm)
         }, {
-            addCardToDeckRetrofit(cardId = card.id)
+            createCardDeckRetrofit(cardId = card.id)
             realm.close()
         }, {
             _showSpinner.value = false
@@ -78,96 +82,61 @@ class InsideDeckUpdateCardViewModel(private val token: String, private val deckI
         })
     }
 
-    private fun addCardToDeckRetrofit(cardId: Int) {
+    private fun createCardDeckRetrofit(cardId: Int) {
+        BaseApi.retrofitHeader(token).createCardDeck(CardDeckMainRequest(CardDeckRequest(cardId = cardId, deckId = deckId)))
+            .enqueue(object : Callback<CardDeckMainResponse?> {
+            override fun onResponse(call: Call<CardDeckMainResponse?>, response: Response<CardDeckMainResponse?>) {
 
-        BaseApi.retrofitHeader(token).addCardToDeck(deckId = deckId, cardId = cardId)
-            .enqueue(object : Callback<SuccessResponse?> {
-            override fun onResponse(call: Call<SuccessResponse?>, response: Response<SuccessResponse?>) {
-                if (response.isSuccessful) {
-                    addCardToDeckRealm(cardId = cardId)
+                val responseBody = response.body()
+
+                if (response.isSuccessful && responseBody != null) {
+                    createCardDeckRealm(responseBody.cardDeck)
                 } else {
                     _showSpinner.value = false
                     _showToast.value = response.code().toString()
                 }
             }
-            override fun onFailure(call: Call<SuccessResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<CardDeckMainResponse?>, t: Throwable) {
                 _showToast.value = R.string.connection_issues
                 _showSpinner.value = false
             }
         })
     }
 
-    private fun addCardToDeckRealm(cardId: Int) {
-//        val config = ConfigurationRealm.configuration
-//        val realm = Realm.getInstance(config)
-//        realm.executeTransactionAsync({ realmTransaction ->
-//
-//            val deck = realmTransaction
-//                .where(Deck::class.java)
-//                .equalTo("id", deckId)
-//                .findFirst()
-//                ?.cards
-//
-//            val card = realmTransaction
-//                .where(Card::class.java)
-//                .equalTo("id", cardId)
-//                .findFirst()
-//
-//            deck?.add(card)
-//
-//        }, {
-//            _success.value = true
-//            _showSpinner.value = false
-//            realm.close()
-//        }, {
-//            _showToast.value = R.string.problem_realm
-//            _showSpinner.value = false
-//            realm.close()
-//        })
-    }
-
-    fun updateCardRetrofit(card: CardParameters) {
-
-        if (card.example.isEmpty() || card.translation.isEmpty() || card.word.isEmpty()) {
-            _showToast.value = R.string.empty_fields
-            return
-        }
-
-        _showSpinner.value = true
-        BaseApi.retrofitHeader(token).updateCard(id = card.id, params = card)
-            .enqueue(object : Callback<CardResponse?> {
-            override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
-                val responseBody = response.body()
-                if (response.isSuccessful && responseBody != null) {
-                    updateCardRealm(responseBody.card)
-                } else {
-                    _showToast.value = response.code().toString()
-                }
-                _showSpinner.value = false
-            }
-            override fun onFailure(call: Call<CardResponse?>, t: Throwable) {
-                _showSpinner.value = false
-                _showToast.value = R.string.connection_issues
-            }
-        })
-    }
-
-    private fun updateCardRealm(card: CardParameters) {
-        val config = ConfigurationRealm.configuration
-        val realm = Realm.getInstance(config)
+    private fun createCardDeckRealm(response: CardDeckResponse) {
+        val realm = Realm.getInstance(ConfigurationRealm.configuration)
         realm.executeTransactionAsync({ realmTransaction ->
-            val result = realmTransaction
-                .where(Card::class.java)
-                .equalTo("id", card.id)
+
+            realmTransaction.insert(CardDeck(
+                id = response.id,
+                cardId = response.cardId,
+                deckId = response.deckId
+            ))
+
+            val cardDeck = realmTransaction
+                .where(CardDeck::class.java)
+                .equalTo("id", response.id)
                 .findFirst()
-            result?.example = card.example
-            result?.translation = card.translation
-            result?.word = card.word
+
+            val card = realmTransaction
+                .where(Card::class.java)
+                .equalTo("id", response.cardId)
+                .findFirst()
+            card?.cardDecks?.add(cardDeck)
+
+            val deck = realmTransaction
+                .where(Deck::class.java)
+                .equalTo("id", response.deckId)
+                .findFirst()
+            deck?.cardDecks?.add(cardDeck)
+
         }, {
             _success.value = true
+            _showSpinner.value = false
             realm.close()
-        },{
+        }, {
             _showToast.value = R.string.problem_realm
+            _showSpinner.value = false
             realm.close()
         })
     }

@@ -74,12 +74,15 @@
         <argument
             android:name="token"
             app:argType="string"/>
+        <action
+            android:id="@+id/action_insideDeckCardFragment_to_showDetailsCardFragment2"
+            app:destination="@id/showDetailsCardFragment2"/>
     </fragment>
 
     <dialog
         android:id="@+id/insideDeckUpdateCardDialog"
-        android:name="com.example.learingrealmandretrofit.deck.insidedeck.InsideDeckUpdateCardDialog"
-        tools:layout="@layout/dialog_create_or_change_card">
+        android:name="com.example.learingrealmandretrofit.deck.insidedeck.InsideDeckCreateCardDialog"
+        tools:layout="@layout/dialog_create_card">
         <argument
             android:name="card"
             app:argType="com.example.learingrealmandretrofit.card.Card"
@@ -103,4 +106,15 @@
             android:name="token"
             app:argType="string"/>
     </dialog>
+    <fragment
+        tools:layout="@layout/show_details_card"
+        android:id="@+id/showDetailsCardFragment2"
+        android:name="com.example.learingrealmandretrofit.card.ShowDetailsCardFragment">
+        <argument
+            android:name="cardId"
+            app:argType="integer"/>
+        <argument
+            android:name="token"
+            app:argType="string"/>
+    </fragment>
 </navigation>

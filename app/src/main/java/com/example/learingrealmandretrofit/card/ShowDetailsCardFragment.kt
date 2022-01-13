@@ -64,7 +64,7 @@ class ShowDetailsCardFragment : Fragment() {
             }
         }
 
-        viewModelFactory = ShowDetailsCardViewModelFactory(token = arguments.token, cardId = arguments.cardId)
+        viewModelFactory = ShowDetailsCardViewModelFactory(application = requireActivity().application, cardId = arguments.cardId)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(ShowDetailsCardViewModel::class.java)
 

@@ -38,8 +38,8 @@ class DialogDeleteDeck : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         viewModelFactory = DeleteDeckViewModelFactory(
-            token = arguments.token,
-            deckId = arguments.deckId
+            deckId = arguments.deckId,
+            application = requireActivity().application
         )
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(DeleteDeckViewModel::class.java)

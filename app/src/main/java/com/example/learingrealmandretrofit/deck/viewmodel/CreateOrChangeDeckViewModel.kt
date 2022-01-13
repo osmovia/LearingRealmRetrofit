@@ -1,8 +1,9 @@
 package com.example.learingrealmandretrofit.deck.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.Constants
 import com.example.learingrealmandretrofit.R
@@ -17,7 +18,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
+class CreateOrChangeDeckViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val context = getApplication<Application>()
 
     private val _showToast = MutableLiveData<Any>()
     val showToast: LiveData<Any>
@@ -47,7 +50,7 @@ class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
         _showSpinner.value = true
         val titleRequest = DeckTitleRequest(title)
         val request = DeckCreateOrUpdateRequest(titleRequest)
-        BaseApi.retrofitHeader(token).createdDeck(params = request).enqueue(object : Callback<DeckResponse?> {
+        BaseApi.retrofit(context).createdDeck(params = request).enqueue(object : Callback<DeckResponse?> {
             override fun onResponse(call: Call<DeckResponse?>, response: Response<DeckResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
@@ -90,7 +93,7 @@ class CreateOrChangeDeckViewModel(private val token: String) : ViewModel() {
         _showSpinner.value = true
         val requestTitle = DeckTitleRequest(titleDeck)
         val request = DeckCreateOrUpdateRequest(requestTitle)
-        BaseApi.retrofitHeader(token).updateDeck(id = _currentDeck.value?.id ?: return , params = request)
+        BaseApi.retrofit(context).updateDeck(id = _currentDeck.value?.id ?: return , params = request)
             .enqueue(object : Callback<DeckResponse?> {
             override fun onResponse(call: Call<DeckResponse?>, response: Response<DeckResponse?>) {
                 val responseBody = response.body()

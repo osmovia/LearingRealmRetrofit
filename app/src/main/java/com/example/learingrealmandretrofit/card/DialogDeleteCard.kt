@@ -37,7 +37,7 @@ class DialogDeleteCard : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModelFactory = DeleteCardViewModelFactory(arguments.token, arguments.cardId)
+        viewModelFactory = DeleteCardViewModelFactory(application = requireActivity().application, arguments.cardId)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(DeleteCardViewModel::class.java)
 

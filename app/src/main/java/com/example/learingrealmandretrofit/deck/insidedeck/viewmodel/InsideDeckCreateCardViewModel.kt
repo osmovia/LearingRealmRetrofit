@@ -1,8 +1,9 @@
 package com.example.learingrealmandretrofit.deck.insidedeck.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
@@ -20,7 +21,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class InsideDeckCreateCardViewModel(private val token: String, private val deckId: Int) : ViewModel() {
+class InsideDeckCreateCardViewModel(application: Application, private val deckId: Int) : AndroidViewModel(application) {
+
+    private val context = getApplication<Application>()
 
     private val _showSpinner = MutableLiveData<Boolean>()
     val showSpinner: LiveData<Boolean>
@@ -43,7 +46,7 @@ class InsideDeckCreateCardViewModel(private val token: String, private val deckI
 
         _showSpinner.value = true
 
-        BaseApi.retrofitHeader(token).createCard(params = cardView)
+        BaseApi.retrofit(context).createCard(params = cardView)
             .enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()
@@ -83,7 +86,7 @@ class InsideDeckCreateCardViewModel(private val token: String, private val deckI
     }
 
     private fun createCardDeckRetrofit(cardId: Int) {
-        BaseApi.retrofitHeader(token).createCardDeck(CardDeckMainRequest(CardDeckRequest(cardId = cardId, deckId = deckId)))
+        BaseApi.retrofit(context).createCardDeck(CardDeckMainRequest(CardDeckRequest(cardId = cardId, deckId = deckId)))
             .enqueue(object : Callback<CardDeckMainResponse?> {
             override fun onResponse(call: Call<CardDeckMainResponse?>, response: Response<CardDeckMainResponse?>) {
 

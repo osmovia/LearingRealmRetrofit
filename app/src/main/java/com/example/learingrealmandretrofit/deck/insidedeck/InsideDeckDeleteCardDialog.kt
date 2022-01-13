@@ -13,9 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.learingrealmandretrofit.databinding.DialogDeleteCardBinding
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.InsideDeckDeleteCardViewModel
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.factory.InsideDeckDeleteCardViewModelFactory
-import com.example.learingrealmandretrofit.hideProgress
 import com.example.learingrealmandretrofit.showErrorCodeOrStringResource
-import com.example.learingrealmandretrofit.showProgress
 
 class InsideDeckDeleteCardDialog: DialogFragment() {
 
@@ -37,9 +35,7 @@ class InsideDeckDeleteCardDialog: DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         viewModelFactory = InsideDeckDeleteCardViewModelFactory(
-            token = arguments.token,
-            deckId = arguments.deckId,
-            cardId = arguments.cardId,
+            application = requireActivity().application,
             cardDeckId = arguments.cardDeckId
         )
 

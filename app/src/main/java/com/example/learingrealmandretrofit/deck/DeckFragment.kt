@@ -23,7 +23,6 @@ class DeckFragment : Fragment() {
     private lateinit var binding: DeckFragmentRecyclerBinding
     private lateinit var viewModelFactory: DeckViewModelFactory
     private lateinit var viewModel: DeckViewModel
-    private lateinit var token: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,9 +39,7 @@ class DeckFragment : Fragment() {
 
         NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController(), appBarConfiguration)
 
-        token = SharedPreferencesManager(requireContext()).fetchAuthentication().sessionToken ?: ""
-
-        viewModelFactory = DeckViewModelFactory(token)
+        viewModelFactory = DeckViewModelFactory(requireActivity().application)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(DeckViewModel::class.java)
 
@@ -65,7 +62,7 @@ class DeckFragment : Fragment() {
         })
 
         binding.buttonCreateDeck.setOnClickListener {
-            val action = DeckFragmentDirections.actionDeckFragmentToDialogCreateOrChangeDeck(token = token)
+            val action = DeckFragmentDirections.actionDeckFragmentToDialogCreateOrChangeDeck()
             findNavController().navigate(action)
         }
 
@@ -75,7 +72,6 @@ class DeckFragment : Fragment() {
                 if (currentSwipeDeckId != null) {
                     val action = DeckFragmentDirections.actionDeckFragmentToDialogDeleteDeck(
                         currentSwipeDeckId,
-                        token = token
                     )
                     findNavController().navigate(action)
                     binding.recyclerDeck.adapter?.notifyItemChanged(viewHolder.absoluteAdapterPosition)
@@ -90,7 +86,6 @@ class DeckFragment : Fragment() {
         val action = DeckFragmentDirections.actionDeckFragmentToInsideDeckCardFragment(
             deckId = deck.id,
             deckTitle = deck.title,
-            token = token
         )
         findNavController().navigate(action)
     }

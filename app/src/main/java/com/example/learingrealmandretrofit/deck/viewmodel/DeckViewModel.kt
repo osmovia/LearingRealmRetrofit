@@ -1,8 +1,9 @@
 package com.example.learingrealmandretrofit.deck.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
@@ -16,7 +17,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DeckViewModel(private val token: String) : ViewModel() {
+class DeckViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val context = getApplication<Application>()
 
     private val _showSpinner = MutableLiveData<Boolean>()
     val showSpinner: LiveData<Boolean>
@@ -37,7 +40,7 @@ class DeckViewModel(private val token: String) : ViewModel() {
 
     private fun getAllDecksRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofitHeader(token).getDecks().enqueue(object : Callback<DeckListResponse?> {
+        BaseApi.retrofit(context).getDecks().enqueue(object : Callback<DeckListResponse?> {
             override fun onResponse(call: Call<DeckListResponse?>, response: Response<DeckListResponse?>) {
                 val responseBody = response.body()
 

@@ -18,6 +18,7 @@ import com.example.learingrealmandretrofit.databinding.SettingsFragmentBinding
 class SettingsFragment : Fragment() {
 
     private lateinit var binding: SettingsFragmentBinding
+    private lateinit var viewModelFactory: SettingsViewModelFactory
     private lateinit var viewModel: SettingsViewModel
 
     override fun onCreateView(
@@ -37,7 +38,9 @@ class SettingsFragment : Fragment() {
 
         NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController(), appBarConfiguration)
 
-        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
+        viewModelFactory = SettingsViewModelFactory(application = requireActivity().application)
+
+        viewModel = ViewModelProvider(this, viewModelFactory).get(SettingsViewModel::class.java)
 
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
             if (showSpinner) {

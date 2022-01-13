@@ -48,7 +48,7 @@ class AddCardToDeckFragment : Fragment() {
 
         NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController())
 
-        viewModelFactory = AddCardToDeckViewModelFactory(token = arguments.token, cardId = arguments.cardId)
+        viewModelFactory = AddCardToDeckViewModelFactory(application = requireActivity().application, cardId = arguments.cardId)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(AddCardToDeckViewModel::class.java)
 
@@ -89,5 +89,4 @@ class AddCardToDeckFragment : Fragment() {
     fun onCheckboxClick(deck: Deck, position :Int) {
         viewModel.changeStateCheckCheckbox(deck, position)
     }
-
 }

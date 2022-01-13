@@ -9,7 +9,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.card.viewmodel.CreateCardViewModel
 import com.example.learingrealmandretrofit.card.viewmodel.factory.CreateCardViewModelFactory
@@ -18,7 +17,6 @@ import com.example.learingrealmandretrofit.objects.CardParameters
 
 class DialogCreateCard : DialogFragment() {
 
-    private val arguments: DialogCreateCardArgs by navArgs()
     private lateinit var viewModel: CreateCardViewModel
     private lateinit var viewModelFactory: CreateCardViewModelFactory
     private lateinit var binding: DialogCreateCardBinding
@@ -35,7 +33,7 @@ class DialogCreateCard : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModelFactory = CreateCardViewModelFactory(token = arguments.token)
+        viewModelFactory = CreateCardViewModelFactory(application = requireActivity().application)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(CreateCardViewModel::class.java)
 

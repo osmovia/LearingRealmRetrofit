@@ -1,8 +1,9 @@
 package com.example.learingrealmandretrofit.card.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
@@ -19,7 +20,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class AddCardToDeckViewModel(private val token: String, private val cardId: Int) : ViewModel() {
+class AddCardToDeckViewModel(application: Application, private val cardId: Int) : AndroidViewModel(application) {
+
+    private val context = getApplication<Application>()
 
     private val _decks = RealmList<Deck>()
     val deck: RealmList<Deck>
@@ -141,7 +144,12 @@ class AddCardToDeckViewModel(private val token: String, private val cardId: Int)
     fun addAndRemoveCardFromDecksRetrofit() {
         _showSpinner.value = true
         val request = AddCardToDecksRequest(deckIds = _decksIds)
-        BaseApi.retrofitHeader(token).updateDecksForCardResponse(params = request, id = cardId).enqueue(object : Callback<AddCardToDecksResponse?> {
+
+        BaseApi
+            .retrofit(context)
+            .updateDecksForCardResponse(params = request, id = cardId)
+            .enqueue(object : Callback<AddCardToDecksResponse?> {
+
             override fun onResponse(call: Call<AddCardToDecksResponse?>, response: Response<AddCardToDecksResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

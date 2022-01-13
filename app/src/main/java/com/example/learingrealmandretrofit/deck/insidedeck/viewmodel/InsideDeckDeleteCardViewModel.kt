@@ -1,8 +1,9 @@
 package com.example.learingrealmandretrofit.deck.insidedeck.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
@@ -13,7 +14,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class InsideDeckDeleteCardViewModel(private val token: String, private val deckId: Int, private val cardId: Int, private val cardDeckId: Int) : ViewModel() {
+class InsideDeckDeleteCardViewModel(
+    application: Application,
+    private val cardDeckId: Int
+    ) : AndroidViewModel(application) {
+
+    private val context = getApplication<Application>()
 
     private val _showToast = MutableLiveData<Any>()
     val showToast: LiveData<Any>
@@ -29,7 +35,7 @@ class InsideDeckDeleteCardViewModel(private val token: String, private val deckI
 
     fun deleteCardRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofitHeader(token).deleteCardDeck(id = cardDeckId).enqueue(object : Callback<CardDeckMainResponse?> {
+        BaseApi.retrofit(context).deleteCardDeck(id = cardDeckId).enqueue(object : Callback<CardDeckMainResponse?> {
             override fun onResponse(call: Call<CardDeckMainResponse?>, response: Response<CardDeckMainResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

@@ -43,6 +43,9 @@ class DeckFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(DeckViewModel::class.java)
 
+        viewModel.pullDecks()
+        viewModel.getAllDecksRetrofit()
+
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
             if (showSpinner) {
                 activity?.showProgress()

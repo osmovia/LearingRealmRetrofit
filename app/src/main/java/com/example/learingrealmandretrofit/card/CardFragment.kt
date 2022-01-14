@@ -40,6 +40,9 @@ class CardFragment : CardActionsFragment() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(CardViewModel::class.java)
 
+        viewModel.pullCardsRealm()
+        viewModel.getAllCardRetrofit()
+
         viewModel.showSpinner.observe(viewLifecycleOwner, Observer { showSpinner ->
             if (showSpinner) {
                 activity?.showProgress()

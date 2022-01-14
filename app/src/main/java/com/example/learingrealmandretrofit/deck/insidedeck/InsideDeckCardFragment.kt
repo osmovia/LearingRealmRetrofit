@@ -66,6 +66,8 @@ class InsideDeckCardFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(InsideDeckCardViewModel::class.java)
 
+        viewModel.getCardsForDeck()
+
         viewModel.getAllCardsRealm.observe(viewLifecycleOwner, Observer { allCardDecks ->
             val adapter = RecyclerAdapterCardDeck(this, allCardDecks, true)
             binding.recyclerCard.layoutManager = LinearLayoutManager(context)

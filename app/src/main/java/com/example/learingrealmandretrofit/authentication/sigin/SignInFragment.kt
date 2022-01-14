@@ -72,7 +72,7 @@ class SignInFragment : Fragment() {
         }
 
         binding.textViewSignUp.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
         }
     }
 }

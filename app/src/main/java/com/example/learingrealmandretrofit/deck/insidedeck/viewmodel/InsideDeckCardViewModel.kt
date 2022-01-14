@@ -34,10 +34,6 @@ class InsideDeckCardViewModel(application: Application, private val deckId: Int)
     val getAllCardsRealm: LiveData<RealmResults<CardDeck>>
         get() = _getAllCardsRealm
 
-    init {
-        getCardsForDeck()
-    }
-
     private fun getCardDecksForDeck() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
@@ -48,7 +44,7 @@ class InsideDeckCardViewModel(application: Application, private val deckId: Int)
         _showSpinner.value = false
     }
 
-    private fun getCardsForDeck() {
+    fun getCardsForDeck() {
         _showSpinner.value = true
         BaseApi.retrofit(context).getCardDecks().enqueue(object : Callback<CardDeckListResponse?> {
             override fun onResponse(

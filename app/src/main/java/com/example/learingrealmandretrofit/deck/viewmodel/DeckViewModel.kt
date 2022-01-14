@@ -33,12 +33,7 @@ class DeckViewModel(application: Application) : AndroidViewModel(application) {
     val gelAllDecksRealm: LiveData<RealmResults<Deck>>
         get() = _getAllDecksRealm
 
-    init {
-        pullDecks()
-        getAllDecksRetrofit()
-    }
-
-    private fun getAllDecksRetrofit() {
+    fun getAllDecksRetrofit() {
         _showSpinner.value = true
         BaseApi.retrofit(context).getDecks().enqueue(object : Callback<DeckListResponse?> {
             override fun onResponse(call: Call<DeckListResponse?>, response: Response<DeckListResponse?>) {
@@ -82,7 +77,7 @@ class DeckViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-    private fun pullDecks() {
+    fun pullDecks() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         _getAllDecksRealm.value = realm.where(Deck::class.java).findAll().sort("title", Sort.ASCENDING)

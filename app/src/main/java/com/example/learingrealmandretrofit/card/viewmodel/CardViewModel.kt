@@ -33,12 +33,7 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     val getAllCardsRealm: LiveData<RealmResults<Card>>
         get() = _getAllCardsRealm
 
-    init {
-        pullCardsRealm()
-        getAllCardRetrofit()
-    }
-
-    private fun getAllCardRetrofit() {
+    fun getAllCardRetrofit() {
         _showSpinner.value = true
 
         BaseApi.retrofit(context).getCards().enqueue(object : Callback<CardListResponse?> {
@@ -89,7 +84,7 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-    private fun pullCardsRealm() {
+     fun pullCardsRealm() {
         val config = ConfigurationRealm.configuration
         val realm = Realm.getInstance(config)
         _getAllCardsRealm.value =  realm.where(Card::class.java).findAll().sort("word", Sort.ASCENDING)

@@ -90,7 +90,7 @@ class SignUpFragment : Fragment() {
         })
 
         binding.textViewSignIn.setOnClickListener {
-            findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+            findNavController().popBackStack()
         }
 
         binding.email.setOnFocusChangeListener { _, _ ->

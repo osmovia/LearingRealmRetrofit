@@ -65,6 +65,7 @@ class SignInFragment : Fragment() {
         })
 
         binding.buttonEntry.setOnClickListener {
+            hideKeyboard()
             viewModel.entryApp(
                 emailView = binding.email.text.toString(),
                 passwordView = binding.password.text.toString()

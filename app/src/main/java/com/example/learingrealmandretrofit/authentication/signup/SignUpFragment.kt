@@ -106,6 +106,7 @@ class SignUpFragment : Fragment() {
         }
 
         binding.buttonRegistration.setOnClickListener {
+            hideKeyboard()
             viewModel.clickRegistration(
                 emailView = binding.email.text.toString(),
                 passwordView = binding.password.text.toString(),

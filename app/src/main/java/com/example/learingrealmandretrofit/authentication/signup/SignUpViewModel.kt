@@ -88,7 +88,7 @@ class SignUpViewModel : ViewModel() {
         val request = SignUpRequest(session = SessionRequest(), user = user)
         _spinner.value = true
 
-        BaseApi.retrofit.createUser(request).enqueue(object : Callback<AuthenticationResponse?> {
+        BaseApi.retrofit(null).createUser(request).enqueue(object : Callback<AuthenticationResponse?> {
             override fun onResponse(call: Call<AuthenticationResponse?>, response: Response<AuthenticationResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

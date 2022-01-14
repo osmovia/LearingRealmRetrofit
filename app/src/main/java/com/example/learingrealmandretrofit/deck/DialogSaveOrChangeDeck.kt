@@ -37,7 +37,7 @@ class DialogCreateOrChangeDeck : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModelFactory = CreateOrChangeDeckViewModelFactory(token = arguments.token)
+        viewModelFactory = CreateOrChangeDeckViewModelFactory(requireActivity().application)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(CreateOrChangeDeckViewModel::class.java)
 

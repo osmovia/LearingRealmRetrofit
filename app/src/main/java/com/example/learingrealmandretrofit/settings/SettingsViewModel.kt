@@ -1,9 +1,10 @@
 package com.example.learingrealmandretrofit.settings
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
@@ -13,7 +14,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SettingsViewModel : ViewModel() {
+class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val context = getApplication<Application>()
 
     private val _showToast = MutableLiveData<Any>()
     val showToast: LiveData<Any>
@@ -29,7 +32,7 @@ class SettingsViewModel : ViewModel() {
 
     fun signOutRetrofit(token: String) {
         _showSpinner.value = true
-        BaseApi.retrofitHeader(token).signOut(token).enqueue(object : Callback<SuccessResponse?> {
+        BaseApi.retrofit(context).signOut(token).enqueue(object : Callback<SuccessResponse?> {
             override fun onResponse(call: Call<SuccessResponse?>, response: Response<SuccessResponse?>) {
                 if (response.isSuccessful) {
                     deleteAllRealm()

@@ -36,7 +36,7 @@ class InsideDeckCreateCardDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         viewModelFactory = InsideDeckCreateCardViewModelFactory(
-            token = arguments.token,
+            application = requireActivity().application,
             deckId = arguments.deckId
         )
 

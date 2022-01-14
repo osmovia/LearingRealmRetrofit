@@ -1,8 +1,9 @@
 package com.example.learingrealmandretrofit.card.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.ConfigurationRealm
 import com.example.learingrealmandretrofit.R
 import com.example.learingrealmandretrofit.api.BaseApi
@@ -14,7 +15,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ShowDetailsCardViewModel(private val token: String, private val cardId: Int) : ViewModel() {
+class ShowDetailsCardViewModel(application: Application, private val cardId: Int) : AndroidViewModel(application) {
+
+    private val context = getApplication<Application>()
 
     private val _showDetailsCard = MutableLiveData<CardParameters>()
     val showDetailsCard: LiveData<CardParameters>
@@ -57,7 +60,7 @@ class ShowDetailsCardViewModel(private val token: String, private val cardId: In
         }
         _showSpinner.value = true
 
-        BaseApi.retrofitHeader(token).updateCard(cardId, cardView).enqueue(object : Callback<CardResponse?> {
+        BaseApi.retrofit(context).updateCard(cardId, cardView).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

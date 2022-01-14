@@ -29,24 +29,12 @@
             android:name="deckId"
             app:argType="integer"
             android:defaultValue="0"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
     </dialog>
 
     <dialog
         android:id="@+id/insideDeckCardDeleteDialog"
         android:name="com.example.learingrealmandretrofit.deck.insidedeck.InsideDeckDeleteCardDialog"
         tools:layout="@layout/dialog_delete_card">
-        <argument
-            android:name="deckId"
-            app:argType="integer"/>
-        <argument
-            android:name="cardId"
-            app:argType="integer"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
         <argument
             android:name="cardDeckId"
             app:argType="integer"/>
@@ -71,9 +59,6 @@
         <argument
             android:name="deckTitle"
             app:argType="string"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
         <action
             android:id="@+id/action_insideDeckCardFragment_to_showDetailsCardFragment2"
             app:destination="@id/showDetailsCardFragment2"/>
@@ -90,9 +75,6 @@
         <argument
             android:name="deckId"
             app:argType="integer"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
     </dialog>
 
     <dialog
@@ -102,9 +84,6 @@
         <argument
             android:name="deckId"
             app:argType="integer"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
     </dialog>
     <fragment
         tools:layout="@layout/show_details_card"
@@ -113,8 +92,5 @@
         <argument
             android:name="cardId"
             app:argType="integer"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
     </fragment>
 </navigation>

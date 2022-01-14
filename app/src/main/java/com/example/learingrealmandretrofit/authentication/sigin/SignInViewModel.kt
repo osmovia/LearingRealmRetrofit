@@ -36,7 +36,7 @@ class SignInViewModel : ViewModel() {
         _showSpinner.value = true
         val user = UserSignInRequest(email = emailView, password = passwordView)
         val request = SignInRequest(session = SessionRequest(), user = user)
-        BaseApi.retrofit.signIn(request).enqueue(object : Callback<AuthenticationResponse?> {
+        BaseApi.retrofit(null).signIn(request).enqueue(object : Callback<AuthenticationResponse?> {
             override fun onResponse(call: Call<AuthenticationResponse?>, response: Response<AuthenticationResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

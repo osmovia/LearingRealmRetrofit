@@ -32,9 +32,6 @@
             android:name="card"
             app:argType="com.example.learingrealmandretrofit.card.Card"
             app:nullable="true"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
     </dialog>
 
     <dialog
@@ -44,9 +41,6 @@
         <argument
             android:name="cardId"
             app:argType="integer"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
     </dialog>
 
     <fragment
@@ -57,9 +51,6 @@
         <argument
             android:name="cardId"
             app:argType="integer"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
     </fragment>
     <fragment
         android:id="@+id/showDetailsCardFragment"
@@ -68,8 +59,5 @@
         <argument
             android:name="cardId"
             app:argType="integer"/>
-        <argument
-            android:name="token"
-            app:argType="string"/>
     </fragment>
 </navigation>

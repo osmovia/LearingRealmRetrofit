@@ -1,8 +1,9 @@
 package com.example.learingrealmandretrofit.card.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.api.BaseApi
 import com.example.learingrealmandretrofit.card.Card
@@ -13,7 +14,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DeleteCardViewModel(private val token: String, private val cardId: Int) : ViewModel() {
+class DeleteCardViewModel(private val cardId: Int, application: Application) : AndroidViewModel(application) {
+
+    private val context = getApplication<Application>()
 
     private val _success = MutableLiveData<Boolean>()
     val success: LiveData<Boolean>
@@ -29,7 +32,7 @@ class DeleteCardViewModel(private val token: String, private val cardId: Int) : 
 
     fun removeCardRetrofit() {
         _showSpinner.value = true
-        BaseApi.retrofitHeader(token).deleteCard(id = cardId).enqueue(object : Callback<CardResponse?> {
+        BaseApi.retrofit(context).deleteCard(id = cardId).enqueue(object : Callback<CardResponse?> {
             override fun onResponse(call: Call<CardResponse?>, response: Response<CardResponse?>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {

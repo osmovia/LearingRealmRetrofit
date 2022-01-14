@@ -47,7 +47,6 @@ class InsideDeckCardFragment : Fragment() {
                 val action = InsideDeckCardFragmentDirections
                     .actionInsideDeckCardFragmentToDialogCreateOrChangeDeck(
                         deckId = arguments.deckId,
-                        token = arguments.token
                     )
                 findNavController().navigate(action)
             }
@@ -61,8 +60,8 @@ class InsideDeckCardFragment : Fragment() {
             }
 
         viewModelFactory = InsideDeckCardViewModelFactory(
-            token = arguments.token,
-            deckId = arguments.deckId
+            deckId = arguments.deckId,
+            application = requireActivity().application
         )
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(InsideDeckCardViewModel::class.java)
@@ -91,9 +90,6 @@ class InsideDeckCardFragment : Fragment() {
                 if (currentSwipe != null) {
                     val action = InsideDeckCardFragmentDirections
                         .actionInsideDeckCardFragmentToInsideDeckCardDeleteDialog(
-                            cardId = currentSwipe.cardId,
-                            deckId = arguments.deckId,
-                            token = arguments.token,
                             cardDeckId = currentSwipe.id
                         )
                     findNavController().navigate(action)
@@ -109,7 +105,6 @@ class InsideDeckCardFragment : Fragment() {
                 .actionInsideDeckCardFragmentToInsideDeckUpdateCardDialog(
                     card = null,
                     deckId = arguments.deckId,
-                    token = arguments.token
                 )
             findNavController().navigate(action)
         }
@@ -117,7 +112,7 @@ class InsideDeckCardFragment : Fragment() {
 
     fun onCardClick(card: Card) {
         val action = InsideDeckCardFragmentDirections
-            .actionInsideDeckCardFragmentToShowDetailsCardFragment2(cardId = card.id, token = arguments.token)
+            .actionInsideDeckCardFragmentToShowDetailsCardFragment2(cardId = card.id)
         findNavController().navigate(action)
     }
 }

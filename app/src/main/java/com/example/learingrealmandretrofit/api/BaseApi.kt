@@ -1,5 +1,6 @@
 package com.example.learingrealmandretrofit.api
 
+import android.content.Context
 import com.example.learingrealmandretrofit.HeaderInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -9,27 +10,30 @@ private const val prefix = "api/v1"
 private const val baseUrlHeroku: String = "https://word-notes.herokuapp.com"
 
 object BaseApi {
-    val retrofit: ApiInterface = Retrofit
-        .Builder()
-        .baseUrl("${baseUrlHeroku}/${prefix}/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(ApiInterface::class.java)
 
-    fun retrofitHeader(token: String): ApiInterface {
-        return Retrofit
-            .Builder()
-            .baseUrl("${baseUrlHeroku}/${prefix}/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okhttpClient(token))
-            .build()
-            .create(ApiInterface::class.java)
+    fun retrofit(context: Context?): ApiInterface {
+        if (context == null) {
+            return Retrofit
+                .Builder()
+                .baseUrl("${baseUrlHeroku}/${prefix}/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(ApiInterface::class.java)
+        } else {
+            return Retrofit
+                .Builder()
+                .baseUrl("${baseUrlHeroku}/${prefix}/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okhttpClient(context))
+                .build()
+                .create(ApiInterface::class.java)
+        }
     }
 }
 
-private fun okhttpClient(token: String): OkHttpClient {
+private fun okhttpClient(context: Context): OkHttpClient {
     return OkHttpClient.Builder()
-        .addInterceptor(HeaderInterceptor(token))
+        .addInterceptor(HeaderInterceptor(context))
         .build()
 }
 

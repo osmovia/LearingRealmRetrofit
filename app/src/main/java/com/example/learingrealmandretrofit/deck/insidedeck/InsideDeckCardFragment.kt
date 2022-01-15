@@ -36,13 +36,13 @@ class InsideDeckCardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController())
+        NavigationUI.setupWithNavController(binding.toolbarContainerCard.toolbarId, findNavController())
 
-        binding.toolbarContainer.toolbarId.title = arguments.deckTitle
+        binding.toolbarContainerCard.toolbarId.title = arguments.deckTitle
 
-        binding.toolbarContainer.toolbarId.inflateMenu(R.menu.toolbar_rename)
+        binding.toolbarContainerCard.toolbarId.inflateMenu(R.menu.toolbar_rename)
 
-        binding.toolbarContainer.toolbarId.setOnMenuItemClickListener { itemMenu ->
+        binding.toolbarContainerCard.toolbarId.setOnMenuItemClickListener { itemMenu ->
             if (itemMenu.itemId == R.id.renameItem) {
                 val action = InsideDeckCardFragmentDirections
                     .actionInsideDeckCardFragmentToDialogCreateOrChangeDeck(
@@ -56,7 +56,7 @@ class InsideDeckCardFragment : Fragment() {
         // New title if has changed
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(Constants.TITLE_INSIDE_DECK)
             ?.observe(viewLifecycleOwner) { newTitle ->
-                binding.toolbarContainer.toolbarId.title = newTitle
+                binding.toolbarContainerCard.toolbarId.title = newTitle
             }
 
         viewModelFactory = InsideDeckCardViewModelFactory(

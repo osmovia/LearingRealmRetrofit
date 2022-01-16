@@ -9,7 +9,7 @@ import org.hamcrest.CoreMatchers.any
 import org.hamcrest.Matcher
 import java.util.concurrent.TimeoutException
 
-class WaitUntilGoneAction(private val timeout: Long) : ViewAction {
+class WaitUntilGoneAction(private val timeout: Long = 999999999) : ViewAction {
 
     override fun getConstraints(): Matcher<View> {
         return any(View::class.java)

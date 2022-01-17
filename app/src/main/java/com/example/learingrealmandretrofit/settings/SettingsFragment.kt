@@ -36,7 +36,7 @@ class SettingsFragment : Fragment() {
             setOf(R.id.deckFragment, R.id.cardFragment, R.id.settingFragment)
         )
 
-        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController(), appBarConfiguration)
+        NavigationUI.setupWithNavController(binding.toolbarContainerSettings.toolbarId, findNavController(), appBarConfiguration)
 
         viewModelFactory = SettingsViewModelFactory(application = requireActivity().application)
 

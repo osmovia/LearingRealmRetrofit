@@ -47,11 +47,11 @@ class ShowDetailsCardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController())
+        NavigationUI.setupWithNavController(binding.toolbarContainerDetailsCard.toolbarId, findNavController())
 
-        binding.toolbarContainer.toolbarId.inflateMenu(R.menu.toolbar_select)
+        binding.toolbarContainerDetailsCard.toolbarId.inflateMenu(R.menu.toolbar_select)
 
-        binding.toolbarContainer.toolbarId.setNavigationOnClickListener {
+        binding.toolbarContainerDetailsCard.toolbarId.setNavigationOnClickListener {
             if (viewModel.stateView.value == true) {
                 viewModel.showDetailsCard.observe(viewLifecycleOwner, Observer { card ->
                     binding.wordId.setText(card.word)
@@ -96,7 +96,7 @@ class ShowDetailsCardFragment : Fragment() {
             binding.wordId.setText(card.word)
             binding.examplesId.setText(card.example)
             binding.translationId.setText(card.translation)
-            binding.toolbarContainer.toolbarId.title = card.word
+            binding.toolbarContainerDetailsCard.toolbarId.title = card.word
         })
 
         viewModel.stateView.observe(viewLifecycleOwner, Observer { clickable ->
@@ -104,10 +104,10 @@ class ShowDetailsCardFragment : Fragment() {
             binding.translationId.isEnabled = clickable
             binding.examplesId.isEnabled = clickable
             binding.buttonChangeCard.isVisible = !clickable
-            binding.toolbarContainer.toolbarId.menu?.findItem(R.id.selectItem)?.isVisible = clickable
+            binding.toolbarContainerDetailsCard.toolbarId.menu?.findItem(R.id.selectItem)?.isVisible = clickable
         })
 
-        binding.toolbarContainer.toolbarId.setOnMenuItemClickListener { itemMenu ->
+        binding.toolbarContainerDetailsCard.toolbarId.setOnMenuItemClickListener { itemMenu ->
             when(itemMenu.itemId) {
                 R.id.selectItem -> {
                     viewModel.changeCard(

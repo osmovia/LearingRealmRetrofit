@@ -32,6 +32,6 @@ class RecyclerAdapterDeck(
 
     class DeckViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textViewDeckName: TextView = itemView.findViewById(R.id.deck_name)
-        val itemContainer: ViewGroup = itemView.findViewById(R.id.itemContainerDeck)
+        val itemContainer: ViewGroup = itemView.findViewById(R.id.deckForRecyclerLayoutId)
     }
 }

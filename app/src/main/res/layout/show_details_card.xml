@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/showDetailsCardLayoutId"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/toolbarContainer"
+        android:id="@+id/toolbarContainerDetailsCard"
         layout="@layout/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +21,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarContainer">
+        app:layout_constraintTop_toBottomOf="@+id/toolbarContainerDetailsCard">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutWord"

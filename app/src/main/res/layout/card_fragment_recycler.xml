@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
         <include
-            android:id="@+id/toolbarContainer"
+            android:id="@+id/toolbarContainerCard"
             layout="@layout/toolbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarContainer"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarContainerCard"
             app:layout_constraintVertical_bias="1.0"
             tools:listitem="@layout/item_card_recycler"/>
 

@@ -37,16 +37,16 @@ class AddCardToDeckFragment : Fragment() {
 
         binding.buttonCreateDeck.isInvisible = true
 
-        binding.toolbarContainer.toolbarId.inflateMenu(R.menu.toolbar_select)
+        binding.toolbarContainerDeck.toolbarId.inflateMenu(R.menu.toolbar_select)
 
-        binding.toolbarContainer.toolbarId.setOnMenuItemClickListener { itemMenu ->
+        binding.toolbarContainerDeck.toolbarId.setOnMenuItemClickListener { itemMenu ->
             when (itemMenu.itemId) {
                 R.id.selectItem -> viewModel.addAndRemoveCardFromDecksRetrofit()
             }
             true
         }
 
-        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController())
+        NavigationUI.setupWithNavController(binding.toolbarContainerDeck.toolbarId, findNavController())
 
         viewModelFactory = AddCardToDeckViewModelFactory(application = requireActivity().application, cardId = arguments.cardId)
 

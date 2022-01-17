@@ -34,7 +34,7 @@ class CardFragment : CardActionsFragment() {
 
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.deckFragment, R.id.cardFragment, R.id.settingFragment))
 
-        NavigationUI.setupWithNavController(binding.toolbarContainer.toolbarId, findNavController(), appBarConfiguration)
+        NavigationUI.setupWithNavController(binding.toolbarContainerCard.toolbarId, findNavController(), appBarConfiguration)
 
         viewModelFactory = CardViewModelFactory(application = requireActivity().application)
 

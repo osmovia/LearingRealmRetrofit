@@ -16,6 +16,7 @@ import com.example.learingrealmandretrofit.card.Card
 import com.example.learingrealmandretrofit.databinding.CardFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.InsideDeckCardViewModel
 import com.example.learingrealmandretrofit.deck.insidedeck.viewmodel.factory.InsideDeckCardViewModelFactory
+import com.google.android.gms.ads.AdRequest
 
 class InsideDeckCardFragment : Fragment() {
 
@@ -37,6 +38,8 @@ class InsideDeckCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         NavigationUI.setupWithNavController(binding.toolbarContainerCard.toolbarId, findNavController())
+
+        binding.adView.loadAd(AdRequest.Builder().build())
 
         binding.toolbarContainerCard.toolbarId.title = arguments.deckTitle
 

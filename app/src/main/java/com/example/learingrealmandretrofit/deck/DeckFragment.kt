@@ -17,6 +17,7 @@ import com.example.learingrealmandretrofit.*
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.deck.viewmodel.DeckViewModel
 import com.example.learingrealmandretrofit.deck.viewmodel.factory.DeckViewModelFactory
+import com.google.android.gms.ads.AdRequest
 
 class DeckFragment : Fragment() {
 
@@ -42,6 +43,8 @@ class DeckFragment : Fragment() {
         viewModelFactory = DeckViewModelFactory(requireActivity().application)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(DeckViewModel::class.java)
+
+        binding.adView.loadAd(AdRequest.Builder().build())
 
         viewModel.pullDecks()
         viewModel.getAllDecksRetrofit()

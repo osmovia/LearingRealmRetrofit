@@ -15,6 +15,7 @@ import com.example.learingrealmandretrofit.card.viewmodel.AddCardToDeckViewModel
 import com.example.learingrealmandretrofit.card.viewmodel.factory.AddCardToDeckViewModelFactory
 import com.example.learingrealmandretrofit.databinding.DeckFragmentRecyclerBinding
 import com.example.learingrealmandretrofit.deck.Deck
+import com.google.android.gms.ads.AdRequest
 
 class AddCardToDeckFragment : Fragment() {
 
@@ -34,6 +35,8 @@ class AddCardToDeckFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding.adView.loadAd(AdRequest.Builder().build())
 
         binding.buttonCreateDeck.isInvisible = true
 
